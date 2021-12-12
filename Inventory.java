@@ -1,4 +1,4 @@
-package gameprototypes;
+package game;
 /*
  * Zachary Kinkopf
  * December 1st
@@ -47,20 +47,54 @@ public class Inventory
 	{
 		gold=g;
 	}
+	public void addGold(int adder)
+	{
+		gold+=adder;
+	}
 	public void setUpgrades(int u)
 	{
 		upgradeTokens=u;
 	}
-	//Miscelanious________________________
-	public int randomGen(int min, int max)
+	public void addUpgrades(int adder)
 	{
-		return (int)(Math.random()*(max-min+1))+min;
+		upgradeTokens+=adder;
 	}
+	//Miscelanious________________________
 	
-	
-		public class Sword
-		{
-			int damage;
-			
-		}
+//	
+//	
+//		public class Sword//WIP(duh)
+//		{
+//			private int minDamage,maxDamage,damageBonus;
+//			
+//			public Sword(int min,int max)//constructor
+//			{
+//				setMin(min);
+//				setMax(max);
+//			}
+//			
+//			public void addDamage(int dam)//bonus damage will be for upgrading the weapon
+//			{
+//				damageBonus+=dam;
+//			}
+//			public void setMin(int min)
+//			{
+//				minDamage=min;
+//			}
+//			public void setMax(int max)
+//			{
+//				maxDamage=max;
+//			}
+//			
+//			
+//			public int randomGen(int min, int max)
+//			{
+//				return (int)(Math.random()*(max-min+1))+min;
+//			}
+//			public int rollDamage()
+//			{
+//				return randomGen(minDamage,maxDamage)+damageBonus;
+//			}
+//			
+//		}
 }
