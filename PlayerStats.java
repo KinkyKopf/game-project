@@ -1,10 +1,10 @@
-package gameprototypes;
+package game;
 
 public class PlayerStats 
 {
-	private int evasion,health,maxHealth,protection,gold,weaponNum;
-	boolean alive;
-	String weapon;
+	private int floor, evasion,health,maxHealth,protection,gold,weaponNum;
+	private boolean alive;
+	private String weapon;
 	
 	/*
 	 *Item index:
@@ -13,7 +13,7 @@ public class PlayerStats
 	 *2-shield
 	 *3-bow
 	 */
-	public PlayerStats(int e,int h,int mh, int d, int p)//constructor
+	public PlayerStats(int e,int h,int mh, int p)//constructor
 	{
 		setEvasion(e);
 		setHealth(h);
@@ -39,7 +39,14 @@ public class PlayerStats
 	{
 		return evasion;
 	}
-	
+	public boolean aliveOrNot()
+	{
+		return alive;
+	}
+	public int getFloor()
+	{
+		return floor;
+	}
 	//Mutators_______________________________________
 	public void setHealth(int h)
 	{
@@ -57,8 +64,15 @@ public class PlayerStats
 	{
 		maxHealth=mh;
 	}
+	public void addHealth(int adder)
+	{
+		health+=adder;
+	}
+	public void addMaxHealth(int adder)
+	{
+		maxHealth+=adder;
+	}
 	
-
 	public boolean takeDamage(int damage)
 	{
 		health-=damage;
@@ -77,7 +91,12 @@ public class PlayerStats
 	{
 		health=maxHealth;
 	}
-	//Miscelanious methods
+	public void nextFloor()
+	{
+		floor++;
+		//add some cool message here, or maybe a funny one
+	}
+	//Miscelanious methods______________________________
 	public boolean rollEvasion(int enemyAccuracy)//roll to see if you can dodge
 	{
 		int playerRoll=Rpg1_17.randomGen(1,20)+evasion;
