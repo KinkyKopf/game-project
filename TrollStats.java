@@ -1,8 +1,8 @@
-package game;
+package gameprototypes;
 
 public class TrollStats 
 {
-	private int health,damage,accuracy,floor;
+	private int health,damage,accuracy,floor,damageOut;
 	private String name;
 	/*   Notes:
 	 *make the troll get bonus evasion if he has glasses on
@@ -12,7 +12,10 @@ public class TrollStats
 	
 	public TrollStats(int f)
 	{
+		setFloor(f);
 		setDamage((int)(floor*1.5));
+		setHealth(20+(floor*5));	
+		nameGen();
 	}
 
 	
@@ -43,12 +46,12 @@ public class TrollStats
 	}
 	public void setFloor(int f)
 	{
-		
+		floor=f;
 	}
 //Getters_________________
 	public int getDamage()
 	{
-		return damage;
+		return damageOut;
 	}
 	public int getHealth()
 	{
@@ -70,11 +73,29 @@ public class TrollStats
 		switch(Rpg1_17.randomGen(1,4))
 		{
 		case 1:
-			name="jeff";
+			name="Jeff";
+			break;
 		case 2:
-			name="phill";
+			name="Phill";
+			break;
+		case 3:
+			name = "Gary";
+			break;
+		case 4:
+			name="Hok'no'Ragut'Hum";
+			break;
 		}
 	}
-
-	
+	public int rollDamage(int times)
+	{
+		if(times<=0)
+		return 0;
+		int dam = Rpg1_17.randomGen(1, 5)+damage+rollDamage(times-1);
+		return dam;
+		
+	}
+	public String toString()
+	{
+		return name+" currently has "+health+" health.";
+	}
 }
