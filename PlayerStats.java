@@ -1,4 +1,4 @@
-package game;
+package gameprototypes;
 
 public class PlayerStats 
 {
@@ -39,7 +39,7 @@ public class PlayerStats
 	{
 		return evasion;
 	}
-	public boolean aliveOrNot()
+	public boolean alive()
 	{
 		return alive;
 	}
@@ -48,6 +48,10 @@ public class PlayerStats
 		return floor;
 	}
 	//Mutators_______________________________________
+	public void die()
+	{
+		alive=false;
+	}
 	public void setHealth(int h)
 	{
 		health=h;
