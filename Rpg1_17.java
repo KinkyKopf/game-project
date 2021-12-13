@@ -1,4 +1,4 @@
-package game;
+package gameprototypes;
 
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -131,7 +131,7 @@ public class Rpg1_17
 		}
 		System.out.println();
 	}
-	
+	//k
 
 	public static void grueFight(Scanner input, PlayerStats player,Inventory stuff)
 	{
@@ -155,19 +155,15 @@ public class Rpg1_17
 		 */
 		String prompt;
 		
-		
+		TrollStats troll= new TrollStats(player.getFloor());
 		
 		int round=1;
 		int playerDam;
 		int loot;
-		
+		String plural="";
 		boolean	win=false;
 		boolean autoRun=false;
-		int trollHealth=20+floor*10;
-		int trollDamage;
-		
-		TrollStats troll = new TrollStats(player.getFloor());
-		
+				
 		slowPrint("Would you like to auto run this combat?");
 		prompt=input.nextLine();
 		
@@ -181,43 +177,43 @@ public class Rpg1_17
 		
 		do 
 		{
-			trollDamage=(int)(Math.random()*(4+1.5*floor)+(1.5*floor));
-			playerDam=randomGen(1,4)+damPlus;
 			
 			slowPrintln("Round "+round+"___________\n");
 			
-				if(trollHealth-playerDam>0)//troll is still alive 
+				if(troll.getHealth()-playerDam>0)//troll is still alive 
 				{
-				trollHealth-=playerDam;
-				slowPrintln("You deal "+playerDam+" damage to the troll!\n\nThe troll has "+trollHealth+" health remaning.");
+				troll.takeDamage(playerDam);
+				slowPrintln("You deal "+playerDam+" damage to the troll!\n\nThe troll has "+troll.getHealth()+" health remaning.");
 				}
-				else if(trollHealth-playerDam<=0)
+				else if(troll.getHealth()-playerDam<=0)
 				{
 					slowPrintln("Congrats, You killed the troll!\n I bet the troll's children will be equally as happy with your success!");
 					Thread.sleep(500);
 					slowPrint("Nah just kidding, he dosen't have children!");
-					loot =lootMaker(floor);
-					money+=loot;
-					slowPrintln("You got "+loot+" gold from killing,the troll!\nIt's a bit red but I bet you don't care about that do you?\n\nGold: "+money+" \n");
+					loot =lootMaker(player.getFloor());
+					stuff.addGold(loot);
+					slowPrintln("You got "+loot+" gold from killing,the troll!\nIt's a bit red but I bet you don't care about that do you?\n\nGold: "+stuff.getGold()+" \n");
 					loot=randomGen(1,3);
-					tokens+=loot;
-					slowPrintln("You also found "+loot+" upgrade tokens inside the troll's "+partGen()+"...  ...  ...  ...Nice!");
-					win=true;
+					stuff.addUpgrades(loot);
+					if(loot>1)
+					{
+						plural="s";
+					}
+					slowPrintln("You also found "+loot+" upgrade token"+plural+" inside the troll's "+partGen()+"...  ...  ...  ...Nice!");
 					break;
+					troll=null;
 				}
 				
-				trollDamage=randomGen(4+(int)(floor*1.5),6+2*floor)-protPlus;
-				if(health-trollDamage<=0)//player dies
+				if(player.getHealth()-troll.rollDamage(1)<=0)//player dies
 				{
-					slowPrintln("The troll hits you for "+trollDamage+" damage, absoutely obliterating your "+partGen()+", killing you instantly.");//add a random part generator
-					alive=false;
-					transferArray[5]=0;
+					slowPrintln("The troll hits you for "+troll.getDamage()+" damage, absoutely obliterating your "+partGen()+", killing you instantly.");//add a random part generator
+					player.die();
 					break;
 				}
-				else if(trollDamage<=0)
-				{
-					slowPrintln("You blocked the attack!");
-				}
+//				else if(trollDamage<=0)
+//				{
+//					slowPrintln("You blocked the attack!");
+//				}
 				else 
 				{
 					health-=trollDamage;
