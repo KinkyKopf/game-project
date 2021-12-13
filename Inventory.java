@@ -1,4 +1,4 @@
-package game;
+package gameprototypes;
 /*
  * Zachary Kinkopf
  * December 1st
@@ -61,40 +61,50 @@ public class Inventory
 	}
 	//Miscelanious________________________
 	
-//	
-//	
-//		public class Sword//WIP(duh)
-//		{
-//			private int minDamage,maxDamage,damageBonus;
-//			
-//			public Sword(int min,int max)//constructor
-//			{
-//				setMin(min);
-//				setMax(max);
-//			}
-//			
-//			public void addDamage(int dam)//bonus damage will be for upgrading the weapon
-//			{
-//				damageBonus+=dam;
-//			}
-//			public void setMin(int min)
-//			{
-//				minDamage=min;
-//			}
-//			public void setMax(int max)
-//			{
-//				maxDamage=max;
-//			}
-//			
-//			
-//			public int randomGen(int min, int max)
-//			{
-//				return (int)(Math.random()*(max-min+1))+min;
-//			}
-//			public int rollDamage()
-//			{
-//				return randomGen(minDamage,maxDamage)+damageBonus;
-//			}
-//			
-//		}
+		/*
+		 * add protecion
+		 * 
+		 */
+		public class Sword//WIP(duh)
+		{
+			private int minDamage,maxDamage,damageBonus,protection;
+			private boolean enchanted;
+			public Sword()//constructor
+			{
+				setMin(1);
+				setMax(4);
+				setProtection(2);
+			}
+			
+			public void addDamage(int dam)//bonus damage will be for upgrading the weapon
+			{
+				damageBonus+=dam;
+			}
+			public void setMin(int min)
+			{
+				minDamage=min;
+			}
+			public void setMax(int max)
+			{
+				maxDamage=max;
+			}
+			public void setProtection(int p)
+			{
+				protection= p;
+			}
+			
+			public int randomGen(int min, int max)
+			{
+				return (int)(Math.random()*(max-min+1))+min;
+			}
+			public int rollDamage()
+			{
+				
+				int damage= randomGen(minDamage,maxDamage)+damageBonus;
+				if(enchanted)
+					return 2*damage;
+				return damage;
+			}
+			
+		}
 }
