@@ -1,101 +1,111 @@
 package gameprototypes;
 
-public class TrollStats 
+public class PlayerStats 
 {
-	private int health,damage,accuracy,floor,damageOut;
-	private String name;
-	/*   Notes:
-	 *make the troll get bonus evasion if he has glasses on
-	 *more damage if there are tubs of pre-workout 
-	 *bonus health be some quip about him being "big but not like in a bad way"
+	private int floor, evasion,health,maxHealth,protection,gold,weaponNum;
+	private boolean alive;
+	private String weapon;
+	
+	/*
+	 *Item index:
+	 *0-gauntlets(fists/no weapon)
+	 *1-sword
+	 *2-shield
+	 *3-bow
 	 */
-	
-	public TrollStats(int f)
+	public PlayerStats(int e,int h,int mh, int p)//constructor
 	{
-		setFloor(f);
-		setDamage((int)(floor*1.5));
-		setHealth(20+(floor*5));	
-		nameGen();
+		setEvasion(e);
+		setHealth(h);
+		setMaxHealth(mh);
+		
+		setProtection(p);
 	}
-
 	
-//Setters______________
-	public void setDamage(int d)
+	//getters______________________________
+	
+	
+	public int getHealth() throws InterruptedException
 	{
-		damage=d;
+		if(health<0)
+			Rpg1_17.slowPrintln("You Died!");
+		return health;
+	}
+	public int getMaxHealth()//
+	{
+		return maxHealth;
+	}
+	public int getEvasion()
+	{
+		return evasion;
+	}
+	public boolean alive()
+	{
+		return alive;
+	}
+	public int getFloor()
+	{
+		return floor;
+	}
+	//Mutators_______________________________________
+	public void die()
+	{
+		alive=false;
 	}
 	public void setHealth(int h)
 	{
-		health = h;
+		health=h;
 	}
-	public void setAccuracy(int a)
+	public void setEvasion(int e)
 	{
-		accuracy=a;
+		evasion=e;
 	}
-	public void setName(String n)
+	public void setProtection(int p)
 	{
-		name=n;
+		protection=p;
 	}
-	public void takeDamage(int dam) throws InterruptedException
+	public void setMaxHealth(int mh)
 	{
-		health-=dam;
-		if(health<=0)
-		{
-			Rpg1_17.slowPrintln("You killed the troll!");
-		}
+		maxHealth=mh;
 	}
-	public void setFloor(int f)
+	public void addHealth(int adder)
 	{
-		floor=f;
+		health+=adder;
 	}
-//Getters_________________
-	public int getDamage()
+	public void addMaxHealth(int adder)
 	{
-		return damageOut;
+		maxHealth+=adder;
 	}
-	public int getHealth()
-	{
-		return health;
-	}
-	public int getAccuracy()
-	{
-		return accuracy;
-	}
-	public String getName()
-	{
-		return name;
-	}
-//misc methods_________________________	
 	
-	public void nameGen()
+	public boolean takeDamage(int damage)
 	{
-		
-		switch(Rpg1_17.randomGen(1,4))
-		{
-		case 1:
-			name="Jeff";
-			break;
-		case 2:
-			name="Phill";
-			break;
-		case 3:
-			name = "Gary";
-			break;
-		case 4:
-			name="Hok'no'Ragut'Hum";
-			break;
-		}
+		health-=damage;
+		alive=(health>0);
+		return alive;
 	}
-	public int rollDamage(int times)
+	public void addProtection(int plus)
 	{
-		if(times<=0)
-		return 0;
-		int dam = Rpg1_17.randomGen(1, 5)+damage+rollDamage(times-1);
-		return dam;
-		
+		protection+=plus;
 	}
-	public String toString()
+	public void addEvasion(int plus)
 	{
-		return name+" currently has "+health+" health.";
+		evasion+=plus;
 	}
+	public void refillHealth()
+	{
+		health=maxHealth;
+	}
+	public void nextFloor()
+	{
+		floor++;
+		//add some cool message here, or maybe a funny one
+	}
+	//Miscelanious methods______________________________
+	public boolean rollEvasion(int enemyAccuracy)//roll to see if you can dodge
+	{
+		int playerRoll=Rpg1_17.randomGen(1,20)+evasion;
+		int enemyRoll=Rpg1_17.randomGen(1,20)+enemyAccuracy;
+		return (playerRoll>enemyRoll);
+	}
+	
 }
