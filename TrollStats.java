@@ -1,4 +1,4 @@
-package gameprototypes;
+package game;
 
 public class TrollStats 
 {
