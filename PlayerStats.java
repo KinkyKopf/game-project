@@ -1,10 +1,10 @@
-package gameprototypes;
+package game;
 
 public class PlayerStats 
 {
-	private int floor, evasion,health,maxHealth,protection,gold,weaponNum;
+	private int floor, evasion,health,maxHealth;
 	private boolean alive;
-	private String weapon;
+	
 	
 	/*
 	 *Item index:
@@ -13,15 +13,16 @@ public class PlayerStats
 	 *2-shield
 	 *3-bow
 	 */
-	public PlayerStats(int e,int h,int mh, int p)//constructor
+	public PlayerStats(int e,int h,int mh)//constructor
 	{
 		setEvasion(e);
 		setHealth(h);
 		setMaxHealth(mh);
-		
-		setProtection(p);
 	}
-	
+	public PlayerStats()
+	{
+		this(3,20,20);
+	}
 	//getters______________________________
 	
 	
@@ -39,7 +40,7 @@ public class PlayerStats
 	{
 		return evasion;
 	}
-	public boolean alive()
+	public boolean aliveOrNot()
 	{
 		return alive;
 	}
@@ -60,10 +61,7 @@ public class PlayerStats
 	{
 		evasion=e;
 	}
-	public void setProtection(int p)
-	{
-		protection=p;
-	}
+
 	public void setMaxHealth(int mh)
 	{
 		maxHealth=mh;
@@ -83,10 +81,7 @@ public class PlayerStats
 		alive=(health>0);
 		return alive;
 	}
-	public void addProtection(int plus)
-	{
-		protection+=plus;
-	}
+	
 	public void addEvasion(int plus)
 	{
 		evasion+=plus;
