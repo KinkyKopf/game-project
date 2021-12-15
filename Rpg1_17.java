@@ -1,4 +1,4 @@
-package gameprototypes;
+package game;
 
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -132,15 +132,15 @@ public class Rpg1_17
 		System.out.println();
 	}
 	//k
-
-	public static void grueFight(Scanner input, PlayerStats player,Inventory stuff,Object playerWeapon)
+	
+	public static void grueFight(Scanner input, PlayerStats player,Inventory stuff,Weapon playerWeapon)
 	{
 		/*
 		 * Notes:
 		 * make it so the grue has a chance of stunning you, making it so you can't attack for a turn
 		 */
 	}
-	public static void trollFight(Scanner input, PlayerStats player,Inventory stuff,Object playerWeapon) throws InterruptedException
+	public static void trollFight(Scanner input, PlayerStats player,Inventory stuff,Weapon playerWeapon) throws InterruptedException
 	{
 		/*
 		 * Notes:
@@ -158,7 +158,7 @@ public class Rpg1_17
 		TrollStats troll= new TrollStats(player.getFloor());
 		
 		int round=1;
-		int playerDam;
+		int playerDam,trollDam;
 		int loot;
 		String plural="";
 		boolean	win=false;
@@ -179,27 +179,34 @@ public class Rpg1_17
 		
 		do 
 		{
-			slowPrintln("Round "+round+"___________\n");
 			
+			slowPrintln("Round "+round+"___________\n");
+			playerDam=playerWeapon.rollDamage(1);
+			trollDam=troll.rollDamage(2)-playerWeapon.protection;
 				if(troll.getHealth()>0)//troll is still alive 
 				{
+				
 				troll.takeDamage(playerDam);
 				slowPrintln("You deal "+playerDam+" damage to the troll!\n\nThe troll has "+troll.getHealth()+" health remaning.");
+				
 				}
 				else if(troll.getHealth()-playerDam<=0)
 				{
 					slowPrintln("Congrats, You killed the troll!\n I bet the troll's children will be equally as happy with your success!");
 					Thread.sleep(500);
 					slowPrint("Nah just kidding, he dosen't have children!");
+					
 					loot =lootMaker(player.getFloor());
 					stuff.addGold(loot);
+					
 					slowPrintln("You got "+loot+" gold from killing,the troll!\nIt's a bit red but I bet you don't care about that do you?\n\nGold: "+stuff.getGold()+" \n");
+					
 					loot=randomGen(1,3);
 					stuff.addUpgrades(loot);
+					
 					if(loot>1)
-					{
 						plural="s";
-					}
+					
 					slowPrintln("You also found "+loot+" upgrade token"+plural+" inside the troll's "+partGen()+"...  ...  ...  ...Nice!");
 					break;
 				}
@@ -227,6 +234,7 @@ public class Rpg1_17
 					if(prompt.toLowerCase().equals("n"))
 					{
 						slowPrint("As you run away the troll laughs and taunts you with some gestures I won't repeat here since my teacher is going to see this");
+						break;
 					}
 				}
 				
@@ -238,7 +246,7 @@ public class Rpg1_17
 	
 		
 	}
-	public static void goblinHorde(Scanner input, PlayerStats player,Inventory stuff,Object playerWeapon) throws InterruptedException
+	public static void goblinHorde(Scanner input, PlayerStats player,Inventory stuff,Weapon playerWeapon) throws InterruptedException
 	{
 		/*
 		 * Notes:
@@ -255,8 +263,8 @@ public class Rpg1_17
 		int playerDamage, enemyDamage, numberOfGoblins;//the biggest challenge is going to be integrating this into my game-I was right , but it is done
 		int goblinAttacker;
 		int loot;
-		int goblinBaseAttack=(floor*2);
-		int goblinBaseHealth=10+(floor*3);
+		int goblinBaseAttack=(player.getFloor()*2);
+		int goblinBaseHealth=10+(player.getFloor()*3);
 		String prompt = "";
 		
 		boolean alive=true;
@@ -322,10 +330,9 @@ public class Rpg1_17
 				
 					}
 					while(answer==true);//I am just having this as a useless variable, the loop will exit via break.
-			
-			playerDamage=randomGen(1,4)+damPlus;
+			playerDamage=playerWeapon.rollDamage(1);
 			goblinGroup[0][selection-1]-=playerDamage;
-			
+		
 			slowPrintln("You deal "+playerDamage+" damage to goblin "+selection+".  The goblin now has "+goblinGroup[0][selection-1]+ " health remaining!");
 			
 					if(goblinGroup[0][selection-1]<=0)
@@ -338,19 +345,12 @@ public class Rpg1_17
 					if(numberDead==numberOfGoblins)
 					{
 						slowPrintln("You killed all the goblins, congrats!  I'm not going to guilt trip you on this one, the goblins are just idiots.");
-						loot=lootMaker(floor*numberOfGoblins);
-						money+=loot;
+						loot=lootMaker(player.getFloor()*numberOfGoblins);
+						stuff.addGold(loot);
 						loot=randomGen(1,3);
-						tokens+=loot;
+						stuff.addGold(loot);;
 						slowPrintln("You also found "+loot+" ugrade tokens in one of the goblin's "+partGen()+" so win/win!");
-						
-						
-						transferArray[0]=damPlus;
-						transferArray[1]=protPlus;
-						transferArray[2]=playerHealth;
-						transferArray[4]=money;
-						transferArray[6]=tokens;
-						return transferArray;
+						return;
 					}
 					
 					if(goblinGroup[0][selection-1]<=(goblinBaseHealth/2))
@@ -375,7 +375,7 @@ public class Rpg1_17
 			}
 			while(validAttacker==false);
 			
-			enemyDamage=randomGen(1+floor,3+floor)-protPlus; 
+			enemyDamage=randomGen(1+player.getFloor(),3+player.getFloor())-playerWeapon.protection; 
 			
 			if(enemyDamage<=0)
 			{
@@ -383,36 +383,31 @@ public class Rpg1_17
 			}
 			else
 			{
-				playerHealth=playerHealth-enemyDamage;
+				player.addHealth(-enemyDamage);
 			slowPrintln("Goblin number "+goblinAttacker+" hits you for "+enemyDamage+" damage!\n");
 			}
 			
-			if(playerHealth<=0)
+			if(player.getHealth()<=0)
 			{
 				
 				System.out.print("The goblins killed you! They celebrate by taking out your "+partGen()+" and doing a dance around it that looks like a monkey told another group of monkeys how to do the hokey pokey, but there was a severe language barrier between the two and it got lost in translation.");
 				alive=false;
-				transferArray[5]=0;
+				player.die();
 				break;
 			}
 			else 
 			{
-				slowPrintln("You have "+ playerHealth+" health remaining.");
+				slowPrintln("You have "+ player.getHealth()+" health remaining.");
 			}
 		}
 		while(win==false&&alive==true);
 		
-		transferArray[0]=damPlus;
-		transferArray[1]=protPlus;
-		transferArray[2]=playerHealth;
-		transferArray[4]=money;
-		transferArray[6]=tokens;
 		
-		return(transferArray);
 	}
 	
-	public static void firstStore(Scanner input, PlayerStats player,Inventory stuff) throws InterruptedException
+	public static Weapon firstStore(Scanner input, PlayerStats player,Inventory stuff) throws InterruptedException
 	{
+		Weapon killTool=null;
 		int swordCost,shieldCost,bowCost,loot,floor;
 		String prompt;
 		boolean skipDungeon=false;//first cheat code
@@ -453,7 +448,7 @@ public class Rpg1_17
 												stuff.addGold(-swordCost);
 												slowPrintln("You have "+stuff.getGold()+" gold remaining");
 												slowPrintln("Now off to the dungeon you go!");
-												stuff.setWeapon("sword");
+												killTool=new Weapon("sword");
 												prompt = "dungeon";
 												break;
 											}
@@ -481,7 +476,7 @@ public class Rpg1_17
 												stuff.addGold(-shieldCost);
 												slowPrintln("You now have "+stuff.getGold()+" gold remaining");
 												slowPrintln("Now off to the dungeon you go!");
-												stuff.setWeapon("shield");
+												killTool=new Weapon("shield");
 												prompt = "dungeon";
 												break;
 											}
@@ -509,7 +504,7 @@ public class Rpg1_17
 											stuff.addGold(-bowCost);
 										slowPrintln("You now have "+stuff.getGold()+" gold remaining");
 										slowPrintln("Now off to the dungeon you go!");
-										stuff.setWeapon("bow");
+										killTool=new Weapon("bow");
 										prompt = "dungeon";
 										break;
 											}//end else
@@ -540,6 +535,7 @@ public class Rpg1_17
 //							break;
 						case "leave":
 							prompt="dungeon";
+							killTool=new Weapon("gauntlets");
 							break;
 						case "gimme.stuff":
 							loot=lootMaker(floor);
@@ -571,10 +567,10 @@ public class Rpg1_17
 				slowPrintln("\n Man, you have " + stuff.getGold()+" gold! Your bankrupt!!!you are going to have to work that off in the dungeon)");
 				
 			}
-		
+		return killTool;
 	
 	}
-	public static void floorStore(Scanner input, PlayerStats player,Inventory stuff) throws InterruptedException
+	public static void floorStore(Scanner input, PlayerStats player,Inventory stuff,Weapon playerWeapon) throws InterruptedException
 	{
 		/*
 		 * Notes:
@@ -584,9 +580,9 @@ public class Rpg1_17
 		double number;
 		int maxCst,egg2Tries=0,refilCost=100;
 		boolean egg1=false;
-		int maxHlth=20;
 		
-		String prompt,item;
+		
+		String prompt;
 		
 		
 		slowPrintln("\n________________________________________________\n\nYou now enter the floor "+player.getFloor()+" shop.");
@@ -595,7 +591,7 @@ public class Rpg1_17
 		{		
 	
 		slowPrintln("\nYou can either type potion to look at the avaible potions, type upgrade to upgrade your weapon, or type leave to go to the next floor.");
-		slowPrintln("\nMax health:"+maxHlth+"\t\tHealth:"+player.getHealth()+"\n\nGold: "+stuff.getGold()+"\t\tUpgrade Tokens: "+stuff.getUpgrades());
+		slowPrintln("\nMax health:"+player.getMaxHealth()+"\t\tHealth:"+player.getHealth()+"\n\nGold: "+stuff.getGold()+"\t\tUpgrade Tokens: "+stuff.getUpgrades());
 		prompt=input.nextLine();
 		
 			if(prompt.toLowerCase().equals("potions")||prompt.toLowerCase().equals("potion"))
@@ -691,8 +687,8 @@ public class Rpg1_17
 											else
 											{
 												stuff.addGold(-maxCst*(int)number);
-												maxHlth+=10*(int)number;
-												slowPrintln("You paid "+((int)maxCst*number)+" gold for "+(int)number+" potions and you now have "+maxHlth+" Max health and "+ stuff.getGold()+" gold left");
+												player.addMaxHealth(10*(int)number);
+												slowPrintln("You paid "+((int)maxCst*number)+" gold for "+(int)number+" potions and you now have "+player.getMaxHealth()+" Max health and "+ stuff.getGold()+" gold left");
 											}
 									}
 									else if(prompt.toLowerCase().equals("refill"))
@@ -733,24 +729,25 @@ public class Rpg1_17
 			}//potion bracket end
 			else if (prompt.toLowerCase().equals("upgrade"))
 			{
-				slowPrintln("\nWould you like to upgrade your "+item+" for 200 gold?(y/n)");
+				slowPrintln("\nWould you like to upgrade your "+playerWeapon.weaponType+" for 200 gold?(y/n)");
 				prompt=input.nextLine();
 				
-					if(prompt.toLowerCase().equals("y")&&money>=200&&upgAmnt>0)
+					if(prompt.toLowerCase().equals("y")&&stuff.getGold()>=200&&stuff.getUpgrades()>0)
 					{
-						money-=200;
-						damPlus+=3+(int)(floor*.5);
-						slowPrintln("\nYou Upgraded your "+item+" and now have "+money+" gold left!");
-						upgAmnt--;
-						protPlus+=randomGen(1,3+floor);
+						stuff.addGold(-200);
+						playerWeapon.damageBonus+= 3+(int)(player.getFloor()*.5);
+						slowPrintln("\nYou Upgraded your "+playerWeapon.weaponType+" and now have "+stuff.getGold()+" gold left!");
+						stuff.addUpgrades(-1);
+						if(playerWeapon.weaponType.equals("shield"));
+							playerWeapon.protection+=randomGen(1,3+player.getFloor());
 					}
-					else if((prompt.toLowerCase().equals("y"))&&money<200)
+					else if((prompt.toLowerCase().equals("y"))&&stuff.getGold()<200)
 					{
 						slowPrintln("\nSorry! You don't have enough gold to get an upgrade!");
 					}
-					else if((prompt.toLowerCase().equals("y"))&&money<200)
+					else if((prompt.toLowerCase().equals("y"))&&stuff.getGold()<200)
 					{
-						slowPrintln("You don't enough upgrade tokens to upgrade your "+bag.weapon+", try being a better killer!");
+						slowPrintln("You don't enough upgrade tokens to upgrade your "+playerWeapon.weaponType+", try being a better killer!");
 					}
 					else if((prompt.toLowerCase().equals("n")))
 					{
@@ -799,30 +796,21 @@ public class Rpg1_17
 			 */
 		
 	 	Scanner input = new Scanner(System.in);
-		PlayerStats character = new PlayerStats(15,20,20,0);
-		Inventory bag = new	Inventory(1000,2,null);
-				
+		PlayerStats character = new PlayerStats();
+		Inventory bag = new	Inventory(1000,2);
+		Weapon killonater;
 		int roll;
 		double number;
 		int loot;
 		String prompt;
 		boolean balance=false;//this is for skipping floors
 		
-			firstStore(input,character,bag);
-			
-			Object weapon;
-			
-			if(bag.getWeapon().equals("sword"))
-			{
-				 weapon= bag.new Sword();
-			}
-			else if(bag.getWeapon().equals("shield"))
-			{
-				 weapon= bag.new Shield();
-			}
-			
-			
+			killonater=firstStore(input,character,bag);
 			character.nextFloor();
+			
+		
+			
+			
 			
 			if(balance==true)
 			{
@@ -880,10 +868,10 @@ public class Rpg1_17
 							{
 							case 1,2:
 								
-								goblinHorde(input,character,bag,weapon);
+								goblinHorde(input,character,bag,killonater);
 								break;
 							case 3,4:
-								trollFight(input,character,bag,weapon);
+								trollFight(input,character,bag,killonater);
 							case 5:
 								slowPrint("You find nothing in this hallway and continue to the shop, tough luck");
 								break;
@@ -897,10 +885,10 @@ public class Rpg1_17
 							switch(roll)
 							{
 							case 1,2,3,6:
-								trollFight(input,character,bag,bag.inventorySlots);
+								trollFight(input,character,bag,killonater);
 								break;
 							case 4:
-								goblinHorde(input,character,bag);
+								goblinHorde(input,character,bag,killonater);
 							case 5:
 								slowPrintln("You find nothing in this hallway and continue to the shop, tough luck");
 								break;
@@ -910,10 +898,10 @@ public class Rpg1_17
 							switch(roll)
 							{
 							case 1,2,3,6:
-								goblinHorde(input,character,bag,bag.inventorySlots);
+								goblinHorde(input,character,bag,killonater);
 								break;
 							case 4:
-								trollFight(input,character,bag,bag.inventorySlots);
+								trollFight(input,character,bag,killonater);
 							case 5:
 								slowPrintln("You find nothing in this hallway and continue to the shop, tough luck");
 								break;
@@ -926,7 +914,7 @@ public class Rpg1_17
 							break;
 						}		
 						
-				       floorStore(input, character,bag);
+				       floorStore(input, character,bag,killonater);
 				   
 				       slowPrint("Type quit to leave the game or press enter to continue on to the next floor:");
 				       prompt = input.nextLine();
