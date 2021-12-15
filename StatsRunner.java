@@ -15,15 +15,19 @@ public class StatsRunner {
 	{
 //		PlayerStats Stats = new PlayerStats();
 //		
-//		Stats.gold=1000;
-//		
-////		System.out.println(Stats.gold);
-//		test(Stats);
+		
 		Inventory bag = new Inventory();
 		
 		Inventory.Sword bigKnife=bag.new Sword();
+		bag.inventorySlots[0]=bigKnife;
+		System.out.println(bag.inventorySlots[0]);
+		Object weapon=bag.inventorySlots[0];
 		
-		System.out.print(bigKnife.damage);
+		
+		
 	}
-
+	public void printer(Inventory bag)
+	{
+		
+	}
 }

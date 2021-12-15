@@ -1,10 +1,10 @@
-package game;
+package gameprototypes;
 
 public class PlayerStats 
 {
 	private int floor, evasion,health,maxHealth;
 	private boolean alive;
-	
+	Weapon characterWeapon;
 	
 	/*
 	 *Item index:
@@ -15,7 +15,7 @@ public class PlayerStats
 	 */
 	public PlayerStats(int e,int h,int mh)//constructor
 	{
-		setEvasion(e);
+		setEvasion(e+characterWeapon.evasionBuff);
 		setHealth(h);
 		setMaxHealth(mh);
 	}

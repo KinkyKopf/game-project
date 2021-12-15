@@ -1,9 +1,9 @@
-package game;
+package gameprototypes;
 
 public class Weapon
 {
 	
-		int minDamage,maxDamage,damageBonus,protection,evasionBuff;
+		int minDamage,maxDamage,damageBonus,protection,evasionBuff,currentDamage;
 		private boolean enchanted;
 		String weaponType;
 		public Weapon(String s)//constructor
@@ -95,6 +95,7 @@ public class Weapon
 			if(times<=0)
 			return 0;
 			int dam = Rpg1_17.randomGen(minDamage, maxDamage)+damageBonus+rollDamage(times-1);
+			currentDamage=dam;
 			return dam;
 		}
 		public String toString()
