@@ -1,4 +1,4 @@
-package game;
+package gameprototypes;
 
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -115,14 +115,7 @@ public class Rpg1_17
 	}
 	public static void slowPrint(String text) throws InterruptedException//this slowly prints text at a set speed in miliseconds
 	{
-		Scanner input= new Scanner(System.in);
 		int printSpeed=15;
-		
-		if(text.equals("print_speed"))
-		{
-			slowPrint("What would you like to change the speed to?");
-			printSpeed=input.nextInt();
-		}
 		
 		for (int i=0;i<text.length();i++)
 		{
@@ -158,7 +151,7 @@ public class Rpg1_17
 		TrollStats troll= new TrollStats(player.getFloor());
 		
 		int round=1;
-		int playerDam,trollDam;
+		int playerDam;
 		int loot;
 		String plural="";
 		boolean	win=false;
@@ -182,15 +175,14 @@ public class Rpg1_17
 			
 			slowPrintln("Round "+round+"___________\n");
 			playerDam=playerWeapon.rollDamage(1);
-			trollDam=troll.rollDamage(2)-playerWeapon.protection;
-				if(troll.getHealth()>0)//troll is still alive 
+				if(troll.getHealth()>0)//troll is still alive , you damage the troll
 				{
 				
 				troll.takeDamage(playerDam);
 				slowPrintln("You deal "+playerDam+" damage to the troll!\n\nThe troll has "+troll.getHealth()+" health remaning.");
 				
 				}
-				else if(troll.getHealth()-playerDam<=0)
+				else if(troll.getHealth()-playerDam<=0)//killing the troll
 				{
 					slowPrintln("Congrats, You killed the troll!\n I bet the troll's children will be equally as happy with your success!");
 					Thread.sleep(500);
@@ -211,22 +203,26 @@ public class Rpg1_17
 					break;
 				}
 				
-				if(player.getHealth()-troll.rollDamage(1)<=0)//player dies
+				if(player.rollEvasion(troll.getAccuracy()))
+				{
+					slowPrintln("You dodged the attack!");
+				}
+				else if(player.getHealth()-troll.rollDamage(1)<=0)//player dies
 				{
 					slowPrintln("The troll hits you for "+troll.getDamage()+" damage, absoutely obliterating your "+partGen()+", killing you instantly.");//add a random part generator
 					player.die();
 					break;
 				}
-//				else if(trollDamage<=0)
-//				{
-//					slowPrintln("You blocked the attack!");
-//				}
+				else if(troll.getDamage()<=0)
+				{
+					slowPrintln("You blocked the attack!");
+				}
 				else 
 				{
 					player.addHealth(-troll.getDamage());
 					slowPrintln("The troll hits you for "+troll.getDamage()+" damage!\nYou have "+player.getHealth()+" health remaning!");
 				}
-				if(!autoRun)
+				if(!autoRun||player.getHealth()<player.getMaxHealth()/4)
 				{
 					slowPrintln("Press enter to continue or n to run away");
 					prompt=input.nextLine();
@@ -260,7 +256,7 @@ public class Rpg1_17
 	
 		
 		int selection,numberDead=0;
-		int playerDamage, enemyDamage, numberOfGoblins;//the biggest challenge is going to be integrating this into my game-I was right , but it is done
+		int enemyDamage;//the biggest challenge is going to be integrating this into my game-I was right , but it is done
 		int goblinAttacker;
 		int loot;
 		int goblinBaseAttack=(player.getFloor()*2);
@@ -271,22 +267,20 @@ public class Rpg1_17
 		boolean answer=true;
 		boolean validAttacker=false;//this will be for a loop to make a random ALIVE goblin attack you.
 		boolean win = false;
-		numberOfGoblins =randomGen(1,5);
-		int [][] goblinGroup;
-		goblinGroup=new int[numberOfGoblins][numberOfGoblins];//rng for number of goblins
-		ArrayList<Integer> deadGoblins=new ArrayList<Integer>();
+		int goblinGen =randomGen(1,5);
+		
+		Goblin[] goblins=new Goblin[goblinGen];
 	
-				for(int i=0;i<goblinGroup[0].length;i++)
+				for(int i=0;i<goblinGen;i++)
 				{
-					goblinGroup[0][0+i]=goblinBaseHealth;//health for gobs
-					goblinGroup[1][0+i]=goblinBaseAttack;//attack for the gobs
+					goblins[i]=new Goblin(player.getFloor());
 				}
 				
-		slowPrintln("There are "+goblinGroup.length+" goblins to attack");
+		slowPrintln("There are "+Goblin.numberOfGoblins+" goblins to attack");
 				
-		for(int i=0;i<goblinGroup.length;i++)
+		for(int i=0;i<Goblin.numberOfGoblins;i++)
 		{			
-			slowPrintln("Goblin number "+(i+1)+" has "+goblinGroup[0][i]+" health remaining");
+			slowPrintln("Goblin number "+(i+1)+" has "+goblins[i].health+" health remaining");
 		}
 		
 	selection=0;
@@ -302,7 +296,7 @@ public class Rpg1_17
 						
 							if(prompt.toLowerCase().equals("goblins"))
 							{
-								for(int i=0;i<goblinGroup.length;i++)
+								for(int i=0;i<Goblin.numberOfGoblins;i++)
 								{			
 									if(goblinGroup[0][i]<=0)
 										slowPrint("Goblin number "+(i+1)+" has tragically died");
@@ -330,10 +324,9 @@ public class Rpg1_17
 				
 					}
 					while(answer==true);//I am just having this as a useless variable, the loop will exit via break.
-			playerDamage=playerWeapon.rollDamage(1);
-			goblinGroup[0][selection-1]-=playerDamage;
+			goblinGroup[0][selection-1]-=playerWeapon.rollDamage(1);
 		
-			slowPrintln("You deal "+playerDamage+" damage to goblin "+selection+".  The goblin now has "+goblinGroup[0][selection-1]+ " health remaining!");
+			slowPrintln("You deal "+playerWeapon.damageBonus+" damage to goblin "+selection+".  The goblin now has "+goblinGroup[0][selection-1]+ " health remaining!");
 			
 					if(goblinGroup[0][selection-1]<=0)
 					{
@@ -405,7 +398,7 @@ public class Rpg1_17
 		
 	}
 	
-	public static Weapon firstStore(Scanner input, PlayerStats player,Inventory stuff) throws InterruptedException
+	public static Weapon firstStore(Scanner input,Inventory stuff) throws InterruptedException
 	{
 		Weapon killTool=null;
 		int swordCost,shieldCost,bowCost,loot,floor;
@@ -796,7 +789,7 @@ public class Rpg1_17
 			 */
 		
 	 	Scanner input = new Scanner(System.in);
-		PlayerStats character = new PlayerStats();
+		
 		Inventory bag = new	Inventory(1000,2);
 		Weapon killonater;
 		int roll;
@@ -805,10 +798,10 @@ public class Rpg1_17
 		String prompt;
 		boolean balance=false;//this is for skipping floors
 		
-			killonater=firstStore(input,character,bag);
-			character.nextFloor();
+			killonater=firstStore(input,bag);
 			
-		
+			PlayerStats character = new PlayerStats();
+			character.nextFloor();
 			
 			
 			
@@ -819,10 +812,11 @@ public class Rpg1_17
 				character.setHealth(90);
 				character.setMaxHealth(90);
 			}
+			goblinHorde(input,character,bag,killonater);
 			
 			do 
 			{
-				do
+				do//this is to make sure you don't enter a negative number
 				{
 					slowPrintln("Before you are three halls, which hallway would you like to go down?");
 					number=input.nextInt();
@@ -902,6 +896,7 @@ public class Rpg1_17
 								break;
 							case 4:
 								trollFight(input,character,bag,killonater);
+								break;
 							case 5:
 								slowPrintln("You find nothing in this hallway and continue to the shop, tough luck");
 								break;
@@ -910,10 +905,10 @@ public class Rpg1_17
 						}
 					
 						if(!character.aliveOrNot())//detects if you died in one of the other types of combats.
-						{
+						{							
+							slowPrintln("You Died");
 							break;
 						}		
-						
 				       floorStore(input, character,bag,killonater);
 				   
 				       slowPrint("Type quit to leave the game or press enter to continue on to the next floor:");
