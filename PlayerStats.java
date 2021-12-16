@@ -13,15 +13,16 @@ public class PlayerStats
 	 *2-shield
 	 *3-bow
 	 */
-	public PlayerStats(int e,int h,int mh)//constructor
+	public PlayerStats(int e,int h,int mh,Weapon w)//constructor
 	{
+		characterWeapon=w;
 		setEvasion(e+characterWeapon.evasionBuff);
 		setHealth(h);
 		setMaxHealth(mh);
 	}
-	public PlayerStats()
+	public PlayerStats(Weapon w)
 	{
-		this(3,20,20);
+		this(1,20,20,w);
 	}
 	//getters______________________________
 	
@@ -75,11 +76,9 @@ public class PlayerStats
 		maxHealth+=adder;
 	}
 	
-	public boolean takeDamage(int damage)
+	public void takeDamage(int damage)
 	{
 		health-=damage;
-		alive=(health>0);
-		return alive;
 	}
 	
 	public void addEvasion(int plus)
@@ -102,5 +101,8 @@ public class PlayerStats
 		int enemyRoll=Rpg1_17.randomGen(1,20)+enemyAccuracy;
 		return (playerRoll>enemyRoll);
 	}
-	
+	public String toString()
+	{
+		return "Current Health: "+health+"\t Max Health: "+maxHealth+"\nEvasion: "+evasion;
+	}
 }

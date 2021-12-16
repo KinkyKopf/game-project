@@ -4,7 +4,7 @@ public class Weapon
 {
 	
 		int minDamage,maxDamage,damageBonus,protection,evasionBuff,currentDamage;
-		private boolean enchanted;
+		 boolean enchanted;
 		String weaponType;
 		public Weapon(String s)//constructor
 		{
@@ -14,24 +14,24 @@ public class Weapon
 			case"sword":
 				setMin(1);
 				setMax(6);
-				setProtection(2);
+				setProtection(-1);
 				break;
 			case"shield":
 				setMin(1);
 				setMax(4);
-				setProtection(4);
+				setProtection(1);
 				evasionBuff=-4;
 				break;	
 			case "bow"://look up inheritance
 				setMin(1);
 				setMax(4);
 				setProtection(0);
-				evasionBuff=5;
+				evasionBuff=3;
 			case"gauntlets":
 				setMin(1);
 				setMax(2);
 				setProtection(0);
-				evasionBuff=7;
+				evasionBuff=3;
 			
 			}
 		}
@@ -100,7 +100,7 @@ public class Weapon
 		}
 		public String toString()
 		{
-			return "Damage: "+damageBonus+"\nProtection: "+"\nEnchanted: "+enchanted;
+			return "Damage: "+damageBonus+"\nProtection: "+protection+"\nEnchanted: "+enchanted;
 		}
 		
 	}

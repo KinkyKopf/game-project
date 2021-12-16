@@ -10,12 +10,13 @@ public class TrollStats
 	 *bonus health be some quip about him being "big but not like in a bad way"
 	 */
 	
-	public TrollStats(int f)
+	public TrollStats(int f) throws InterruptedException
 	{
 		setFloor(f);
 		setDamage((int)(floor*1.5));
 		setHealth(20+(floor*5));	
 		nameGen();
+		setAccuracy(Rpg1_17.randomGen(0, 6));
 	}
 
 	
@@ -28,9 +29,15 @@ public class TrollStats
 	{
 		health = h;
 	}
-	public void setAccuracy(int a)
+	public void setAccuracy(int a) throws InterruptedException
 	{
 		accuracy=a;
+		if(a>4)
+			Rpg1_17.slowPrintln("It appears that "+name+" is wearing glasses");
+		else if (a==0)
+			{
+			Rpg1_17.slowPrintln(name+" squints at you.");
+			}
 	}
 	public void setName(String n)
 	{
@@ -70,7 +77,7 @@ public class TrollStats
 	public void nameGen()
 	{
 		
-		switch(Rpg1_17.randomGen(1,4))
+		switch(Rpg1_17.randomGen(1,5))
 		{
 		case 1:
 			name="Jeff";
@@ -83,6 +90,9 @@ public class TrollStats
 			break;
 		case 4:
 			name="Hok'no'Ragut'Hum";
+			break;
+		case 5:
+			name ="Fus Ro Dah";
 			break;
 		}
 	}

@@ -255,12 +255,9 @@ public class Rpg1_17
 		 */
 	
 		
-		int selection,numberDead=0;
-		int enemyDamage;//the biggest challenge is going to be integrating this into my game-I was right , but it is done
+		int selection;
 		int goblinAttacker;
 		int loot;
-		int goblinBaseAttack=(player.getFloor()*2);
-		int goblinBaseHealth=10+(player.getFloor()*3);
 		String prompt = "";
 		
 		boolean alive=true;
@@ -270,18 +267,13 @@ public class Rpg1_17
 		int goblinGen =randomGen(1,5);
 		
 		Goblin[] goblins=new Goblin[goblinGen];
-	
+		
+		slowPrintln("There are "+goblinGen+" goblins to attack");
+		
 				for(int i=0;i<goblinGen;i++)
 				{
 					goblins[i]=new Goblin(player.getFloor());
 				}
-				
-		slowPrintln("There are "+Goblin.numberOfGoblins+" goblins to attack");
-				
-		for(int i=0;i<Goblin.numberOfGoblins;i++)
-		{			
-			slowPrintln("Goblin number "+(i+1)+" has "+goblins[i].health+" health remaining");
-		}
 		
 	selection=0;
 		do
@@ -298,13 +290,10 @@ public class Rpg1_17
 							{
 								for(int i=0;i<Goblin.numberOfGoblins;i++)
 								{			
-									if(goblinGroup[0][i]<=0)
-										slowPrint("Goblin number "+(i+1)+" has tragically died");
-									else
-									slowPrintln("Goblin number "+(i+1)+" has "+goblinGroup[0][i]+" health remaining");
+									slowPrintln(""+goblins[i]);
 								}
 							}
-							else if(selection>goblinGroup.length)
+							else if(selection>Goblin.numberOfGoblins)
 							{
 								slowPrintln("There aren't that many goblins, try a lower number!");
 								
@@ -313,32 +302,27 @@ public class Rpg1_17
 							{
 								slowPrintln("Ok nice try ya goofball, are you trying to break my game?");	
 							}
-							else if(deadGoblins.contains(selection))//this was way easier than I thought once I actually learned about ArrayList but it was still a pain in the booty to learn so whatevs.
+							else if(goblins[selection-1].dead==true)
 							{
-								slowPrintln("You can't attack a dead goblin! Well I mean you CAN, but that wouldn't make any sense.");
+								slowPrintln("You cant attack a dead goblin. Well you CAN but I would advise against it");
 							}
 							else
 							{
-								break;
+								answer=false;
 							}
 				
 					}
-					while(answer==true);//I am just having this as a useless variable, the loop will exit via break.
-			goblinGroup[0][selection-1]-=playerWeapon.rollDamage(1);
+					while(answer);//I am just having this as a useless variable, the loop will exit via break.
+			goblins[selection-1].takeDamage(playerWeapon.rollDamage(1));
 		
-			slowPrintln("You deal "+playerWeapon.damageBonus+" damage to goblin "+selection+".  The goblin now has "+goblinGroup[0][selection-1]+ " health remaining!");
+			slowPrintln("You deal "+playerWeapon.currentDamage+" damage to goblin "+selection+".  The goblin now has "+goblins[selection-1].health+ " health remaining!");
 			
-					if(goblinGroup[0][selection-1]<=0)
-					{
-						slowPrintln("You killed goblin number "+selection);
-						deadGoblins.add(selection);
-						numberDead++;
-					}
+					
 					 
-					if(numberDead==numberOfGoblins)
+					if(Goblin.numberOfGoblins==0)
 					{
 						slowPrintln("You killed all the goblins, congrats!  I'm not going to guilt trip you on this one, the goblins are just idiots.");
-						loot=lootMaker(player.getFloor()*numberOfGoblins);
+						loot=lootMaker(player.getFloor()*Goblin.numberOfGoblins);
 						stuff.addGold(loot);
 						loot=randomGen(1,3);
 						stuff.addGold(loot);;
@@ -346,52 +330,44 @@ public class Rpg1_17
 						return;
 					}
 					
-					if(goblinGroup[0][selection-1]<=(goblinBaseHealth/2))
-					{
-						enemyDamage=goblinGroup[1][selection-1]=(goblinBaseAttack/2);//this reduces damage if they are hurt.
-					}
+					
 			
 			
-			goblinAttacker= randomGen(1,numberOfGoblins);//this decides what goblin will attack
+			goblinAttacker= randomGen(0,Goblin.numberOfGoblins-1);//this decides what goblin will attack
 			
 			do//if the chosen goblin is dead, this keep picking until an alive goblin is chosen.
 			{
-					if(deadGoblins.contains(goblinAttacker))
+					if(goblins[goblinAttacker].dead)
 					{
-						goblinAttacker=randomGen(1,numberOfGoblins);//rerolls the selection
+						goblinAttacker= randomGen(0,Goblin.numberOfGoblins-1);//rerolls the selection
 						validAttacker=false;//sets the condition to true, continuing the loop
 					}
 					else
 					{
+						
 						validAttacker=true;
 					}
 			}
 			while(validAttacker==false);
+			slowPrint("Goblin number "+(goblinAttacker+1)+" swings");
+			goblins[goblinAttacker].rollDamage(player);
 			
-			enemyDamage=randomGen(1+player.getFloor(),3+player.getFloor())-playerWeapon.protection; 
-			
-			if(enemyDamage<=0)
+			if(goblins[goblinAttacker].currentDamage>0)
 			{
-				slowPrint("You blocked the attack!");
-			}
-			else
-			{
-				player.addHealth(-enemyDamage);
-			slowPrintln("Goblin number "+goblinAttacker+" hits you for "+enemyDamage+" damage!\n");
+			player.takeDamage(goblins[goblinAttacker].currentDamage);
+			slowPrintln("and hits you for "+goblins[goblinAttacker].currentDamage+" damage!\n "
+					+ " You have "+player.getHealth()+" health remaining");
 			}
 			
 			if(player.getHealth()<=0)
 			{
 				
-				System.out.print("The goblins killed you! They celebrate by taking out your "+partGen()+" and doing a dance around it that looks like a monkey told another group of monkeys how to do the hokey pokey, but there was a severe language barrier between the two and it got lost in translation.");
+				System.out.print("The goblins killed you! They celebrate by taking out your "+partGen()+" and doing a dance around it\n that looks like a monkey told another monkey how to do the hokey pokey. ");
 				alive=false;
 				player.die();
 				break;
 			}
-			else 
-			{
-				slowPrintln("You have "+ player.getHealth()+" health remaining.");
-			}
+			
 		}
 		while(win==false&&alive==true);
 		
@@ -781,11 +757,11 @@ public class Rpg1_17
 			 *Get the class-things to work in each method-1
 			 *get rid of the transfer arrays-2
 			 *put in the evasion stat-3
-			 * add a dagger to maxamize evasion. -5
+			 * add a dagger to maximize evasion. -5
 			 * make it so you can chooses your stats, fallout-style at the beginning of the game.-6
 			 * integrate the cheat codes into working again.-7
 			 * add spells-10
-			 *allow player to get diffrent weapons later on.-10
+			 *allow player to get different weapons later on.-10
 			 */
 		
 	 	Scanner input = new Scanner(System.in);
@@ -800,7 +776,7 @@ public class Rpg1_17
 		
 			killonater=firstStore(input,bag);
 			
-			PlayerStats character = new PlayerStats();
+			PlayerStats character = new PlayerStats(killonater);
 			character.nextFloor();
 			
 			
@@ -812,7 +788,7 @@ public class Rpg1_17
 				character.setHealth(90);
 				character.setMaxHealth(90);
 			}
-			goblinHorde(input,character,bag,killonater);
+			//goblinHorde(input,character,bag,killonater);
 			
 			do 
 			{
@@ -884,7 +860,17 @@ public class Rpg1_17
 							case 4:
 								goblinHorde(input,character,bag,killonater);
 							case 5:
-								slowPrintln("You find nothing in this hallway and continue to the shop, tough luck");
+								if(!killonater.enchanted)
+								{
+								slowPrintln("Your "+killonater.weaponType+" feels imbued with energy, you can feel the power flowing through it ");
+								killonater.enchanted=true;
+								}
+								else
+								{
+									slowPrintln("Suddenly, the energy from your "+killonater.weaponType+" seems to dissipate into the air\n and on the ground, a pitiful compensatio of one coin");
+									killonater.enchanted=false;
+									bag.addGold(1);
+								}
 								break;
 							}
 							break;
@@ -898,13 +884,24 @@ public class Rpg1_17
 								trollFight(input,character,bag,killonater);
 								break;
 							case 5:
-								slowPrintln("You find nothing in this hallway and continue to the shop, tough luck");
+								slowPrintln("You find an old amulet, after you put it on, you feel more protected");
+								killonater.protection++;
 								break;
 							}
 							break;
 						}
 					
-						if(!character.aliveOrNot())//detects if you died in one of the other types of combats.
+						slowPrintln("Do you want to see your stats?");
+						prompt=input.nextLine();
+						
+						switch (prompt)
+						{
+						case "y","yes","yerr":
+							slowPrintln(character+"");
+							slowPrintln(killonater+"");
+						}
+						
+						if(character.aliveOrNot())//detects if you died in one of the other types of combats.
 						{							
 							slowPrintln("You Died");
 							break;
