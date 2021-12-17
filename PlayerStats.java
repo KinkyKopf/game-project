@@ -1,4 +1,4 @@
-package game;
+package gameprototypes;
 
 public class PlayerStats 
 {
@@ -22,15 +22,13 @@ public class PlayerStats
 	}
 	public PlayerStats(Weapon w)
 	{
-		this(1,20,20,w);
+		this(0,20,20,w);
 	}
 	//getters______________________________
 	
 	
 	public int getHealth() throws InterruptedException
 	{
-		if(health<0)
-			Rpg1_17.slowPrintln("You Died!");
 		return health;
 	}
 	public int getMaxHealth()//

@@ -1,21 +1,33 @@
-package game;
+package gameprototypes;
 /*
  * Zachary Kinkopf
  * December 1st
  * test the concepts of storing data outside of my main game class
  */
-public class StatsRunner 
-{
-	public static int randomGen(int min, int max)//this is meant to make it easier to get random numbers faster without thinking too much about it.
-	{
-		return (int)(Math.random()*(max-min+1))+min;
-	}
-	
-	
+public class StatsRunner {
+
+//	public static void test(PlayerStats Character)
+//	{
+//		System.out.print(Character.gold);
+//	}
+//	
 	public static void main(String[] args) 
 	{
-			for(int i=0;i<30;i++)
-			System.out.print(randomGen(-5,6)+" ");
+//		PlayerStats Stats = new PlayerStats();
+//		
+		
+		Inventory bag = new Inventory();
+		
+		Inventory.Sword bigKnife=bag.new Sword();
+		bag.inventorySlots[0]=bigKnife;
+		System.out.println(bag.inventorySlots[0]);
+		Object weapon=bag.inventorySlots[0];
+		
+		
+		
 	}
-
+	public void printer(Inventory bag)
+	{
+		
+	}
 }

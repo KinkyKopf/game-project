@@ -1,4 +1,4 @@
-package game;
+package gameprototypes;
 
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -10,9 +10,9 @@ import java.util.Scanner;
  */
 public class Rpg1_17 
 {
-	static int printSpeed=0;
+	static int printSpeed=17;//20 feels a bit slow but anything less 
 	
-	public static int stringToIntConverter(String intInString)
+	public static int stringToInt(String intInString)
 	{
 		
 		for(int i=0;i<200000;i++ )
@@ -91,7 +91,44 @@ public class Rpg1_17
 		return (int)(Math.random()*(max-min+1))+min;
 	}
 
-
+	public static int answerChecker(Goblin[] gob,String str,Scanner inputTaker) throws InterruptedException
+	{
+		int choice=0;
+		int times=0;
+		while(choice<=Goblin.numberOfGoblins||choice>=1)
+		{
+			slowPrint("Enter goblins to see the goblin's health or enter the number of the goblin you want to attack");
+			str=inputTaker.nextLine();
+			if(str.equals("goblins"))
+				for(int i=0;i<Goblin.numberOfGoblins;i++)
+					slowPrintln(gob[i]+"");
+			else
+			{
+				choice = stringToInt(str);
+				if(choice>Goblin.numberOfGoblins)
+				{
+					slowPrintln("You can't attack a goblin that isn't there, try again.");
+				}
+				else if(choice<1)
+				{
+					slowPrintln("How do you think that would even work? You make no sense");
+				}
+				else if(gob[choice].dead==true&&times==0)
+				{
+					slowPrintln("Hey, look, he's dead you dont need to keep whacking the corpse");
+					times++;
+				}
+				else if(gob[choice].dead==true&&times!=0)
+				{
+					slowPrintln("Ok fine, if you want to beat a ded goblin for no benefit, who am I to stop you");
+				}
+				else if(choice>=1 && choice<=Goblin.numberOfGoblins)
+					return choice;
+			}
+		}
+		return choice;
+	}
+	
 	public static void slowPrint(String text,int printSpeed) throws InterruptedException//This slow prints, but you can set the print speed, good for counting.
 	{
 		
@@ -185,7 +222,7 @@ public class Rpg1_17
 				}
 				else if(troll.getHealth()-playerDam<=0)//killing the troll
 				{
-					slowPrintln("Congrats, You killed the troll!\n I bet the troll's children will be equally as happy with your success!");
+					slowPrintln("Congrats, You killed "+troll.getName()+"!\n I bet the troll's children will be equally as happy with your success!");
 					Thread.sleep(500);
 					slowPrint("Nah just kidding, he dosen't have children!");
 					
@@ -200,7 +237,7 @@ public class Rpg1_17
 					if(loot>1)
 						plural="s";
 					
-					slowPrintln("You also found "+loot+" upgrade token"+plural+" inside the troll's "+partGen()+"...  ...  ...  ...Nice!");
+					slowPrintln("You also found "+loot+" upgrade token"+plural+" inside the troll's "+partGen()+"........Nice!");
 					break;
 				}
 				
@@ -262,7 +299,6 @@ public class Rpg1_17
 		String prompt = "";
 		
 		boolean alive=true;
-		boolean answer=true;
 		boolean validAttacker=false;//this will be for a loop to make a random ALIVE goblin attack you.
 		boolean win = false;
 		int goblinGen =randomGen(1,5);
@@ -276,44 +312,9 @@ public class Rpg1_17
 					goblins[i]=new Goblin(player.getFloor());
 				}
 		
-	selection=0;
 		do
 		{
-					do
-					{
-			
-						slowPrintln("\nEnter the goblin number you would like to attack, or enter \"goblins\" to see the goblins' current status");
-						prompt=input.nextLine();
-
-							selection=stringToIntConverter(prompt);
-						
-							if(prompt.toLowerCase().equals("goblins"))
-							{
-								for(int i=0;i<Goblin.numberOfGoblins;i++)
-								{			
-									slowPrintln(""+goblins[i]);
-								}
-							}
-							else if(selection>Goblin.numberOfGoblins)
-							{
-								slowPrintln("There aren't that many goblins, try a lower number!");
-								
-							}
-							else if(selection<1)
-							{
-								slowPrintln("Ok nice try ya goofball, are you trying to break my game?");	
-							}
-							else if(goblins[selection-1].dead==true)
-							{
-								slowPrintln("You cant attack a dead goblin. Well you CAN but I would advise against it");
-							}
-							else
-							{
-								answer=false;
-							}
-				
-					}
-					while(!answer);//I am just having this as a useless variable, the loop will exit via break.
+			selection=answerChecker(goblins,prompt,input);
 			goblins[selection-1].takeDamage(playerWeapon.rollDamage(1));
 		
 			slowPrintln("You deal "+playerWeapon.currentDamage+" damage to goblin "+selection+".  The goblin now has "+goblins[selection-1].health+ " health remaining!");
@@ -341,15 +342,12 @@ public class Rpg1_17
 					if(goblins[goblinAttacker].dead)
 					{
 						goblinAttacker= randomGen(0,Goblin.numberOfGoblins-1);//rerolls the selection
-						validAttacker=false;//sets the condition to true, continuing the loop
 					}
 					else
-					{
-						
 						validAttacker=true;
-					}
 			}
 			while(validAttacker==false);
+			
 			slowPrint("Goblin number "+(goblinAttacker+1)+" swings");
 			goblins[goblinAttacker].rollDamage(player);
 			
@@ -520,9 +518,7 @@ public class Rpg1_17
 						case "print_speed":
 							slowPrint("print_speed");
 							break;
-						case "string_to_int_test":
-							prompt=input.nextLine();
-							slowPrint(""+stringToIntConverter(prompt));
+						
 						default:
 							slowPrintln("I'm sorry, I dont understand things that aren't commands, please try again");
 							
@@ -789,8 +785,8 @@ public class Rpg1_17
 				character.setHealth(90);
 				character.setMaxHealth(90);
 			}
-			//goblinHorde(input,character,bag,killonater);
-			trollFight(input,character,bag,killonater);
+			goblinHorde(input,character,bag,killonater);
+			//trollFight(input,character,bag,killonater);
 			do 
 			{
 				do//this is to make sure you don't enter a negative number

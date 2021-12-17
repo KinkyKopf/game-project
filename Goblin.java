@@ -1,4 +1,4 @@
-package game;
+package gameprototypes;
 
 public class Goblin 
 {
@@ -47,6 +47,7 @@ public class Goblin
 		if(player.rollEvasion(accuracy))
 		{
 			Rpg1_17.slowPrint("You dodged the attack!");
+			currentDamage=0;
 			return 0;
 		}
 		

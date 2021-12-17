@@ -1,4 +1,4 @@
-package game;
+package gameprototypes;
 
 public class TrollStats 
 {
@@ -12,9 +12,11 @@ public class TrollStats
 	
 	public TrollStats(int f) throws InterruptedException
 	{
-		Rpg1_17.slowPrintln("As you go down the hallway, a rank scent of what you can only decsribe as teenage man-musk floods your nostrills, a troll is near.");
-		
 		nameGen();
+		Rpg1_17.slowPrintln("As you go down the hallway, a rank scent of what you can only decsribe as teenage man-musk floods your nostrills ");
+		Rpg1_17.slowPrint("...\n",500);
+		Rpg1_17.slowPrintln("A troll is near.\nYou see a door labeled: "+name+". \nBrave yourself, the troll is behind here.");
+		
 		setFloor(f);
 		setDamage(Rpg1_17.randomGen(-2,6));
 		setHealth(20+(floor*5));	
@@ -55,7 +57,7 @@ public class TrollStats
 	}
 	public void setName(String n)
 	{
-		name=(n+" the troll");
+		name=n;
 	}
 	public void takeDamage(int dam) throws InterruptedException
 	{
@@ -126,6 +128,7 @@ public class TrollStats
 		case 11:
 			n="Linguini";
 			break;
+			
 		default:
 			n="Jorge Lopez";
 		}
