@@ -1,4 +1,4 @@
-package oldversions;
+package game;
 import java.util.ArrayList;
 /*
  * Zachary Kinkopf
@@ -120,7 +120,14 @@ public class rpg1_16
 	}
 	public static void slowPrint(String text) throws InterruptedException//this slowly prints text at a set speed in miliseconds
 	{
+		Scanner input= new Scanner(System.in);
 		int printSpeed=15;
+		
+		if(text.equals("print_speed"))
+		{
+			slowPrint("What would you like to change the speed to?");
+			printSpeed=input.nextInt();
+		}
 		
 		for (int i=0;i<text.length();i++)
 		{
@@ -306,35 +313,35 @@ public class rpg1_16
 						slowPrintln("Enter the goblin number you would like to attack, or enter \"goblins\" to see the goblins' current status");
 						prompt=input.nextLine();
 
-						selection=stringToIntConverter(prompt);
-					
-						if(prompt.toLowerCase().equals("goblins"))
-						{
-							for(int i=0;i<goblinGroup.length;i++)
-							{			
-								if(goblinGroup[0][i]<=0)
-									slowPrint("Goblin number "+(i+1)+" has tragically died");
-								else
-								slowPrintln("Goblin number "+(i+1)+" has "+goblinGroup[0][i]+" health remaining");
+							selection=stringToIntConverter(prompt);
+						
+							if(prompt.toLowerCase().equals("goblins"))
+							{
+								for(int i=0;i<goblinGroup.length;i++)
+								{			
+									if(goblinGroup[0][i]<=0)
+										slowPrint("Goblin number "+(i+1)+" has tragically died");
+									else
+									slowPrintln("Goblin number "+(i+1)+" has "+goblinGroup[0][i]+" health remaining");
+								}
 							}
-						}
-						else if(selection>goblinGroup.length)
-						{
-							slowPrintln("There aren't that many goblins, try a lower number!");
-							
-						}
-						else if(selection<1)
-						{
-							slowPrintln("Ok nice try ya goofball, are you trying to break my game?");	
-						}
-						else if(deadGoblins.contains(selection))//this was way easier than I thought once I actually learned about ArrayList but it was still a pain in the booty to learn so whatevs.
-						{
-							slowPrintln("You can't attack a dead goblin! Well I mean you CAN, but that wouldn't make any sense.");
-						}
-						else
-						{
-							break;
-						}
+							else if(selection>goblinGroup.length)
+							{
+								slowPrintln("There aren't that many goblins, try a lower number!");
+								
+							}
+							else if(selection<1)
+							{
+								slowPrintln("Ok nice try ya goofball, are you trying to break my game?");	
+							}
+							else if(deadGoblins.contains(selection))//this was way easier than I thought once I actually learned about ArrayList but it was still a pain in the booty to learn so whatevs.
+							{
+								slowPrintln("You can't attack a dead goblin! Well I mean you CAN, but that wouldn't make any sense.");
+							}
+							else
+							{
+								break;
+							}
 				
 					}
 					while(answer==true);//I am just having this as a useless variable, the loop will exit via break.
@@ -343,36 +350,38 @@ public class rpg1_16
 			goblinGroup[0][selection-1]-=playerDamage;
 			
 			slowPrintln("You deal "+playerDamage+" damage to goblin "+selection+".  The goblin now has "+goblinGroup[0][selection-1]+ " health remaining!");
-	
-			if(goblinGroup[0][selection-1]<=0)
-			{
-				slowPrintln("You killed goblin number "+selection);
-				deadGoblins.add(selection);
-				numberDead++;
-			}
-			 
-			if(numberDead==numberOfGoblins)
-			{
-				slowPrintln("You killed all the goblins, congrats!  I'm not going to guilt trip you on this one, the goblins are just idiots.");
-				loot=lootMaker(floor*numberOfGoblins);
-				money+=loot;
-				loot=randomGen(1,3);
-				tokens+=loot;
-				slowPrintln("You also found "+loot+" ugrade tokens in one of the goblin's "+partGen()+" so win/win!");
-
-				transferArray[0]=damPlus;
-				transferArray[1]=protPlus;
-				transferArray[2]=playerHealth;
-				transferArray[4]=money;
-				transferArray[6]=tokens;
-				return transferArray;
-			}
 			
-			if(goblinGroup[0][selection-1]<=(goblinBaseHealth/2))
-			{
-				enemyDamage=goblinGroup[1][selection-1]=(goblinBaseAttack/2);//this reduces damage if they are hurt.
-			}
-	
+					if(goblinGroup[0][selection-1]<=0)
+					{
+						slowPrintln("You killed goblin number "+selection);
+						deadGoblins.add(selection);
+						numberDead++;
+					}
+					 
+					if(numberDead==numberOfGoblins)
+					{
+						slowPrintln("You killed all the goblins, congrats!  I'm not going to guilt trip you on this one, the goblins are just idiots.");
+						loot=lootMaker(floor*numberOfGoblins);
+						money+=loot;
+						loot=randomGen(1,3);
+						tokens+=loot;
+						slowPrintln("You also found "+loot+" ugrade tokens in one of the goblin's "+partGen()+" so win/win!");
+						
+						
+						transferArray[0]=damPlus;
+						transferArray[1]=protPlus;
+						transferArray[2]=playerHealth;
+						transferArray[4]=money;
+						transferArray[6]=tokens;
+						return transferArray;
+					}
+					
+					if(goblinGroup[0][selection-1]<=(goblinBaseHealth/2))
+					{
+						enemyDamage=goblinGroup[1][selection-1]=(goblinBaseAttack/2);//this reduces damage if they are hurt.
+					}
+			
+			
 			goblinAttacker= randomGen(1,numberOfGoblins);//this decides what goblin will attack
 			
 			do//if the chosen goblin is dead, this keep picking until an alive goblin is chosen.
@@ -393,7 +402,7 @@ public class rpg1_16
 			
 			if(enemyDamage<=0)
 			{
-				slowPrint("Goblin "+goblinAttacker+" swings at you but you blocked the attack!");
+				slowPrint("You blocked the attack!");
 			}
 			else
 			{
@@ -424,7 +433,7 @@ public class rpg1_16
 		
 		return(transferArray);
 	}
-	public static int[] firstStore(Scanner input,int transferArray[]) throws InterruptedException
+	public static int[] firstStore(Scanner input) throws InterruptedException
 	{
 		int money,cost,loot,floor,weaponNum=0;
 		String prompt;
@@ -545,8 +554,7 @@ public class rpg1_16
 							weaponNum=2;
 							break;
 						case "floor6":
-							weaponNum=1;
-							
+							weaponNum=0;
 							floor=6;
 							balance=true;
 							break;
@@ -554,12 +562,12 @@ public class rpg1_16
 							prompt="dungeon";
 							weaponNum=3;
 							break;
-						case "gimme_money":
+						case "gimme.money":
 							loot=lootMaker(floor);
 							money+=loot;
 							System.out.print(loot);
 							break;
-						case "part_test":
+						case "part.test":
 							slowPrint(partGen());
 						case "println_speed":
 							slowPrintln("print_speed");
@@ -571,18 +579,26 @@ public class rpg1_16
 							prompt=input.nextLine();
 							slowPrint(""+stringToIntConverter(prompt));
 						default:
-							//slowPrintln("CSOBJXBSJBEJB hohebu sjfwevi34jn......Did you understand that?\n no, of course you didn't, so how do you expect me to understand the gibberish you threw into the console, huh?");
-							slowPrintln("I didn't understand what you said, could you try again?");
+							slowPrintln("CSOBJXBSJBEJB hohebu sjfwevi34jn......Did you understand that?\n no, of course you didn't, so how do you expect me to understand the gibberish you threw into the console, huh?");
+							
 						}//switch brckt
 					
 				   }//while brckt
-				while(!(prompt.equals("dungeon"))&& skipDungeon==false && balance==false);
-			
-			transferArray[3]=floor;
-			transferArray[4]=money;
-			transferArray[8]=weaponNum;
+				while(!(prompt.equals("dungeon"))&&skipDungeon==false&&balance==false);
+				
+				
+			if (money<0)
+			{
+				slowPrintln("\n Man, you have " + money+" gold! Your bankrupt!!!you are going to have to work that off in the dungeon)");
+				
+			}
 		
-		return transferArray;
+		int[] shopArray=new int[2];
+		
+		shopArray[0]=money;
+		shopArray[1]=weaponNum;
+		
+		return shopArray;
 	}
 	public static int[] floorStore(Scanner input, int[] transferArray,String item) throws InterruptedException
 	{
@@ -790,15 +806,16 @@ public class rpg1_16
 		 * Eventually I should be able to completely get rid of the combat in my main method, which is my primary goal right now 11/5-only took me 14 days
 		 * I also don't need to return an array since non-primitive datatypes are constant throughout the class-eh too much work imma return them anyway
 		 * add an evasion stat that is complemented by the bow-4
-		 * add a dagger to maxamize evasion. -5
+		 * add a dagger to maxamize evasion. -5-I will make it a stat in DnD where I roll a d20 and if it is higher that your evasion you take 0 damage
 		 * add spells-10
 		 * allow player to get diffrent weapons later on.-10
 		 * be able to buy upgrade tokens-3-maybe not, still not sure if I should.
 		 * add a thing where you can edit the print speed in game-1-dosen't really work
-		 * make it so that you can choose from three diffrent halls, with a diffrent event behind each, randomly assigned of course-2
-		 * -make it that hall 1 might be goblins, 2 a troll and 3 be a treasure-3
+		 * make it so that you can choose from three diffrent halls, with a diffrent event behind each, randomly assigned of course-2-done?
+		 * -make it that hall 1 might be goblins, 2 a troll and 3 be a treasure-3-done?
 		 * transfer stores into seperate methods-done-that was a lot easier than I expected.
 		 * integrate the cheat codes into working again.
+		 * make it so that 1.17 has things in different classes-5
 		 */
 	int maxHlth=20;
 	int money,floor,loot;
@@ -811,27 +828,18 @@ public class rpg1_16
 	floor = 1;
 	
 			
-		int damPlus=0;
-		int hlth=20;
-		int protPlus=0;
-		int upgAmnt=0;
-		int roll;
+		int damPlus,hlth,protPlus,upgAmnt,roll;
 		double number;
-
-		int[] transferArray=new int[9];
-
-		transferArray[0]=damPlus;
-		transferArray[1]=protPlus;
-		transferArray[2]=hlth;
-		transferArray[3]=floor;
-		transferArray[4]=money;
-		transferArray[5]=1;
-		transferArray[6]=upgAmnt;
-		transferArray[7]=maxHlth;
+		upgAmnt=1;
+		hlth = 20;
 		
-		transferArray=firstStore(input,transferArray);
 		
-		switch(transferArray[8])//this is the slot that holds the weapon number
+		int[] shopArray=new int[2];
+		
+		shopArray=firstStore(input);
+		money=shopArray[0];
+		
+		switch(shopArray[1])//this is the slot that holds the weapon number
 		{
 		case 0:
 			item="sword";
@@ -874,6 +882,7 @@ public class rpg1_16
 			maxHlth=90;
 		}
 		
+		int[] transferArray=new int[8];
 		do 
 		{
 			do

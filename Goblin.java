@@ -1,4 +1,4 @@
-package gameprototypes;
+package game;
 
 public class Goblin 
 {
@@ -7,6 +7,7 @@ public class Goblin
 	boolean dead;
 	public Goblin(int f) throws InterruptedException
 	{
+		
 		health = 10+(f*3);
 		baseHealth=health;
 		
@@ -45,14 +46,14 @@ public class Goblin
 	{
 		if(player.rollEvasion(accuracy))
 		{
-			Rpg1_17.slowPrintln(",but you dodged the attack!");
+			Rpg1_17.slowPrint("You dodged the attack!");
 			return 0;
 		}
 		
 		currentDamage=Rpg1_17.randomGen(minDamage,maxDamage)-player.characterWeapon.protection; 
 		if (currentDamage<=0)
 		{
-			Rpg1_17.slowPrintln(".but you blocked the attack!");
+			Rpg1_17.slowPrintln("You blocked the attack!");
 			return 0;
 		}
 		return currentDamage;

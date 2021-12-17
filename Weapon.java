@@ -1,4 +1,4 @@
-package gameprototypes;
+package game;
 
 public class Weapon
 {
@@ -14,7 +14,7 @@ public class Weapon
 			case"sword":
 				setMin(1);
 				setMax(6);
-				setProtection(-1);
+				setProtection(0);
 				break;
 			case"shield":
 				setMin(1);

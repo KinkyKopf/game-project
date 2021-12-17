@@ -1,4 +1,4 @@
-package gameprototypes;
+package game;
 
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -10,7 +10,7 @@ import java.util.Scanner;
  */
 public class Rpg1_17 
 {
-	
+	static int printSpeed=0;
 	
 	public static int stringToIntConverter(String intInString)
 	{
@@ -104,7 +104,7 @@ public class Rpg1_17
 	}
 	public static void slowPrintln(String text) throws InterruptedException//This is the same as the others but goes down one line after.
 	{
-		int printSpeed=15;
+		
 		
 		for (int i=0;i<text.length();i++)
 		{
@@ -115,7 +115,7 @@ public class Rpg1_17
 	}
 	public static void slowPrint(String text) throws InterruptedException//this slowly prints text at a set speed in miliseconds
 	{
-		int printSpeed=15;
+		
 		
 		for (int i=0;i<text.length();i++)
 		{
@@ -156,7 +156,8 @@ public class Rpg1_17
 		String plural="";
 		boolean	win=false;
 		boolean autoRun=false;
-				
+		
+		
 		slowPrint("Would you like to auto run this combat?");
 		prompt=input.nextLine();
 		
@@ -281,7 +282,7 @@ public class Rpg1_17
 					do
 					{
 			
-						slowPrintln("Enter the goblin number you would like to attack, or enter \"goblins\" to see the goblins' current status");
+						slowPrintln("\nEnter the goblin number you would like to attack, or enter \"goblins\" to see the goblins' current status");
 						prompt=input.nextLine();
 
 							selection=stringToIntConverter(prompt);
@@ -312,7 +313,7 @@ public class Rpg1_17
 							}
 				
 					}
-					while(answer);//I am just having this as a useless variable, the loop will exit via break.
+					while(!answer);//I am just having this as a useless variable, the loop will exit via break.
 			goblins[selection-1].takeDamage(playerWeapon.rollDamage(1));
 		
 			slowPrintln("You deal "+playerWeapon.currentDamage+" damage to goblin "+selection+".  The goblin now has "+goblins[selection-1].health+ " health remaining!");
@@ -355,8 +356,8 @@ public class Rpg1_17
 			if(goblins[goblinAttacker].currentDamage>0)
 			{
 			player.takeDamage(goblins[goblinAttacker].currentDamage);
-			slowPrintln("and hits you for "+goblins[goblinAttacker].currentDamage+" damage!\n "
-					+ " You have "+player.getHealth()+" health remaining");
+			slowPrintln("He hits you for "+goblins[goblinAttacker].currentDamage+" damage!\n"
+					+ "You have "+player.getHealth()+" health remaining");
 			}
 			
 			if(player.getHealth()<=0)
@@ -367,7 +368,7 @@ public class Rpg1_17
 				player.die();
 				break;
 			}
-			
+			System.out.println("\n_____________________________________");
 		}
 		while(win==false&&alive==true);
 		
@@ -789,7 +790,7 @@ public class Rpg1_17
 				character.setMaxHealth(90);
 			}
 			//goblinHorde(input,character,bag,killonater);
-			
+			trollFight(input,character,bag,killonater);
 			do 
 			{
 				do//this is to make sure you don't enter a negative number

@@ -1,4 +1,4 @@
-package gameprototypes;
+package game;
 /*
  * Zachary Kinkopf
  * December 1st
