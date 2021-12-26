@@ -30,29 +30,29 @@ public class TrollStats
 		//d=0;
 		damage=d;
 		if (d>4)
-			Rpg1_17.slowPrintln("You see a truly staggering ammount of what you can only assume is empty tubs of preworkout scattered around"+name+"'s lair");
+			Rpg1_17.slowPrintln("You see a truly staggering ammount of what you can only assume is empty tubs of preworkout scattered around "+name+"'s lair\n");
 		if(d<2)
-			Rpg1_17.slowPrintln("You notice a stack of books labled \"Computer Science: The Anylitical Studies Of Computational Electronics\"\nin the corner of "+name+"'s lair");
+			Rpg1_17.slowPrintln("You notice a stack of books labled \"Computer Science: The Anylitical Studies Of Computational Electronics\" in the corner of "+name+"'s lair\n");
 	}
 	public void setHealth(int h) throws InterruptedException
 	{
 		int bonusHealth=+Rpg1_17.randomGen(-5,10);
 		health = h+bonusHealth;
 		if(bonusHealth>6)
-			Rpg1_17.slowPrintln(name+" appears to be abnormally big.\nBut not like in a bad way or anything, everyone has their own body size");
+			Rpg1_17.slowPrintln(name+" appears to be abnormally big.\nBut not like in a bad way or anything, everyone has their own body size\n");
 		if(bonusHealth<=3)
 		{
-			Rpg1_17.slowPrintln(name+" is way smaller than your average troll but it is best not to metion it, he is probably insecure");
+			Rpg1_17.slowPrintln(name+" is way smaller than your average troll but it is best not to metion it, he is probably insecure\n");
 		}
 	}
 	public void setAccuracy(int a) throws InterruptedException
 	{
 		accuracy=a;
 		if(a>4)
-			Rpg1_17.slowPrintln("It appears that "+name+" is wearing glasses");
+			Rpg1_17.slowPrintln("It appears that "+name+" is wearing glasses\n");
 		else if (a<=0)
 			{
-			Rpg1_17.slowPrintln(name+" squints at you.");
+			Rpg1_17.slowPrintln(name+" squints at you.\n");
 			}
 	}
 	public void setName(String n)
@@ -93,7 +93,7 @@ public class TrollStats
 	public void nameGen()
 	{
 		String n;
-		switch(Rpg1_17.randomGen(1,10))
+		switch(Rpg1_17.randomGen(1,11))
 		{
 		case 1:
 			n="Jeff";
@@ -116,9 +116,7 @@ public class TrollStats
 		case 7:
 			n="Gene Poole";
 			break;
-		case 8:
-			n="Moe B. Dick";
-			break;
+		
 		case 9:
 			n="Neil McNeil";
 			break;

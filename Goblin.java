@@ -3,7 +3,7 @@ package gameprototypes;
 public class Goblin 
 {
 	 int baseHealth,health,minDamage,maxDamage,accuracy,goblinNum,currentDamage;
-	static int numberOfGoblins;
+	static int numberOfGoblins,startingNum;
 	boolean dead;
 	public Goblin(int f) throws InterruptedException
 	{
@@ -14,6 +14,7 @@ public class Goblin
 		minDamage = 1+f;
 		maxDamage = (int)(minDamage*1.5);
 		
+		startingNum++;
 		numberOfGoblins++;
 		goblinNum=numberOfGoblins;
 		
@@ -27,12 +28,19 @@ public class Goblin
 	}
 	public void takeDamage(int dam) throws InterruptedException
 	{
-		health-=dam;
-		if(health<=0)
+		if(health>0)
 		{
-			dead=true;
-			Rpg1_17.slowPrintln("Goblin "+goblinNum+" has died!");
-			numberOfGoblins--;
+		health-=dam;
+			if(health<=0)
+			{
+				dead=true;
+				Rpg1_17.slowPrintln("Goblin "+goblinNum+" has died!");
+				numberOfGoblins--;
+			}
+		}
+		else
+		{
+			Rpg1_17.slowPrintln("I'm gonna be honest with you champ, you can't kill a corpse, so I would just stop");
 		}
 	}
 	public String toString()

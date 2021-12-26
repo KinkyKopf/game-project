@@ -19,6 +19,7 @@ public class PlayerStats
 		setEvasion(e+characterWeapon.evasionBuff);
 		setHealth(h);
 		setMaxHealth(mh);
+		alive = true;
 	}
 	public PlayerStats(Weapon w)
 	{
@@ -39,7 +40,7 @@ public class PlayerStats
 	{
 		return evasion;
 	}
-	public boolean aliveOrNot()
+	public boolean isAlive()
 	{
 		return alive;
 	}
@@ -101,6 +102,6 @@ public class PlayerStats
 	}
 	public String toString()
 	{
-		return "Current Health: "+health+"\t Max Health: "+maxHealth+"\nEvasion: "+evasion;
+		return "Current Health: "+health+"   Max Health: "+maxHealth+"   Evasion: "+evasion;
 	}
 }

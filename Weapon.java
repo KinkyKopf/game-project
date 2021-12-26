@@ -8,6 +8,7 @@ public class Weapon
 		String weaponType;
 		public Weapon(String s)//constructor
 		{
+//			damageBonus=1000;
 			weaponType=s;
 			switch(weaponType)
 			{
@@ -100,7 +101,12 @@ public class Weapon
 		}
 		public String toString()
 		{
-			return "Damage: "+damageBonus+"\nProtection: "+protection+"\nEnchanted: "+enchanted;
+			String enchantedString;
+			if(enchanted)
+				enchantedString="your weapon is enchanted";
+			else 
+				enchantedString="your weapon is not enchanted";
+			return "Damage: "+damageBonus+"   Protection: "+protection+"   "+enchantedString;
 		}
 		
 	}

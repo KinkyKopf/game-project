@@ -10,7 +10,7 @@ import java.util.Scanner;
  */
 public class Rpg1_17 
 {
-	static int printSpeed=17;//20 feels a bit slow but anything less 
+	static int printSpeed=0;//20 feels a bit slow but anything less 
 	
 	public static int stringToInt(String intInString)
 	{
@@ -67,7 +67,7 @@ public class Rpg1_17
 			part="femur";
 			break;
 		case 11:
-			part ="the top-right part of your left kidney";
+			part ="the top-right part of the left kidney";
 			break;
 		case 12:
 			part="cellular membrane";
@@ -91,21 +91,22 @@ public class Rpg1_17
 		return (int)(Math.random()*(max-min+1))+min;
 	}
 
-	public static int answerChecker(Goblin[] gob,String str,Scanner inputTaker) throws InterruptedException
+	public static int answerChecker(Goblin[] gob,Scanner inputTaker) throws InterruptedException
 	{
-		int choice=0;
-		int times=0;
-		while(choice<=Goblin.numberOfGoblins||choice>=1)
+		int choice;
+		String str;
+		do
 		{
 			slowPrint("Enter goblins to see the goblin's health or enter the number of the goblin you want to attack");
 			str=inputTaker.nextLine();
+			
 			if(str.equals("goblins"))
-				for(int i=0;i<Goblin.numberOfGoblins;i++)
+				for(int i=0;i<Goblin.startingNum;i++)
 					slowPrintln(gob[i]+"");
 			else
 			{
 				choice = stringToInt(str);
-				if(choice>Goblin.numberOfGoblins)
+				if(choice>Goblin.startingNum)
 				{
 					slowPrintln("You can't attack a goblin that isn't there, try again.");
 				}
@@ -113,21 +114,113 @@ public class Rpg1_17
 				{
 					slowPrintln("How do you think that would even work? You make no sense");
 				}
-				else if(gob[choice].dead==true&&times==0)
-				{
-					slowPrintln("Hey, look, he's dead you dont need to keep whacking the corpse");
-					times++;
-				}
-				else if(gob[choice].dead==true&&times!=0)
-				{
-					slowPrintln("Ok fine, if you want to beat a ded goblin for no benefit, who am I to stop you");
-				}
-				else if(choice>=1 && choice<=Goblin.numberOfGoblins)
+				else if(choice>=1 && choice<=Goblin.startingNum)
 					return choice;
 			}
 		}
-		return choice;
+		while((1==1));
 	}
+	public static int psychoChecker(Goblin[] gob,int choice, Scanner inputTaker,PlayerStats player) throws InterruptedException
+	{
+		/*
+		 * Notes:
+		 * There are so many options in this thing, WAAAAAY more than I initially thought
+		 * I defenitely want to do this before show Mr. Rakow, but ,man this might take a bit
+		 * I am also going to have to assume the player might enter in some invalid number,
+		 * , which means I am going to have to put in my other answer checker method...Ughhhhhhhhhhhhhhhhh
+		 * wait maybe not, most of my things are yes or no questions
+		 * SO MANY BUGS
+		 */
+		boolean validAutoChoose=false;
+		String s;
+		
+		slowPrintln("Hey, you sure you wanna attack this goblin?");
+		s=inputTaker.nextLine();
+		
+		switch(s)
+		{
+		case "yes","y","holla","yas","yerr","ya","ayo kill that sucka!":
+			
+			slowPrintln("You know he is already dead right?");
+			s=inputTaker.nextLine();
+		
+			if(s.equals("y")||s.equals("yes")||s.equals("yeah"))
+			{
+				slowPrint("...",330);
+				slowPrint("Are you like");
+				slowPrint("...",330);
+				slowPrint("Ok?...Mentally speaking?");
+				s=inputTaker.nextLine();
+				
+				if(s.equals("y")||s.equals("yes"))
+				{
+					slowPrintln("Great!");
+					slowPrint("So you must have just entered a dead goblin, and then confirmed your choice twice on accident!");
+					Thread.sleep(750);
+					slowPrint("...",333);
+					slowPrintln("Right?");
+					s=inputTaker.nextLine();
+					
+					if(s.equals("y")||s.equals("yes"))
+					{
+						
+						
+						slowPrint("Awesome! I am so glad you came to your senses!  Very well! who would you like to attack?");
+						choice=inputTaker.nextInt();
+						s=inputTaker.nextLine();
+						if(gob[choice-1].dead==true);
+							player.takeDamage(1000);
+							return choice;
+							
+					}
+					else
+					{
+						slowPrintln("Oh good heavens...");
+						slowPrint("I-");
+						slowPrint("...",250);
+						slowPrintln("Give me a couple seconds here-");
+						slowPrintln("...Ok fine whatever, attack your dead goblin");
+						return choice;
+					}
+				}
+				else 
+				{
+					slowPrintln("Yeah I kinda guessed as much..");
+					slowPrintln("It would be foolish to challenge your judgment so sure, you go get 'em champ!");
+					return choice;					
+				}
+			}
+			else 
+			{
+				do
+					if(gob[choice-1].dead)
+						choice=randomGen(1,Goblin.startingNum);
+					else
+						validAutoChoose=true;
+				while(validAutoChoose==false);
+				slowPrintln("Yeah he's totally dead man, I'll go ahead and assume you meant goblin "+choice);
+				return choice;
+			}
+		case "n","no","you know what? i am going to do the proper and good thing and not merscilessly beat the corpse of my former enemy","eh":
+			
+			choice=randomGen(1,Goblin.startingNum);
+		
+			do
+				if(gob[choice-1].dead)
+					choice=randomGen(1,Goblin.startingNum);
+				else
+					validAutoChoose=true;
+			while(validAutoChoose==false);
+			
+			slowPrint("OK awesome! I'll assume you meant goblin "+choice+" Right?");
+			slowPrint("...",400);
+			slowPrintln("Right, awesome! So glad That's what you meant!!");
+			return choice;
+		default:
+			return choice;
+		}
+	}
+	
 	
 	public static void slowPrint(String text,int printSpeed) throws InterruptedException//This slow prints, but you can set the print speed, good for counting.
 	{
@@ -182,6 +275,7 @@ public class Rpg1_17
 		 * make sure if you die, the program ends.-2-done
 		 * add the giving upgrade tokens.-2-done
 		 * add some mechanic where you have the option to spare the ogre and if you do, the orge just eats you instantly
+		 *the troll attacks after you kill it 
 		 */
 		String prompt;
 		
@@ -220,9 +314,9 @@ public class Rpg1_17
 				slowPrintln("You deal "+playerDam+" damage to the troll!\n\nThe troll has "+troll.getHealth()+" health remaning.");
 				
 				}
-				else if(troll.getHealth()-playerDam<=0)//killing the troll
+				if(troll.getHealth()-playerDam<=0)//killing the troll
 				{
-					slowPrintln("Congrats, You killed "+troll.getName()+"!\n I bet the troll's children will be equally as happy with your success!");
+					slowPrintln("Congrats, You killed "+troll.getName()+"!\nI bet the troll's children will be equally as happy with your success!");
 					Thread.sleep(500);
 					slowPrint("Nah just kidding, he dosen't have children!");
 					
@@ -267,7 +361,7 @@ public class Rpg1_17
 					
 					if(prompt.toLowerCase().equals("n"))
 					{
-						slowPrint("As you run away the troll laughs and taunts you with some gestures I won't repeat here since my teacher is going to see this");
+						slowPrint("You decide it is best to run away and as you do, "+troll.getName()+" makes a dumb face and taunts you with his toung out");
 						break;
 					}
 				}
@@ -288,8 +382,10 @@ public class Rpg1_17
 		 * Add blocking-done
 		 * Add a command that allows you to see the health of all the goblins and which ones are dead-3
 		 * add something that auto attacks goblins-4
-		 * integrate the string to number into my code-1-the converter works now all I need to do is get the if statments right.
-		 * 
+		 * integrate the string to number into my code-1-the converter works now all I need to do is get the if statements right.
+		 *
+		 *	Bugs:
+		 *  it makes a number bigger than the array when choosing an attacker sometimes, so far it has happened once
 		 */
 	
 		
@@ -299,8 +395,9 @@ public class Rpg1_17
 		String prompt = "";
 		
 		boolean alive=true;
-		boolean validAttacker=false;//this will be for a loop to make a random ALIVE goblin attack you.
+		boolean validAttacker=false;//this will be for a loop to make a random ALIVE goblin attack you.I am also going to copy the code to make it so the "A.I" can pick a selection for you from my dialouge tree
 		boolean win = false;
+		int timesAttackedCorpse=0;//lets keep it that way
 		int goblinGen =randomGen(1,5);
 		
 		Goblin[] goblins=new Goblin[goblinGen];
@@ -314,47 +411,54 @@ public class Rpg1_17
 		
 		do
 		{
-			selection=answerChecker(goblins,prompt,input);
-			goblins[selection-1].takeDamage(playerWeapon.rollDamage(1));
-		
-			slowPrintln("You deal "+playerWeapon.currentDamage+" damage to goblin "+selection+".  The goblin now has "+goblins[selection-1].health+ " health remaining!");
+			selection=answerChecker(goblins,input);
+			slowPrint("Answer recived: "+selection);
 			
-					
-					 
+			if(goblins[selection-1].dead==true)
+				selection=psychoChecker(goblins,selection,input,player);
+			
+			if(goblins[selection-1].dead==false)
+			{
+			goblins[selection-1].takeDamage(playerWeapon.rollDamage(1));
+			slowPrintln("You deal "+playerWeapon.currentDamage+" damage to goblin "+selection+".  The goblin now has "+goblins[selection-1].health+ " health remaining!");
+			}
+			else 
+			{
+				slowPrint("You look at all the very much alive goblins standing around you and decide that, in the middle of a fight, you will attack the ONE THING that poses zero danger to you and beat the corpse of goblin "+selection);
+			}
 					if(Goblin.numberOfGoblins==0)
 					{
 						slowPrintln("You killed all the goblins, congrats!  I'm not going to guilt trip you on this one, the goblins are just idiots.");
-						loot=lootMaker(player.getFloor()*Goblin.numberOfGoblins);
+						loot=lootMaker(player.getFloor()*Goblin.startingNum);
 						stuff.addGold(loot);
 						loot=randomGen(1,3);
 						stuff.addGold(loot);;
 						slowPrintln("You also found "+loot+" ugrade tokens in one of the goblin's "+partGen()+" so win/win!");
 						return;
 					}
-					
-					
-			
-			
-			goblinAttacker= randomGen(0,Goblin.numberOfGoblins-1);//this decides what goblin will attack
+	
+			goblinAttacker= randomGen(1,Goblin.startingNum);//this decides what goblin will attack
 			
 			do//if the chosen goblin is dead, this keep picking until an alive goblin is chosen.
 			{
-					if(goblins[goblinAttacker].dead)
+					if(goblins[goblinAttacker-1].dead)
 					{
-						goblinAttacker= randomGen(0,Goblin.numberOfGoblins-1);//rerolls the selection
+						slowPrintln("Old Attacker: "+goblinAttacker);
+						goblinAttacker= randomGen(1,Goblin.startingNum);//rerolls the selection
+						slowPrintln("New Attacker: "+goblinAttacker);
 					}
 					else
 						validAttacker=true;
 			}
 			while(validAttacker==false);
 			
-			slowPrint("Goblin number "+(goblinAttacker+1)+" swings");
-			goblins[goblinAttacker].rollDamage(player);
+			slowPrint("Goblin number "+(goblinAttacker)+" swings!");
+			goblins[goblinAttacker-1].rollDamage(player);
 			
-			if(goblins[goblinAttacker].currentDamage>0)
+			if(goblins[goblinAttacker-1].currentDamage>0)
 			{
-			player.takeDamage(goblins[goblinAttacker].currentDamage);
-			slowPrintln("He hits you for "+goblins[goblinAttacker].currentDamage+" damage!\n"
+			player.takeDamage(goblins[goblinAttacker-1].currentDamage);
+			slowPrintln("He hits you for "+goblins[goblinAttacker-1].currentDamage+" damage!\n"
 					+ "You have "+player.getHealth()+" health remaining");
 			}
 			
@@ -369,8 +473,6 @@ public class Rpg1_17
 			System.out.println("\n_____________________________________");
 		}
 		while(win==false&&alive==true);
-		
-		
 	}
 	
 	public static Weapon firstStore(Scanner input,Inventory stuff) throws InterruptedException
@@ -542,6 +644,8 @@ public class Rpg1_17
 		 * Notes:
 		 * Get both the inventory and player classes to work in this-1
 		 * get rid of the transfer array that I was so proud of-2
+		 * get rid of the archaic if else mess and do a switch instead, but it might be better to do that in the next edition
+		 * make it print the updated stats
 		 */
 		double number;
 		int maxCst,egg2Tries=0,refilCost=100;
@@ -557,22 +661,28 @@ public class Rpg1_17
 		{		
 	
 		slowPrintln("\nYou can either type potion to look at the avaible potions, type upgrade to upgrade your weapon, or type leave to go to the next floor.");
-		slowPrintln("\nMax health:"+player.getMaxHealth()+"\t\tHealth:"+player.getHealth()+"\n\nGold: "+stuff.getGold()+"\t\tUpgrade Tokens: "+stuff.getUpgrades());
-		prompt=input.nextLine();
+		slowPrintln(player+"\n"+stuff+"\n"+playerWeapon);
+		prompt=input.nextLine().toLowerCase();
 		
+		
+//		switch(prompt)
+//		{
 			if(prompt.toLowerCase().equals("potions")||prompt.toLowerCase().equals("potion"))
 			{
+			//case "potions",potion;
 				slowPrintln("\n There is a max health potion, which increases your max health by ten but you must use the refill after, and the refill potion which refills your health back to max.");
 				
 				
 				
 								do
 								{
+									//switch(prompt)
+//									{
 									slowPrintln("Type max to buy max potions, refill to buy refill potions, or n to go back to the store.");
-									prompt=input.nextLine();
+									prompt=input.nextLine().toLowerCase();
 									
 									
-									
+									//case "max"
 									if(prompt.toLowerCase().equals("max"))
 									{
 										maxCst=100+(player.getFloor()*50);
@@ -612,7 +722,7 @@ public class Rpg1_17
 															{
 																slowPrintln("OKAY THAT'S IT! YOU'RE ON TIME OUT, GO THINK ABOUT WHAT YOU HAVE DONE AND COUNT TO SIXTY!");
 																
-																for (int i =1; i<60;i++)
+																for (int i=1; i<=60;i++)
 																{
 																	int numCount;
 																	boolean correct;
@@ -641,13 +751,9 @@ public class Rpg1_17
 															{
 																slowPrintln("Hey, you just tried that, you know how much time it took coding this and you try to cheat AGAIN??!\n\n...\n\n");
 																egg2Tries++;
-																try {
-																	Thread.sleep(500);
-																} catch (InterruptedException e) {
-																	e.printStackTrace();
-																}
+																Thread.sleep(500);
 																slowPrintln("For shame");
-																	Thread.sleep(500);
+																Thread.sleep(500);
 															}
 															
 											else
@@ -674,8 +780,9 @@ public class Rpg1_17
 												else
 												{
 													player.getHealth();
-													stuff.addGold(refilCost);
-													slowPrintln("Your health has been refilled to "+player.getHealth());
+													stuff.addGold(-refilCost);
+													slowPrintln("Your health has been refilled to "+player.getMaxHealth());
+													player.refillHealth();
 													break;
 												}
 									}
@@ -747,13 +854,16 @@ public class Rpg1_17
 			 * make it so that you can choose from three diffrent halls, with a diffrent event behind each, randomly assigned of course-2-done?
 			 * -make it that hall 1 might be goblins, 2 a troll and 3 be a treasure-3-done?
 			 * transfer stores into seperate methods-done-that was a lot easier than I expected.
-			 *
-			 *To Do:
-			 *____________________
 			 *make it so that 1.17 has things in different classes-1
 			 *Get the class-things to work in each method-1
 			 *get rid of the transfer arrays-2
 			 *put in the evasion stat-3
+			 *
+			 *To Do:
+			 *____________________
+			 *
+			 *
+			 *
 			 * add a dagger to maximize evasion. -5
 			 * make it so you can chooses your stats, fallout-style at the beginning of the game.-6
 			 * integrate the cheat codes into working again.-7
@@ -785,7 +895,7 @@ public class Rpg1_17
 				character.setHealth(90);
 				character.setMaxHealth(90);
 			}
-			goblinHorde(input,character,bag,killonater);
+//			goblinHorde(input,character,bag,killonater);
 			//trollFight(input,character,bag,killonater);
 			do 
 			{
@@ -817,7 +927,7 @@ public class Rpg1_17
 				
 				slowPrintln("You have "+character.getHealth()+" health");
 				
-				if(character.getHealth()<=0)
+				if(character.isAlive()==false)
 				{
 					slowPrintln("looks like you somehow died, those walls must have been pretty fun huh? ");
 					break;
@@ -839,6 +949,7 @@ public class Rpg1_17
 								break;
 							case 3,4:
 								trollFight(input,character,bag,killonater);
+								break;	
 							case 5:
 								slowPrint("You find nothing in this hallway and continue to the shop, tough luck");
 								break;
@@ -851,11 +962,12 @@ public class Rpg1_17
 						case 2:
 							switch(roll)
 							{
-							case 1,2,3,6:
+							case 1,2,3:
 								trollFight(input,character,bag,killonater);
 								break;
-							case 4:
+							case 4,6:
 								goblinHorde(input,character,bag,killonater);
+								break;
 							case 5:
 								if(!killonater.enchanted)
 								{
@@ -864,7 +976,9 @@ public class Rpg1_17
 								}
 								else
 								{
-									slowPrintln("Suddenly, the energy from your "+killonater.weaponType+" seems to dissipate into the air\n and on the ground, a pitiful compensatio of one coin");
+									slowPrint("Suddenly, the energy from your "+killonater.weaponType+" seems to dissipate into the air\nYou feel you coin purse get heavier by a miniscule ammount, you recived compensation");
+									slowPrint("...",300);
+									slowPrintln("one coin.");
 									killonater.enchanted=false;
 									bag.addGold(1);
 								}
@@ -888,17 +1002,9 @@ public class Rpg1_17
 							break;
 						}
 					
-						slowPrintln("Do you want to see your stats?");
-						prompt=input.nextLine();
 						
-						switch (prompt)
-						{
-						case "y","yes","yerr":
-							slowPrintln(character+"");
-							slowPrintln(killonater+"");
-						}
 						
-						if(character.aliveOrNot())//detects if you died in one of the other types of combats.
+						if(character.isAlive()==false)//detects if you died in one of the other types of combats.
 						{							
 							slowPrintln("You Died");
 							break;
@@ -907,6 +1013,7 @@ public class Rpg1_17
 				   
 				       slowPrint("Type quit to leave the game or press enter to continue on to the next floor:");
 				       prompt = input.nextLine();
+				       character.nextFloor();
 			}
 		   while(!prompt.equals("quit"));
 			
