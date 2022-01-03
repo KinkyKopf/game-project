@@ -10,7 +10,7 @@ import java.util.Scanner;
  */
 public class Rpg1_17 
 {
-	static int printSpeed=0;//20 feels a bit slow but anything less 
+	static int printSpeed=0;//20 feels a bit slow but anything less skips around too much
 	
 	public static int stringToInt(String intInString)
 	{
@@ -222,13 +222,13 @@ public class Rpg1_17
 	}
 	
 	
-	public static void slowPrint(String text,int printSpeed) throws InterruptedException//This slow prints, but you can set the print speed, good for counting.
+	public static void slowPrint(String text,int printingSpeed) throws InterruptedException//This slow prints, but you can set the print speed, good for counting.
 	{
 		
 		for (int i=0;i<text.length();i++)
 		{
 			System.out.print(text.charAt(i));
-			Thread.sleep(printSpeed);
+			Thread.sleep(printingSpeed);
 		}
 		System.out.println();
 	}
@@ -254,7 +254,6 @@ public class Rpg1_17
 		}
 		System.out.println();
 	}
-	//k
 	
 	public static void grueFight(Scanner input, PlayerStats player,Inventory stuff,Weapon playerWeapon)
 	{
@@ -276,6 +275,11 @@ public class Rpg1_17
 		 * add the giving upgrade tokens.-2-done
 		 * add some mechanic where you have the option to spare the ogre and if you do, the orge just eats you instantly
 		 *the troll attacks after you kill it 
+		 *
+		 *to Do:
+		 *____________________
+		 *
+		 *make the taking damage thing work so that you can block or dodge when you are at low health
 		 */
 		String prompt;
 		
@@ -285,7 +289,7 @@ public class Rpg1_17
 		int playerDam;
 		int loot;
 		String plural="";
-		boolean	win=false;
+		boolean	win=false,isHit;
 		boolean autoRun=false;
 		
 		
@@ -295,8 +299,8 @@ public class Rpg1_17
 		switch(prompt)
 		{
 		case "y","yes":
-			slowPrint("Auto running in ...");
-			slowPrint("3...2...1...",250);
+//			slowPrint("Auto running in ...");
+//			slowPrint("3...2...1...",250);
 			autoRun=true;
 		}
 		
@@ -307,16 +311,13 @@ public class Rpg1_17
 			
 			slowPrintln("Round "+round+"___________\n");
 			playerDam=playerWeapon.rollDamage(1);
-				if(troll.getHealth()>0)//troll is still alive , you damage the troll
+						
+			
+				 if(troll.getHealth()-playerDam<=0)//killing the troll
 				{
-				
-				troll.takeDamage(playerDam);
-				slowPrintln("You deal "+playerDam+" damage to the troll!\n\nThe troll has "+troll.getHealth()+" health remaning.");
-				
-				}
-				if(troll.getHealth()-playerDam<=0)//killing the troll
-				{
-					slowPrintln("Congrats, You killed "+troll.getName()+"!\nI bet the troll's children will be equally as happy with your success!");
+					slowPrintln("You deal "+playerDam+" damage to the troll!");
+					troll.takeDamage(playerDam);
+					slowPrintln("Congrats, You killed "+troll.getName()+"!\nI bet his children will be equally as happy with your success!");
 					Thread.sleep(500);
 					slowPrint("Nah just kidding, he dosen't have children!");
 					
@@ -334,26 +335,28 @@ public class Rpg1_17
 					slowPrintln("You also found "+loot+" upgrade token"+plural+" inside the troll's "+partGen()+"........Nice!");
 					break;
 				}
+				 else 
+				 {
+					 troll.takeDamage(playerDam);
+						slowPrintln("You deal "+playerDam+" damage to the troll!\n\nThe troll has "+troll.getHealth()+" health remaning.");
+						
+				 }
+				 
+				isHit=!player.rollToHit(troll.getAccuracy());
+				troll.rollDamage(1,playerWeapon.protection);
 				
-				if(player.rollEvasion(troll.getAccuracy()))
-				{
-					slowPrintln("You dodged the attack!");
-				}
-				else if(player.getHealth()-troll.rollDamage(1)<=0)//player dies
+				if( isHit && player.getHealth()-troll.getDamage()<=0 )//this is when you wouldn't want shortcircut evaulation,because it would skip the roll damage method, messing up the rest of the code.
 				{
 					slowPrintln("The troll hits you for "+troll.getDamage()+" damage, absoutely obliterating your "+partGen()+", killing you instantly.");//add a random part generator
 					player.die();
 					break;
 				}
-				else if(troll.getDamage()<=0)
-				{
-					slowPrintln("You blocked the attack!");
-				}
-				else 
+				else if(isHit&&troll.getDamage()>0)
 				{
 					player.addHealth(-troll.getDamage());
 					slowPrintln("The troll hits you for "+troll.getDamage()+" damage!\nYou have "+player.getHealth()+" health remaning!");
 				}
+				
 				if(!autoRun||player.getHealth()<player.getMaxHealth()/4)
 				{
 					slowPrintln("Press enter to continue or n to run away");
@@ -361,9 +364,12 @@ public class Rpg1_17
 					
 					if(prompt.toLowerCase().equals("n"))
 					{
-						slowPrint("You decide it is best to run away and as you do, "+troll.getName()+" makes a dumb face and taunts you with his toung out");
+						slowPrint("You decide it is best to run away and as you do, "+troll.getName()+" makes a dumb face and sneers as you run away");
 						break;
 					}
+					else if(prompt.toLowerCase().equals("troll stats"));
+					{
+						slowPrintln(""+troll);					}
 				}
 				
 			round++;
@@ -385,7 +391,9 @@ public class Rpg1_17
 		 * integrate the string to number into my code-1-the converter works now all I need to do is get the if statements right.
 		 *
 		 *	Bugs:
-		 *  it makes a number bigger than the array when choosing an attacker sometimes, so far it has happened once
+		 *  it makes a number bigger than the array when choosing an attacker sometimes, so far it has happened twice
+		 * I haven't been able to recreate the bug recently, which is both good and bad, but I have no Idea why it is happening, must be with the number gen with the adding and subtracting
+		 *
 		 */
 	
 		
@@ -397,10 +405,12 @@ public class Rpg1_17
 		boolean alive=true;
 		boolean validAttacker=false;//this will be for a loop to make a random ALIVE goblin attack you.I am also going to copy the code to make it so the "A.I" can pick a selection for you from my dialouge tree
 		boolean win = false;
-		int timesAttackedCorpse=0;//lets keep it that way
 		int goblinGen =randomGen(1,5);
-		
+		goblinGen=4;
 		Goblin[] goblins=new Goblin[goblinGen];
+	
+		slowPrintln("You see the flickering light of a fire around the hall, but right as you are about to turn the corner,\n You see the the dancing shadows of goblins.  Prepare for a fight."
+				+ "\n___________________________\n");
 		
 		slowPrintln("There are "+goblinGen+" goblins to attack");
 		
@@ -412,7 +422,7 @@ public class Rpg1_17
 		do
 		{
 			selection=answerChecker(goblins,input);
-			slowPrint("Answer recived: "+selection);
+			//slowPrint("Answer recived: "+selection);
 			
 			if(goblins[selection-1].dead==true)
 				selection=psychoChecker(goblins,selection,input,player);
@@ -424,7 +434,7 @@ public class Rpg1_17
 			}
 			else 
 			{
-				slowPrint("You look at all the very much alive goblins standing around you and decide that, in the middle of a fight, you will attack the ONE THING that poses zero danger to you and beat the corpse of goblin "+selection);
+				slowPrint("You look at all the very much alive goblins standing around you and decide that,\n in the middle of a fight, you will attack the ONE THING that poses zero danger to you and beat the corpse of goblin "+selection);
 			}
 					if(Goblin.numberOfGoblins==0)
 					{
@@ -443,9 +453,9 @@ public class Rpg1_17
 			{
 					if(goblins[goblinAttacker-1].dead)
 					{
-						slowPrintln("Old Attacker: "+goblinAttacker);
+//						slowPrintln("Old Attacker: "+goblinAttacker);
 						goblinAttacker= randomGen(1,Goblin.startingNum);//rerolls the selection
-						slowPrintln("New Attacker: "+goblinAttacker);
+//						slowPrintln("New Attacker: "+goblinAttacker);
 					}
 					else
 						validAttacker=true;
@@ -644,7 +654,7 @@ public class Rpg1_17
 		 * Notes:
 		 * Get both the inventory and player classes to work in this-1
 		 * get rid of the transfer array that I was so proud of-2
-		 * get rid of the archaic if else mess and do a switch instead, but it might be better to do that in the next edition
+		 * get rid of the old if/else mess and do a switch instead, but it might be better to do that in the next edition
 		 * make it print the updated stats
 		 */
 		double number;
@@ -862,13 +872,17 @@ public class Rpg1_17
 			 *To Do:
 			 *____________________
 			 *
-			 *
+			 *I think everything is about good for this edition, I just need to play it a lot to make sure it is fully debuged.
+			 *	make a prompt that tells you you are going to see goblins
+			 *Next Update:
+			 *___________________________________________
 			 *
 			 * add a dagger to maximize evasion. -5
 			 * make it so you can chooses your stats, fallout-style at the beginning of the game.-6
 			 * integrate the cheat codes into working again.-7
 			 * add spells-10
 			 *allow player to get different weapons later on.-10
+			 *goblins are a bit to hard if you get bad rng, either add player input (maybe spells) or add a mechanic like counterattacking for dodging
 			 */
 		
 	 	Scanner input = new Scanner(System.in);
@@ -891,7 +905,7 @@ public class Rpg1_17
 			if(balance==true)
 			{
 				slowPrintln("\n\nYou skipped to floor "+character.getFloor()+", now I will beef up your stats!");
-//				error message to remind me to add damage;
+				killonater.damageBonus=15;
 				character.setHealth(90);
 				character.setMaxHealth(90);
 			}

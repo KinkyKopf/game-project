@@ -2,7 +2,17 @@ package gameprototypes;
 
 public class PlayerStats 
 {
-	private int floor, evasion,health,maxHealth;
+	
+	/*
+	 * Notes:
+	 * ________________
+	 * 
+	 * 
+	 * To do:
+	 * ________________________
+	 * make a balanced way to block, so that the player isn't constantly blocking everything,
+	 */
+	private int floor, evasion,health,maxHealth,armorClass;
 	private boolean alive;
 	Weapon characterWeapon;
 	
@@ -20,6 +30,7 @@ public class PlayerStats
 		setHealth(h);
 		setMaxHealth(mh);
 		alive = true;
+		//armorClass=characterWeapon.protection;
 	}
 	public PlayerStats(Weapon w)
 	{
@@ -94,12 +105,25 @@ public class PlayerStats
 		//add some cool message here, or maybe a funny one
 	}
 	//Miscelanious methods______________________________
-	public boolean rollEvasion(int enemyAccuracy)//roll to see if you can dodge
+	public boolean rollToHit(int enemyAccuracy) throws InterruptedException//roll to see if you can dodge
 	{
 		int playerRoll=Rpg1_17.randomGen(1,20)+evasion;
 		int enemyRoll=Rpg1_17.randomGen(1,20)+enemyAccuracy;
-		return (playerRoll>enemyRoll);
+		
+		System.out.println("Player ROll: "+ playerRoll);
+		System.out.println("Enemy ROll: "+ enemyRoll);
+
+		if(playerRoll>enemyRoll)
+		{
+			Rpg1_17.slowPrintln("You dodged the attack!");
+			return true;
+		}
+		
+		
+		
+		return false;
 	}
+	
 	public String toString()
 	{
 		return "Current Health: "+health+"   Max Health: "+maxHealth+"   Evasion: "+evasion;

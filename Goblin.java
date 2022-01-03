@@ -2,6 +2,13 @@ package gameprototypes;
 
 public class Goblin 
 {
+	
+	/*
+	 * to DO: 
+	 * ____________________
+	 * 
+	 * fix the roll To hit in the goblins
+	 */
 	 int baseHealth,health,minDamage,maxDamage,accuracy,goblinNum,currentDamage;
 	static int numberOfGoblins,startingNum;
 	boolean dead;
@@ -52,7 +59,7 @@ public class Goblin
 	}
 	public int rollDamage(PlayerStats player) throws InterruptedException
 	{
-		if(player.rollEvasion(accuracy))
+		if(player.rollToHit(accuracy))
 		{
 			Rpg1_17.slowPrint("You dodged the attack!");
 			currentDamage=0;

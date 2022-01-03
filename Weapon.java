@@ -3,6 +3,16 @@ package gameprototypes;
 public class Weapon
 {
 	
+	/*
+	 * Notes:
+	 * ___________________
+	 *
+	 *	To do:
+	 *__________________
+	 *tweak the values so that the game is properly balanced
+	 * I think the balancing is going to be super hard, I don't even know how each of them should interact, and how to ensure they all work properly
+	 */
+	
 		int minDamage,maxDamage,damageBonus,protection,evasionBuff,currentDamage;
 		 boolean enchanted;
 		String weaponType;
@@ -20,7 +30,7 @@ public class Weapon
 			case"shield":
 				setMin(1);
 				setMax(4);
-				setProtection(1);
+				setProtection(4);
 				evasionBuff=-4;
 				break;	
 			case "bow"://look up inheritance
@@ -32,7 +42,13 @@ public class Weapon
 				setMin(1);
 				setMax(2);
 				setProtection(0);
-				evasionBuff=3;
+				evasionBuff=4;
+			default:
+				setMin(1);
+				setMax(2);
+				setProtection(0);
+				evasionBuff=4;
+				weaponType="gauntlets";
 			
 			}
 		}

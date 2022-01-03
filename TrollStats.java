@@ -15,12 +15,12 @@ public class TrollStats
 		nameGen();
 		Rpg1_17.slowPrintln("As you go down the hallway, a rank scent of what you can only decsribe as teenage man-musk floods your nostrills ");
 		Rpg1_17.slowPrint("...\n",500);
-		Rpg1_17.slowPrintln("A troll is near.\nYou see a door labeled: "+name+". \nBrave yourself, the troll is behind here.");
+		Rpg1_17.slowPrintln("A troll is near.\nYou see a door labeled: "+name+". \nBrave yourself, "+name+" the troll is behind here.");
 		
 		setFloor(f);
-		setDamage(Rpg1_17.randomGen(-2,6));
+		setDamage(Rpg1_17.randomGen(-3,4));
 		setHealth(20+(floor*5));	
-		setAccuracy(Rpg1_17.randomGen(-2, 6));
+		setAccuracy(Rpg1_17.randomGen(-3, 6));
 	}
 
 	
@@ -29,17 +29,17 @@ public class TrollStats
 	{
 		//d=0;
 		damage=d;
-		if (d>4)
+		if (d>2)
 			Rpg1_17.slowPrintln("You see a truly staggering ammount of what you can only assume is empty tubs of preworkout scattered around "+name+"'s lair\n");
-		if(d<2)
+		if(d<1)
 			Rpg1_17.slowPrintln("You notice a stack of books labled \"Computer Science: The Anylitical Studies Of Computational Electronics\" in the corner of "+name+"'s lair\n");
 	}
 	public void setHealth(int h) throws InterruptedException
 	{
-		int bonusHealth=+Rpg1_17.randomGen(-5,10);
+		int bonusHealth=Rpg1_17.randomGen(-7,10);
 		health = h+bonusHealth;
 		if(bonusHealth>6)
-			Rpg1_17.slowPrintln(name+" appears to be abnormally big.\nBut not like in a bad way or anything, everyone has their own body size\n");
+			Rpg1_17.slowPrintln(name+" appears to be abnormally large. But not like in a bad way or anything,he's still in shape for a troll");
 		if(bonusHealth<=3)
 		{
 			Rpg1_17.slowPrintln(name+" is way smaller than your average troll but it is best not to metion it, he is probably insecure\n");
@@ -132,12 +132,18 @@ public class TrollStats
 		}
 		setName(n);
 	}
-	public int rollDamage(int times)
+	public int rollDamage(int times,int playerProtection) throws InterruptedException
 	{
 		if(times<=0)
 		return 0;
-		int dam = Rpg1_17.randomGen(1, 5)+damage+rollDamage(times-1);
-		return dam;
+		damageOut = (Rpg1_17.randomGen(1, 7)+damage-playerProtection)+rollDamage(times-1,playerProtection);
+		
+		System.out.println("DamageValue: "+damageOut);
+		
+		if(damageOut<=0)
+			Rpg1_17.slowPrintln("You blocked the attack!");
+		
+		return damageOut;
 		
 	}
 	public String toString()
