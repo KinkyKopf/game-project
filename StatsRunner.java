@@ -33,8 +33,8 @@ public class StatsRunner
 		System.out.println(testWeapon);
 		System.out.println(testWeapon.rollDamage(1));
 		
-		Rpg1_17.trollFight(inputTaker, player, null, testWeapon);
-		
+		//Rpg1_17.trollFight(inputTaker, player, null, testWeapon);
+		Rpg1_17.goblinHorde(inputTaker, player, null, testWeapon);
 		
 	}
 

@@ -19,16 +19,16 @@ public class Goblin
 		baseHealth=health;
 		
 		minDamage = 1+f;
-		maxDamage = (int)(minDamage*1.5);
+		maxDamage = (int)(minDamage+3*1.5);
 		
 		startingNum++;
 		numberOfGoblins++;
 		goblinNum=numberOfGoblins;
 		
-		accuracy=Rpg1_17.randomGen(1, 7);
-			if(accuracy>5)
+		accuracy=Rpg1_17.randomGen(-3, 4);
+			if(accuracy>2)
 				Rpg1_17.slowPrintln("It looks like goblin "+goblinNum+" has glasses");
-			if(accuracy<3)
+			if(accuracy<0)
 				Rpg1_17.slowPrintln("Goblin "+goblinNum+" squints at you.");
 		Rpg1_17.slowPrintln("Goblin "+goblinNum+" has "+health+" health");
 
@@ -61,7 +61,6 @@ public class Goblin
 	{
 		if(player.rollToHit(accuracy))
 		{
-			Rpg1_17.slowPrint("You dodged the attack!");
 			currentDamage=0;
 			return 0;
 		}

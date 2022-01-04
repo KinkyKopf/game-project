@@ -338,28 +338,31 @@ public class Rpg1_17
 				 else 
 				 {
 					 troll.takeDamage(playerDam);
-						slowPrintln("You deal "+playerDam+" damage to the troll!\n\nThe troll has "+troll.getHealth()+" health remaning.");
-						
+						slowPrintln("You deal "+playerDam+" damage to the troll!\n\nThe troll has "+troll.getHealth()+" health remaning.");	
 				 }
 				 
 				isHit=!player.rollToHit(troll.getAccuracy());
-				if(isHit==false)
+				if(isHit)
 				{
-				troll.rollDamage(1,playerWeapon.protection);
-				blocked=troll.getDamage()<=0;
+					troll.rollDamage(1,playerWeapon.protection);
+					blocked=troll.getDamage()<=0;
 				}
 				else
 					blocked=true;
-				if( isHit && blocked)//this is when you wouldn't want shortcircut evaulation,because it would skip the roll damage method, messing up the rest of the code.
+				
+				if( isHit && !blocked)
 				{
+					if(troll.getDamage()>=player.getHealth())
+					{
 					slowPrintln("The troll hits you for "+troll.getDamage()+" damage, absoutely obliterating your "+partGen()+", killing you instantly.");//add a random part generator
 					player.die();
 					break;
-				}
-				else if(isHit&&troll.getDamage()>0)
-				{
+					}
+					else
+					{
 					player.addHealth(-troll.getDamage());
 					slowPrintln("The troll hits you for "+troll.getDamage()+" damage!\nYou have "+player.getHealth()+" health remaning!");
+					}
 				}
 				
 				if(!autoRun||player.getHealth()<player.getMaxHealth()/4)
@@ -411,7 +414,7 @@ public class Rpg1_17
 		boolean validAttacker=false;//this will be for a loop to make a random ALIVE goblin attack you.I am also going to copy the code to make it so the "A.I" can pick a selection for you from my dialouge tree
 		boolean win = false;
 		int goblinGen =randomGen(1,5);
-		goblinGen=4;
+	//	goblinGen=4;
 		Goblin[] goblins=new Goblin[goblinGen];
 	
 		slowPrintln("You see the flickering light of a fire around the hall, but right as you are about to turn the corner,\n You see the the dancing shadows of goblins.  Prepare for a fight."
@@ -458,12 +461,14 @@ public class Rpg1_17
 			{
 					if(goblins[goblinAttacker-1].dead)
 					{
-//						slowPrintln("Old Attacker: "+goblinAttacker);
+						slowPrintln("Old Attacker: "+goblinAttacker);
 						goblinAttacker= randomGen(1,Goblin.startingNum);//rerolls the selection
-//						slowPrintln("New Attacker: "+goblinAttacker);
+						slowPrintln("New Attacker: "+goblinAttacker);
 					}
 					else
+					{
 						validAttacker=true;
+					}
 			}
 			while(validAttacker==false);
 			

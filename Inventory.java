@@ -57,7 +57,7 @@ public class Inventory
 	//Miscelanious________________________
 	public String toString()
 	{
-		return "Gold: "+gold+"   Upgrade Tokens: "+upgradeTokens;
+		return "Gold: "+gold+"\nUpgrade Tokens: "+upgradeTokens;
 	}
 		
 }
