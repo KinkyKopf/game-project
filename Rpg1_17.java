@@ -291,7 +291,7 @@ public class Rpg1_17
 		String plural="";
 		boolean	win=false,isHit;
 		boolean autoRun=false;
-		
+		boolean blocked;
 		
 		slowPrint("Would you like to auto run this combat?");
 		prompt=input.nextLine();
@@ -343,9 +343,14 @@ public class Rpg1_17
 				 }
 				 
 				isHit=!player.rollToHit(troll.getAccuracy());
+				if(isHit==false)
+				{
 				troll.rollDamage(1,playerWeapon.protection);
-				
-				if( isHit && player.getHealth()-troll.getDamage()<=0 )//this is when you wouldn't want shortcircut evaulation,because it would skip the roll damage method, messing up the rest of the code.
+				blocked=troll.getDamage()<=0;
+				}
+				else
+					blocked=true;
+				if( isHit && blocked)//this is when you wouldn't want shortcircut evaulation,because it would skip the roll damage method, messing up the rest of the code.
 				{
 					slowPrintln("The troll hits you for "+troll.getDamage()+" damage, absoutely obliterating your "+partGen()+", killing you instantly.");//add a random part generator
 					player.die();
@@ -754,7 +759,7 @@ public class Rpg1_17
 															{
 																while(egg2Tries==11)
 																{
-																	slowPrintln("NIGHTMARE");
+																	slowPrintln("PANIC ");
 																}
 															}
 															else if(number<0)

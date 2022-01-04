@@ -18,7 +18,7 @@ public class TrollStats
 		Rpg1_17.slowPrintln("A troll is near.\nYou see a door labeled: "+name+". \nBrave yourself, "+name+" the troll is behind here.");
 		
 		setFloor(f);
-		setDamage(Rpg1_17.randomGen(-3,4));
+		setDamage(Rpg1_17.randomGen(-2,3));
 		setHealth(20+(floor*5));	
 		setAccuracy(Rpg1_17.randomGen(-3, 6));
 	}
@@ -38,9 +38,9 @@ public class TrollStats
 	{
 		int bonusHealth=Rpg1_17.randomGen(-7,10);
 		health = h+bonusHealth;
-		if(bonusHealth>6)
+		if(bonusHealth>5)
 			Rpg1_17.slowPrintln(name+" appears to be abnormally large. But not like in a bad way or anything,he's still in shape for a troll");
-		if(bonusHealth<=3)
+		if(bonusHealth<0)
 		{
 			Rpg1_17.slowPrintln(name+" is way smaller than your average troll but it is best not to metion it, he is probably insecure\n");
 		}
@@ -136,7 +136,7 @@ public class TrollStats
 	{
 		if(times<=0)
 		return 0;
-		damageOut = (Rpg1_17.randomGen(1, 7)+damage-playerProtection)+rollDamage(times-1,playerProtection);
+		damageOut = (Rpg1_17.randomGen(2, 5)+damage-playerProtection)+rollDamage(times-1,playerProtection);
 		
 		System.out.println("DamageValue: "+damageOut);
 		

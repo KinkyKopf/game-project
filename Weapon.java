@@ -23,18 +23,18 @@ public class Weapon
 			switch(weaponType)
 			{
 			case"sword":
-				setMin(1);
+				setMin(2);
 				setMax(6);
 				setProtection(0);
 				break;
 			case"shield":
 				setMin(1);
 				setMax(4);
-				setProtection(4);
+				setProtection(3);
 				evasionBuff=-4;
 				break;	
 			case "bow"://look up inheritance
-				setMin(1);
+				setMin(2);
 				setMax(4);
 				setProtection(0);
 				evasionBuff=3;
