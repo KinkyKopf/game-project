@@ -19,7 +19,7 @@ public class StatsRunner
 	public static void main(String[] args) throws InterruptedException 
 	{
 		Scanner inputTaker= new Scanner(System.in);
-		Weapon testWeapon= new Weapon("shield");
+		Weapon testWeapon= new Weapon("sword");
 		PlayerStats player= new PlayerStats(testWeapon);
 		//TrollStats troll = new TrollStats(1);
 		
@@ -27,14 +27,19 @@ public class StatsRunner
 //		{
 //			System.out.println(troll.getDamage());
 //		}
+//		
+//		
+//		System.out.println(player);
+//		System.out.println(testWeapon);
+//		System.out.println(testWeapon.rollDamage(1));
+//		
+//		//Rpg1_17.trollFight(inputTaker, player, null, testWeapon);
+		//Rpg1_17.goblinHorde(inputTaker, player, null, testWeapon);
 		
-		
-		System.out.println(player);
-		System.out.println(testWeapon);
-		System.out.println(testWeapon.rollDamage(1));
-		
-		//Rpg1_17.trollFight(inputTaker, player, null, testWeapon);
-		Rpg1_17.goblinHorde(inputTaker, player, null, testWeapon);
+//Auto Run code:________________________
+		Rpg1_17 runner = new Rpg1_17(3,"shield");
+		runner.main(args);
+
 		
 	}
 

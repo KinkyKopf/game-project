@@ -10,7 +10,7 @@ public class Goblin
 	 * fix the roll To hit in the goblins
 	 */
 	 int baseHealth,health,minDamage,maxDamage,accuracy,goblinNum,currentDamage;
-	static int numberOfGoblins,startingNum;
+	static int numberOfGoblins,startingNum=0;
 	boolean dead;
 	public Goblin(int f) throws InterruptedException
 	{

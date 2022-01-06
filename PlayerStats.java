@@ -13,7 +13,7 @@ public class PlayerStats
 	 * make a balanced way to block, so that the player isn't constantly blocking everything,
 	 */
 	private int floor, evasion,health,maxHealth,armorClass;
-	private boolean alive;
+	private boolean alive,nearDeath;
 	Weapon characterWeapon;
 	
 	/*
@@ -49,6 +49,8 @@ public class PlayerStats
 	}
 	public int getEvasion()
 	{
+		if (nearDeath)
+			return evasion+3;
 		return evasion;
 	}
 	public boolean isAlive()

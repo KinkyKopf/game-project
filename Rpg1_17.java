@@ -10,7 +10,18 @@ import java.util.Scanner;
  */
 public class Rpg1_17 
 {
+	
 	static int printSpeed=0;//20 feels a bit slow but anything less skips around too much
+	static boolean aiAutoRun;
+	static int hallChoice;
+	static String weaponChoice;
+	
+	public Rpg1_17(int hall,String weapon)
+	{
+		aiAutoRun=true;
+		hallChoice =hall;
+		weaponChoice=weapon;
+	}
 	
 	public static int stringToInt(String intInString)
 	{
@@ -66,9 +77,7 @@ public class Rpg1_17
 		case 10:
 			part="femur";
 			break;
-		case 11:
-			part ="the top-right part of the left kidney";
-			break;
+		
 		case 12:
 			part="cellular membrane";
 			break;
@@ -82,7 +91,7 @@ public class Rpg1_17
 			part="Alpha dominant thyroidal coagulator";
 			break;
 		default:
-			part="";
+			part="will to live";
 		}
 		return part;
 	}
@@ -294,8 +303,8 @@ public class Rpg1_17
 		boolean blocked;
 		
 		slowPrint("Would you like to auto run this combat?");
-		prompt=input.nextLine();
-		
+		//prompt=input.nextLine();
+		prompt="y";
 		switch(prompt)
 		{
 		case "y","yes":
@@ -365,7 +374,7 @@ public class Rpg1_17
 					}
 				}
 				
-				if(!autoRun||player.getHealth()<player.getMaxHealth()/4)
+				if( (!autoRun||player.getHealth()<player.getMaxHealth()/4) && !aiAutoRun)
 				{
 					slowPrintln("Press enter to continue or n to run away");
 					prompt=input.nextLine();
@@ -400,8 +409,9 @@ public class Rpg1_17
 		 *
 		 *	Bugs:
 		 *  it makes a number bigger than the array when choosing an attacker sometimes, so far it has happened twice
-		 * I haven't been able to recreate the bug recently, which is both good and bad, but I have no Idea why it is happening, must be with the number gen with the adding and subtracting
-		 *
+		 * 
+		 * fixes:
+		 * dead goblins are attacking; it will say that the goblin is dead, roll the goblin again then just attack-done
 		 */
 	
 		
@@ -413,6 +423,7 @@ public class Rpg1_17
 		boolean alive=true;
 		boolean validAttacker=false;//this will be for a loop to make a random ALIVE goblin attack you.I am also going to copy the code to make it so the "A.I" can pick a selection for you from my dialouge tree
 		boolean win = false;
+		int aiCounter=1;
 		int goblinGen =randomGen(1,5);
 	//	goblinGen=4;
 		Goblin[] goblins=new Goblin[goblinGen];
@@ -429,7 +440,11 @@ public class Rpg1_17
 		
 		do
 		{
-			selection=answerChecker(goblins,input);
+			//Real code:
+			//selection=answerChecker(goblins,input);
+			
+			//AI code:
+			selection=aiCounter;
 			//slowPrint("Answer recived: "+selection);
 			
 			if(goblins[selection-1].dead==true)
@@ -439,6 +454,10 @@ public class Rpg1_17
 			{
 			goblins[selection-1].takeDamage(playerWeapon.rollDamage(1));
 			slowPrintln("You deal "+playerWeapon.currentDamage+" damage to goblin "+selection+".  The goblin now has "+goblins[selection-1].health+ " health remaining!");
+			
+			//Ai runner code:
+			if(goblins[selection-1].dead==true)
+				aiCounter++;
 			}
 			else 
 			{
@@ -455,30 +474,26 @@ public class Rpg1_17
 						return;
 					}
 	
-			goblinAttacker= randomGen(1,Goblin.startingNum);//this decides what goblin will attack
-			
-			do//if the chosen goblin is dead, this keep picking until an alive goblin is chosen.
+			goblinAttacker= randomGen(0,Goblin.startingNum-1);//this decides what goblin will attack
+			if(goblinAttacker>Goblin.startingNum)
 			{
-					if(goblins[goblinAttacker-1].dead)
-					{
+				
+			}
+			while((goblins[goblinAttacker].dead))//if the chosen goblin is dead, this keep picking until an alive goblin is chosen.
+			{
 						slowPrintln("Old Attacker: "+goblinAttacker);
 						goblinAttacker= randomGen(1,Goblin.startingNum);//rerolls the selection
-						slowPrintln("New Attacker: "+goblinAttacker);
-					}
-					else
-					{
-						validAttacker=true;
-					}
+						slowPrintln("New Attacker: "+goblinAttacker);		
 			}
-			while(validAttacker==false);
 			
-			slowPrint("Goblin number "+(goblinAttacker)+" swings!");
-			goblins[goblinAttacker-1].rollDamage(player);
 			
-			if(goblins[goblinAttacker-1].currentDamage>0)
+			slowPrint("Goblin number "+(goblinAttacker+1)+" swings!");
+			goblins[goblinAttacker].rollDamage(player);
+			
+			if(goblins[goblinAttacker].currentDamage>0)
 			{
-			player.takeDamage(goblins[goblinAttacker-1].currentDamage);
-			slowPrintln("He hits you for "+goblins[goblinAttacker-1].currentDamage+" damage!\n"
+			player.takeDamage(goblins[goblinAttacker].currentDamage);
+			slowPrintln("He hits you for "+goblins[goblinAttacker].currentDamage+" damage!\n"
 					+ "You have "+player.getHealth()+" health remaining");
 			}
 			
@@ -507,24 +522,30 @@ public class Rpg1_17
 		shieldCost = 700;
 		bowCost = 150;
 		
-		floor = 1;
 		//slowPrintln("Welcome to Dork adventurer, your journey awaits!  \n\nInside the shop you see a chest, the shopkeeper say you can buy what ever is in the chest, but you doubt he has any idea what it is inside. \n\nWould you like to open the chest? y/n");
 			// long and cheesy, I know but it is about the atmosphere, right?
 			//this was back when I made the weapon you get random, for some reason
 			
 		slowPrintln("Gold:"+stuff.getGold()+"\n\nWelcome to Dork adventurer!");
-		slowPrintln("\nNote: Make sure your inputs are spelled correctly. All prompts will be one word");
+		slowPrintln("\nNote: Make sure your inputs are spelled correctly, All prompts will be one word");
 		
 				do
 				{
 			slowPrintln("\nYou are in the store, Before you is a sword, shield and bow. To leave, type dungeon.");
+			//Real Code:
+			if(!aiAutoRun)
 			prompt = input.nextLine();
+			else
+			prompt=weaponChoice;
 				switch(prompt.toLowerCase())
 						{
 						case "sword":
 							slowPrintln("Gold:"+stuff.getGold()+"\n\n Would you like to purchase the sword for 500 gold?(y/n)");
-							prompt = input.nextLine();
-							
+							//Real Code:
+							if(!aiAutoRun)
+								prompt = input.nextLine();
+							else
+								prompt="y";	
 								if (prompt.equals("y"))
 									{
 								
@@ -550,8 +571,12 @@ public class Rpg1_17
 									}
 								case "shield":
 									slowPrintln("Gold:"+stuff.getGold()+" \n\n Would you like you buy the shield for 700 gold?(y/n)");
+									//Real Code:	
+									if(!aiAutoRun)
 										prompt = input.nextLine();
-										
+									else
+										prompt="y";	
+									
 										if (prompt.toLowerCase().equals("y"))
 										{
 										
@@ -578,8 +603,11 @@ public class Rpg1_17
 								
 						case "bow":
 							slowPrintln("Gold:"+stuff.getGold()+" \n\n Would you like you buy the bow for 150 gold?(y/n)");
+							
+							if(!aiAutoRun)
 								prompt = input.nextLine();
-								
+							else
+								prompt="y";	
 								if (prompt.toLowerCase().equals("y"))
 								{
 								
@@ -628,7 +656,7 @@ public class Rpg1_17
 							killTool=new Weapon("gauntlets");
 							break;
 						case "gimme.stuff":
-							loot=lootMaker(floor);
+							loot=lootMaker(1);
 							stuff.addGold(loot);
 							System.out.print(loot);
 							break;
@@ -670,9 +698,12 @@ public class Rpg1_17
 		double number;
 		int maxCst,egg2Tries=0,refilCost=100;
 		boolean egg1=false;
-		
-		
 		String prompt;
+		
+		maxCst=100+(player.getFloor()*50);
+		if(maxCst>500)
+			maxCst=500;//this should cap the maximum cost at 500
+		
 		
 		
 		slowPrintln("\n________________________________________________\n\nYou now enter the floor "+player.getFloor()+" shop.");
@@ -682,16 +713,27 @@ public class Rpg1_17
 	
 		slowPrintln("\nYou can either type potion to look at the avaible potions, type upgrade to upgrade your weapon, or type leave to go to the next floor.");
 		slowPrintln(player+"\n"+stuff+"\n"+playerWeapon);
+		//real Code:
+		if(!aiAutoRun)
 		prompt=input.nextLine().toLowerCase();
-		
-		
+		//Ai:
+		else
+		{
+			 if(player.getHealth()<player.getMaxHealth()||stuff.getGold()>=maxCst*2)
+				prompt="potions";
+			else if(stuff.getGold()>200&&stuff.getUpgrades()>0)
+				prompt="upgrade";
+			else
+				prompt="leave";
+		}
+		slowPrint(prompt+"\n",25);
 //		switch(prompt)
 //		{
 			if(prompt.toLowerCase().equals("potions")||prompt.toLowerCase().equals("potion"))
 			{
 			//case "potions",potion;
 				slowPrintln("\n There is a max health potion, which increases your max health by ten but you must use the refill after, and the refill potion which refills your health back to max.");
-				
+			
 				
 				
 								do
@@ -699,24 +741,26 @@ public class Rpg1_17
 									//switch(prompt)
 //									{
 									slowPrintln("Type max to buy max potions, refill to buy refill potions, or n to go back to the store.");
-									prompt=input.nextLine().toLowerCase();
 									
-									
+									if(!aiAutoRun)
+										prompt=input.nextLine().toLowerCase();
+									else
+									{
+									if(player.getMaxHealth()==player.getHealth()||stuff.getGold()>=maxCst*2)
+										prompt="max";
+									else 
+										prompt="refill";
+									}
 									//case "max"
 									if(prompt.toLowerCase().equals("max"))
 									{
-										maxCst=100+(player.getFloor()*50);
 										
-												if(maxCst>500)
-												{
-													maxCst=500;//this should cap the maximum cost at 500
-												}
 												
 										slowPrintln("\nThat will cost "+maxCst+" per bottle, how many do you want?");
 										slowPrintln("\n\nNote: The maximum ammount of potions you can currently buy is: "+ ((int)(stuff.getGold()/maxCst)) );
-										number=input.nextDouble();
-										prompt=input.nextLine();//this is to prevent the scanner from skipping inputs later because of how the console reads inputs.
-										
+										//number=input.nextDouble();
+									//	prompt=input.nextLine();//this is to prevent the scanner from skipping inputs later because of how the console reads inputs.
+										number=stuff.getGold()/maxCst-1;
 											if((maxCst*((int)number))>stuff.getGold())
 											{
 												slowPrintln("Sorry, you don't have enough gold to buy that many, please try again.");	
@@ -786,7 +830,7 @@ public class Rpg1_17
 									else if(prompt.toLowerCase().equals("refill"))
 									{
 										slowPrintln("That will cost 100 gold, press enter to accept or n to decline.");
-										prompt=input.nextLine();
+									//	prompt=input.nextLine();
 										
 												if(prompt.toLowerCase().equals("n"))
 												{
@@ -823,8 +867,11 @@ public class Rpg1_17
 			else if (prompt.toLowerCase().equals("upgrade"))
 			{
 				slowPrintln("\nWould you like to upgrade your "+playerWeapon.weaponType+" for 200 gold?(y/n)");
-				prompt=input.nextLine();
 				
+				if(!aiAutoRun)
+					prompt=input.nextLine();
+				else
+				prompt="y";
 					if(prompt.toLowerCase().equals("y")&&stuff.getGold()>=200&&stuff.getUpgrades()>0)
 					{
 						stuff.addGold(-200);
@@ -881,7 +928,7 @@ public class Rpg1_17
 			 *
 			 *To Do:
 			 *____________________
-			 *
+			 * finish the auto run setting
 			 *I think everything is about good for this edition, I just need to play it a lot to make sure it is fully debuged.
 			 *	make a prompt that tells you you are going to see goblins
 			 *Next Update:
@@ -926,8 +973,14 @@ public class Rpg1_17
 				do//this is to make sure you don't enter a negative number
 				{
 					slowPrintln("Before you are three halls, which hallway would you like to go down?");
-					number=input.nextInt();
-					prompt=input.nextLine();
+					if(!aiAutoRun)
+					{
+						number=input.nextInt();
+						prompt=input.nextLine();
+					}
+					else
+						number=hallChoice;
+					
 					if(number>3)
 					{
 						slowPrintln("As you try to run through a hallway that isn't there, you run into a wall and take 1 damage");
@@ -964,7 +1017,7 @@ public class Rpg1_17
 						roll=randomGen(1,6);
 						switch((int)number)
 						{
-						case 1://each hall will have different odds 
+						case 1://each hall will have different odds, this is even odds
 							switch(roll)
 							{
 							case 1,2:
@@ -983,7 +1036,7 @@ public class Rpg1_17
 								slowPrintln("You find a treasure chest containing "+loot+" gold! You now have "+ bag.getGold()+" gold!");
 							}
 							break;
-						case 2:
+						case 2://more likely to have a troll
 							switch(roll)
 							{
 							case 1,2,3:
@@ -1009,7 +1062,7 @@ public class Rpg1_17
 								break;
 							}
 							break;
-						case 3:
+						case 3://more likely to have goblins 
 							switch(roll)
 							{
 							case 1,2,3,6:
@@ -1036,15 +1089,16 @@ public class Rpg1_17
 				       floorStore(input, character,bag,killonater);
 				   
 				       slowPrint("Type quit to leave the game or press enter to continue on to the next floor:");
-				       prompt = input.nextLine();
+//				       prompt = input.nextLine();
+//				       character.nextFloor();
+				       prompt="";
 				       character.nextFloor();
 			}
 		   while(!prompt.equals("quit"));
 			
-			if (prompt.equals("quit"))
-			{
+			
 				slowPrintln("Welp thats the whole game, I hope you had fun!!");
-			}
+			
 		input.close();	
 
 }
