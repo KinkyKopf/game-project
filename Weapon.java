@@ -31,7 +31,7 @@ public class Weapon
 				setMin(1);
 				setMax(4);
 				setProtection(3);
-				evasionBuff=-2;
+				evasionBuff=-4;
 				break;	
 			case "bow"://look up inheritance
 				setMin(2);

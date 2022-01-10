@@ -15,10 +15,10 @@ public class Goblin
 	public Goblin(int f) throws InterruptedException
 	{
 		
-		health = 10+(f*3);
+		health = 10+(f*5);
 		baseHealth=health;
 		
-		minDamage = 1+f;
+		minDamage = 1+2*f;
 		maxDamage = (int)(minDamage+3*1.5);
 		
 		startingNum++;
@@ -43,6 +43,10 @@ public class Goblin
 				dead=true;
 				Rpg1_17.slowPrintln("Goblin "+goblinNum+" has died!");
 				numberOfGoblins--;
+					if(numberOfGoblins<=0)
+					{
+						startingNum=0;
+					}
 			}
 		}
 		else

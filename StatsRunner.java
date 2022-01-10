@@ -10,16 +10,16 @@ import java.util.Scanner;
  */
 public class StatsRunner 
 {
+	public static int randomGen(int min, int max)//this is meant to make it easier to get random numbers faster without thinking too much about it.
+	{
+		return (int)(Math.random()*(max-min+1))+min;
+	}
 
-//	public static void test(PlayerStats Character)
-//	{
-//		System.out.print(Character.gold);
-//	}
-//	
+
 	public static void main(String[] args) throws InterruptedException 
 	{
 		Scanner inputTaker= new Scanner(System.in);
-		Weapon testWeapon= new Weapon("sword");
+		Weapon testWeapon= new Weapon("");
 		PlayerStats player= new PlayerStats(testWeapon);
 		//TrollStats troll = new TrollStats(1);
 		
@@ -37,10 +37,15 @@ public class StatsRunner
 		//Rpg1_17.goblinHorde(inputTaker, player, null, testWeapon);
 		
 //Auto Run code:________________________
-		Rpg1_17 runner = new Rpg1_17(3,"shield");
+		Rpg1_17 runner = new Rpg1_17(3,"sword");
 		runner.main(args);
-
 		
+//		
+//		for(int i=0;i<100;i++)
+//		{
+//			System.out.print(randomGen(0,5-1));
+//		}
+//		
 	}
 
 }

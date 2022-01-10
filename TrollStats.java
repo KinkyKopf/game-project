@@ -2,7 +2,7 @@ package gameprototypes;
 
 public class TrollStats 
 {
-	private int health,damageBuff,accuracy,floor,damageOut;
+	private int health,damage,accuracy,floor,damageOut;
 	private String name;
 	/*   Notes:
 	 *make the troll get bonus evasion if he has glasses on
@@ -18,42 +18,39 @@ public class TrollStats
 		Rpg1_17.slowPrintln("A troll is near.\nYou see a door labeled: "+name+". \nBrave yourself, "+name+" the troll is behind here.");
 		
 		setFloor(f);
-		setDamage();
-		setHealth();	
-		setAccuracy();
+		setDamage(Rpg1_17.randomGen(-2,3));
+		setHealth(20+(floor*5));	
+		setAccuracy(Rpg1_17.randomGen(-3, 6));
 	}
 
 	
 //Setters______________
-	public void setDamage() throws InterruptedException
+	public void setDamage(int d) throws InterruptedException
 	{
 		//d=0;
-		int d=Rpg1_17.randomGen(-2,3);
-		damageBuff=d;
+		damage=d;
 		if (d>2)
 			Rpg1_17.slowPrintln("You see a truly staggering ammount of what you can only assume is empty tubs of preworkout scattered around "+name+"'s lair\n");
-		if(d<0)
+		if(d<1)
 			Rpg1_17.slowPrintln("You notice a stack of books labled \"Computer Science: The Anylitical Studies Of Computational Electronics\" in the corner of "+name+"'s lair\n");
 	}
-	public void setHealth() throws InterruptedException
+	public void setHealth(int h) throws InterruptedException
 	{
-		int h=20+floor*5;
 		int bonusHealth=Rpg1_17.randomGen(-7,10);
 		health = h+bonusHealth;
 		if(bonusHealth>5)
 			Rpg1_17.slowPrintln(name+" appears to be abnormally large. But not like in a bad way or anything,he's still in shape for a troll");
-		if(bonusHealth<-2)
+		if(bonusHealth<0)
 		{
 			Rpg1_17.slowPrintln(name+" is way smaller than your average troll but it is best not to metion it, he is probably insecure\n");
 		}
 	}
-	public void setAccuracy() throws InterruptedException
+	public void setAccuracy(int a) throws InterruptedException
 	{
-		int a =Rpg1_17.randomGen(-3, 4);
 		accuracy=a;
-		if(a>2)
+		if(a>4)
 			Rpg1_17.slowPrintln("It appears that "+name+" is wearing glasses\n");
-		else if (a<0)
+		else if (a<=0)
 			{
 			Rpg1_17.slowPrintln(name+" squints at you.\n");
 			}
@@ -114,7 +111,7 @@ public class TrollStats
 			n ="Fus Ro Dah";
 			break;
 		case 6:
-			n ="Al Dente";
+			n ="Al Dente'";
 			break;
 		case 7:
 			n="Gene Poole";
@@ -137,11 +134,10 @@ public class TrollStats
 	}
 	public int rollDamage(int times,int playerProtection) throws InterruptedException
 	{
+		if(times<=0)
+		return 0;
+		damageOut = (Rpg1_17.randomGen(2, 5)+damage-playerProtection)+rollDamage(times-1,playerProtection);
 		
-		for(int i =0; i<times;i++)
-		{
-		damageOut = (Rpg1_17.randomGen(2, 5)+damageBuff-playerProtection);
-		}
 		System.out.println("DamageValue: "+damageOut);
 		
 		if(damageOut<=0)

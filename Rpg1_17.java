@@ -22,6 +22,10 @@ public class Rpg1_17
 		hallChoice =hall;
 		weaponChoice=weapon;
 	}
+	public Rpg1_17()
+	{
+		//there is nothing here so if I want to launch a test via a different class, I still can
+	}
 	
 	public static int stringToInt(String intInString)
 	{
@@ -408,10 +412,14 @@ public class Rpg1_17
 		 * integrate the string to number into my code-1-the converter works now all I need to do is get the if statements right.
 		 *
 		 *	Bugs:
-		 *  it makes a number bigger than the array when choosing an attacker sometimes, so far it has happened twice
+		 * 	
 		 * 
 		 * fixes:
-		 * dead goblins are attacking; it will say that the goblin is dead, roll the goblin again then just attack-done
+		 * dead goblins are attacking; it will say that the goblin is dead, roll the goblin again then just attack-done, just some bad boolean logic, I belive
+		 *	i fixed half of the array exception issue, originally, whenever it would reroll when a goblin is dead, I set the generator to make the wrong values, so stupid problem, easy fix, but it is still happening sometimes
+		 *  it makes a number bigger than the array when choosing an attacker sometimes, so far it has happened twice
+		 *  it isn't a problem with the random generator, since I made 100 generater numbers and an erroir wasn't in them, meaning in must be in my adding and subtracting--The starting num must stay even though the array got garbage collected meaning that if statring num was five on the las one it will be e5 on this one, i belive. 
+		 *  to fix it, I made it so once all the goblins died, starting num was set to 0.
 		 */
 	
 		
@@ -419,24 +427,29 @@ public class Rpg1_17
 		int goblinAttacker;
 		int loot;
 		String prompt = "";
-		
 		boolean alive=true;
-		boolean validAttacker=false;//this will be for a loop to make a random ALIVE goblin attack you.I am also going to copy the code to make it so the "A.I" can pick a selection for you from my dialouge tree
 		boolean win = false;
 		int aiCounter=1;
-		int goblinGen =randomGen(1,5);
+		int goblinGen =randomGen(1,4);
 	//	goblinGen=4;
 		Goblin[] goblins=new Goblin[goblinGen];
 	
-		slowPrintln("You see the flickering light of a fire around the hall, but right as you are about to turn the corner,\n You see the the dancing shadows of goblins.  Prepare for a fight."
-				+ "\n___________________________\n");
+		slowPrintln("You see the flickering light of a fire around the hall, but right as you are about to turn the corner,\n You see the the dancing shadows of goblins.  Prepare for a fight.\n___________________________\n");
 		
-		slowPrintln("There are "+goblinGen+" goblins to attack");
+		for(int i=0;i<goblinGen;i++)//generates the goblins
+		{
+			goblins[i]=new Goblin(player.getFloor());
+		}
+		slowPrintln("There are "+Goblin.startingNum+" goblins to attack");
 		
-				for(int i=0;i<goblinGen;i++)
-				{
-					goblins[i]=new Goblin(player.getFloor());
-				}
+//		if(aiAutoRun)//this is to generate random numbers to see if they are within a range
+//		{
+//			for(int i=0;i<100;i++)
+//			{
+//				slowPrintln(randomGen(0,Goblin.startingNum-1)+" ");
+//			}
+//			prompt=input.nextLine();
+//		}
 		
 		do
 		{
@@ -471,18 +484,21 @@ public class Rpg1_17
 						loot=randomGen(1,3);
 						stuff.addGold(loot);;
 						slowPrintln("You also found "+loot+" ugrade tokens in one of the goblin's "+partGen()+" so win/win!");
+						
 						return;
 					}
 	
 			goblinAttacker= randomGen(0,Goblin.startingNum-1);//this decides what goblin will attack
-			if(goblinAttacker>Goblin.startingNum)
+			if(goblinAttacker>=Goblin.startingNum)
 			{
-				
+				goblinAttacker= randomGen(0,Goblin.startingNum-1);
+				slowPrintln("reroll");
 			}
+			slowPrint("Goblin number "+goblinAttacker);
 			while((goblins[goblinAttacker].dead))//if the chosen goblin is dead, this keep picking until an alive goblin is chosen.
 			{
 						slowPrintln("Old Attacker: "+goblinAttacker);
-						goblinAttacker= randomGen(1,Goblin.startingNum);//rerolls the selection
+						goblinAttacker= randomGen(1,Goblin.startingNum-1);//rerolls the selection
 						slowPrintln("New Attacker: "+goblinAttacker);		
 			}
 			
@@ -513,7 +529,7 @@ public class Rpg1_17
 	public static Weapon firstStore(Scanner input,Inventory stuff) throws InterruptedException
 	{
 		Weapon killTool=null;
-		int swordCost,shieldCost,bowCost,loot,floor;
+		int swordCost,shieldCost,bowCost,loot;
 		String prompt;
 		boolean skipDungeon=false;//first cheat code
 		boolean balance=false;//this is for skipping floors
