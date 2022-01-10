@@ -15,10 +15,10 @@ public class Goblin
 	public Goblin(int f) throws InterruptedException
 	{
 		
-		health = 10+(f*5);
+		health = 10+(f*0);
 		baseHealth=health;
 		
-		minDamage = 1+2*f;
+		minDamage = (int)(1+(1.5*f));
 		maxDamage = (int)(minDamage+3*1.5);
 		
 		startingNum++;

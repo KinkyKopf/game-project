@@ -3,10 +3,12 @@ package gameprototypes;
 import java.util.Scanner;
 
 /*
- * Zachary Kinkopf
+ * Zachary  Kinkopf
  * December 1st
  * test the concepts of storing data outside of my main game class
  * also I am going to turn this into a console for testing methods individually
+ * I got this to work suprisingly well and it can add up the average floors as well, so that's pretty sweet
+ * there is something super weird about this, it seems like you have a 50% change of being below floor five or getting all the way to 75, usually with only about 1 in 100 not falling in between them
  */
 public class StatsRunner 
 {
@@ -18,9 +20,10 @@ public class StatsRunner
 
 	public static void main(String[] args) throws InterruptedException 
 	{
-		Scanner inputTaker= new Scanner(System.in);
-		Weapon testWeapon= new Weapon("");
-		PlayerStats player= new PlayerStats(testWeapon);
+//		Scanner inputTaker= new Scanner(System.in);
+//		Weapon testWeapon= new Weapon("");
+//		PlayerStats player= new PlayerStats(testWeapon);
+		int realTimes=0;
 		//TrollStats troll = new TrollStats(1);
 		
 //		if(1==1|troll.rollDamage(1)==1)
@@ -37,9 +40,15 @@ public class StatsRunner
 		//Rpg1_17.goblinHorde(inputTaker, player, null, testWeapon);
 		
 //Auto Run code:________________________
+		for(int i=0;i<100;i++)
+		{
 		Rpg1_17 runner = new Rpg1_17(3,"sword");
 		runner.main(args);
-		
+		realTimes++;
+		}
+		System.out.println("Average Floor: "+CounterFile.averageFloors()+"Times: "+CounterFile.times);
+		System.out.println(CounterFile.highFloor);
+		System.out.println(CounterFile.lowFloor);
 //		
 //		for(int i=0;i<100;i++)
 //		{

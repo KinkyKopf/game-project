@@ -62,9 +62,12 @@ public class PlayerStats
 		return floor;
 	}
 	//Mutators_______________________________________
-	public void die()
+	public void die() throws InterruptedException
 	{
 		alive=false;
+		Rpg1_17.slowPrintln("You died!!!");		
+		Rpg1_17.slowPrintln("Floor: "+floor);
+		//Thread.sleep(100);
 	}
 	public void setHealth(int h)
 	{
@@ -88,9 +91,11 @@ public class PlayerStats
 		maxHealth+=adder;
 	}
 	
-	public void takeDamage(int damage)
+	public void takeDamage(int damage) throws InterruptedException
 	{
 		health-=damage;
+		if(health<=0)
+			die();
 	}
 	
 	public void addEvasion(int plus)

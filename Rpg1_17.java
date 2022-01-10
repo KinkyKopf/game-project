@@ -169,7 +169,8 @@ public class Rpg1_17
 				{
 					slowPrintln("Great!");
 					slowPrint("So you must have just entered a dead goblin, and then confirmed your choice twice on accident!");
-					Thread.sleep(750);
+					if(!aiAutoRun)
+						Thread.sleep(750);
 					slowPrint("...",333);
 					slowPrintln("Right?");
 					s=inputTaker.nextLine();
@@ -237,11 +238,12 @@ public class Rpg1_17
 	
 	public static void slowPrint(String text,int printingSpeed) throws InterruptedException//This slow prints, but you can set the print speed, good for counting.
 	{
-		
+		//this is for multi-testing where I want it to go as fast as possible
 		for (int i=0;i<text.length();i++)
 		{
 			System.out.print(text.charAt(i));
-			Thread.sleep(printingSpeed);
+			if(!aiAutoRun)
+				Thread.sleep(printingSpeed);
 		}
 		System.out.println();
 	}
@@ -252,7 +254,8 @@ public class Rpg1_17
 		for (int i=0;i<text.length();i++)
 		{
 			System.out.print(text.charAt(i));
-			Thread.sleep(printSpeed);
+			if(!aiAutoRun)
+				Thread.sleep(printSpeed);
 		}
 		System.out.println();
 	}
@@ -263,7 +266,8 @@ public class Rpg1_17
 		for (int i=0;i<text.length();i++)
 		{
 			System.out.print(text.charAt(i));
-			Thread.sleep(printSpeed);
+			if(!aiAutoRun)
+				Thread.sleep(printSpeed);
 		}
 		System.out.println();
 	}
@@ -331,7 +335,8 @@ public class Rpg1_17
 					slowPrintln("You deal "+playerDam+" damage to the troll!");
 					troll.takeDamage(playerDam);
 					slowPrintln("Congrats, You killed "+troll.getName()+"!\nI bet his children will be equally as happy with your success!");
-					Thread.sleep(500);
+					if(!aiAutoRun)
+						Thread.sleep(500);
 					slowPrint("Nah just kidding, he dosen't have children!");
 					
 					loot =lootMaker(player.getFloor());
@@ -368,7 +373,6 @@ public class Rpg1_17
 					if(troll.getDamage()>=player.getHealth())
 					{
 					slowPrintln("The troll hits you for "+troll.getDamage()+" damage, absoutely obliterating your "+partGen()+", killing you instantly.");//add a random part generator
-					player.die();
 					break;
 					}
 					else
@@ -420,6 +424,7 @@ public class Rpg1_17
 		 *  it makes a number bigger than the array when choosing an attacker sometimes, so far it has happened twice
 		 *  it isn't a problem with the random generator, since I made 100 generater numbers and an erroir wasn't in them, meaning in must be in my adding and subtracting--The starting num must stay even though the array got garbage collected meaning that if statring num was five on the las one it will be e5 on this one, i belive. 
 		 *  to fix it, I made it so once all the goblins died, starting num was set to 0.
+		 *  IT DIDN'T WORK-it actually did, I just didn't5 set it up to be run mutiple times in a row.
 		 */
 	
 		
@@ -484,7 +489,7 @@ public class Rpg1_17
 						loot=randomGen(1,3);
 						stuff.addGold(loot);;
 						slowPrintln("You also found "+loot+" ugrade tokens in one of the goblin's "+partGen()+" so win/win!");
-						
+						Goblin.startingNum=0;
 						return;
 					}
 	
@@ -518,7 +523,8 @@ public class Rpg1_17
 				
 				System.out.print("The goblins killed you! They celebrate by taking out your "+partGen()+" and doing a dance around it\n that looks like a monkey told another monkey how to do the hokey pokey. ");
 				alive=false;
-				player.die();
+				Goblin.startingNum=0;
+				Goblin.numberOfGoblins=0;
 				break;
 			}
 			System.out.println("\n_____________________________________");
@@ -1014,7 +1020,9 @@ public class Rpg1_17
 						character.addHealth(-2);
 					}
 					if(character.getHealth()<=0)
+					{
 						break;
+					}
 				}
 				while(number>3||number<=0);
 				
@@ -1109,10 +1117,19 @@ public class Rpg1_17
 //				       character.nextFloor();
 				       prompt="";
 				       character.nextFloor();
+				       
+				       if(character.getFloor()==76)
+				       {
+				    	   prompt="quit";
+				       }
 			}
 		   while(!prompt.equals("quit"));
 			
-			
+			CounterFile.addFloors(character.getFloor());
+			if(character.getFloor()==76)
+				CounterFile.highFloor++;
+			else if(character.getFloor()<5)
+				CounterFile.lowFloor++;
 				slowPrintln("Welp thats the whole game, I hope you had fun!!");
 			
 		input.close();	
