@@ -12,21 +12,37 @@ public class Goblin
 	 int baseHealth,health,minDamage,maxDamage,accuracy,goblinNum,currentDamage;
 	static int numberOfGoblins,startingNum=0;
 	boolean dead;
+	private double hlthMultiplier,dmgMultiplier;
+
 	public Goblin(int f) throws InterruptedException
 	{
-		
-		health = 10+(f*0);
+		if(f<6)
+		{
+			hlthMultiplier=2;
+			dmgMultiplier=.80;
+		}
+		else if(f<10)
+		{
+			hlthMultiplier=5;
+			dmgMultiplier=1.2;
+		}
+		else if(f<20)
+		{
+			hlthMultiplier=10;
+			dmgMultiplier=3;
+		}
+		health = 10+(int)(f*hlthMultiplier);
 		baseHealth=health;
 		
-		minDamage = (int)(1+(1.5*f));
-		maxDamage = (int)(minDamage+3*1.5);
+		minDamage = (int)(1+(dmgMultiplier*f));
+		maxDamage = (int)(1+minDamage*2+f*dmgMultiplier);
 		
 		startingNum++;
 		numberOfGoblins++;
 		goblinNum=numberOfGoblins;
 		
-		accuracy=Rpg1_17.randomGen(-3, 4);
-			if(accuracy>2)
+		accuracy=Rpg1_17.randomGen(-3, 3);
+			if(accuracy>0)
 				Rpg1_17.slowPrintln("It looks like goblin "+goblinNum+" has glasses");
 			if(accuracy<0)
 				Rpg1_17.slowPrintln("Goblin "+goblinNum+" squints at you.");

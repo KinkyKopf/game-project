@@ -9,6 +9,10 @@ import java.util.Scanner;
  * also I am going to turn this into a console for testing methods individually
  * I got this to work suprisingly well and it can add up the average floors as well, so that's pretty sweet
  * there is something super weird about this, it seems like you have a 50% change of being below floor five or getting all the way to 75, usually with only about 1 in 100 not falling in between them
+ *
+ *TO DO:
+ *finish tweaking the values, so far the bow still dies a lot more on the first level
+ *
  */
 public class StatsRunner 
 {
@@ -42,13 +46,12 @@ public class StatsRunner
 //Auto Run code:________________________
 		for(int i=0;i<100;i++)
 		{
-		Rpg1_17 runner = new Rpg1_17(3,"sword");
+		Rpg1_17 runner = new Rpg1_17(3,"shield");
 		runner.main(args);
 		realTimes++;
 		}
-		System.out.println("Average Floor: "+CounterFile.averageFloors()+"Times: "+CounterFile.times);
-		System.out.println(CounterFile.highFloor);
-		System.out.println(CounterFile.lowFloor);
+		 CounterFile tabKeeper=new CounterFile();
+		System.out.println(tabKeeper);
 //		
 //		for(int i=0;i<100;i++)
 //		{

@@ -26,18 +26,19 @@ public class Weapon
 				setMin(2);
 				setMax(6);
 				setProtection(0);
+				evasionBuff=2;
 				break;
 			case"shield":
 				setMin(1);
 				setMax(4);
-				setProtection(3);
-				evasionBuff=-4;
+				setProtection(1);
+				evasionBuff=-3;
 				break;	
 			case "bow"://look up inheritance
 				setMin(2);
 				setMax(4);
 				setProtection(0);
-				evasionBuff=3;
+				evasionBuff=6;
 			case"gauntlets":
 				setMin(1);
 				setMax(2);

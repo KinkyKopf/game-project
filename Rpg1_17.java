@@ -311,13 +311,18 @@ public class Rpg1_17
 		boolean blocked;
 		
 		slowPrint("Would you like to auto run this combat?");
-		//prompt=input.nextLine();
+		if(!aiAutoRun)
+			prompt=input.nextLine();
+		else
 		prompt="y";
 		switch(prompt)
 		{
 		case "y","yes":
-//			slowPrint("Auto running in ...");
-//			slowPrint("3...2...1...",250);
+			if(!aiAutoRun)
+			{
+			slowPrint("Auto running in ...");
+			slowPrint("3...2...1...",250);
+			}
 			autoRun=true;
 		}
 		
@@ -459,10 +464,10 @@ public class Rpg1_17
 		do
 		{
 			//Real code:
-			//selection=answerChecker(goblins,input);
-			
-			//AI code:
-			selection=aiCounter;
+			if(!aiAutoRun)
+				selection=answerChecker(goblins,input);
+			else
+				selection=aiCounter;
 			//slowPrint("Answer recived: "+selection);
 			
 			if(goblins[selection-1].dead==true)
@@ -741,9 +746,9 @@ public class Rpg1_17
 		//Ai:
 		else
 		{
-			 if(player.getHealth()<player.getMaxHealth()||stuff.getGold()>=maxCst*2)
+			 if( stuff.getGold()>=maxCst*2 || stuff.getGold()>=100&&player.getHealth()!=player.getMaxHealth())
 				prompt="potions";
-			else if(stuff.getGold()>200&&stuff.getUpgrades()>0)
+			else if(stuff.getGold()>=200&&stuff.getUpgrades()>0)
 				prompt="upgrade";
 			else
 				prompt="leave";
@@ -768,10 +773,12 @@ public class Rpg1_17
 										prompt=input.nextLine().toLowerCase();
 									else
 									{
-									if(player.getMaxHealth()==player.getHealth()||stuff.getGold()>=maxCst*2)
+									if(stuff.getGold()>=maxCst*2)
 										prompt="max";
-									else 
+									else if(stuff.getGold()>=100&&player.getHealth()!=player.getMaxHealth()) 
 										prompt="refill";
+									else 
+										prompt="n";
 									}
 									//case "max"
 									if(prompt.toLowerCase().equals("max"))
@@ -1113,9 +1120,15 @@ public class Rpg1_17
 				       floorStore(input, character,bag,killonater);
 				   
 				       slowPrint("Type quit to leave the game or press enter to continue on to the next floor:");
-//				       prompt = input.nextLine();
-//				       character.nextFloor();
-				       prompt="";
+				       
+				       if(!aiAutoRun)
+				       {
+				       prompt = input.nextLine();
+				       character.nextFloor();
+				       }
+				       else
+				    	   prompt="";
+				       
 				       character.nextFloor();
 				       
 				       if(character.getFloor()==76)
@@ -1127,9 +1140,18 @@ public class Rpg1_17
 			
 			CounterFile.addFloors(character.getFloor());
 			if(character.getFloor()==76)
-				CounterFile.highFloor++;
-			else if(character.getFloor()<5)
-				CounterFile.lowFloor++;
+				CounterFile.numWon++;
+			else if(character.getFloor()<2)
+				CounterFile.f1Death++;
+			else if(character.getFloor()<6)
+				CounterFile.f5Death++;
+			else if(character.getFloor()<11)
+				CounterFile.f10Death++;
+			else if(character.getFloor()<21)
+				CounterFile.f20Death++;
+			else if(character.getFloor()<51)
+				CounterFile.f50Death++;
+
 				slowPrintln("Welp thats the whole game, I hope you had fun!!");
 			
 		input.close();	

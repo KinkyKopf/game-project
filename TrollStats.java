@@ -3,6 +3,8 @@ package gameprototypes;
 public class TrollStats 
 {
 	private int health,damage,accuracy,floor,damageOut;
+	private double hlthMultiplier,dmgMultiplier;
+
 	private String name;
 	/*   Notes:
 	 *make the troll get bonus evasion if he has glasses on
@@ -12,6 +14,22 @@ public class TrollStats
 	
 	public TrollStats(int f) throws InterruptedException
 	{
+		
+		if(f<6)
+		{
+			hlthMultiplier=5;
+			dmgMultiplier=.9;
+		}
+		else if(f<10)
+		{
+			hlthMultiplier=8;
+			dmgMultiplier=1.5;
+		}
+		else if(f<20)
+		{
+			hlthMultiplier=15;
+			dmgMultiplier=3;
+		}
 		nameGen();
 		Rpg1_17.slowPrintln("As you go down the hallway, a rank scent of what you can only decsribe as teenage man-musk floods your nostrills ");
 		Rpg1_17.slowPrint("...\n",500);
@@ -19,8 +37,8 @@ public class TrollStats
 		
 		setFloor(f);
 		setDamage(Rpg1_17.randomGen(-2,3));
-		setHealth(20+(floor*5));	
-		setAccuracy(Rpg1_17.randomGen(-3, 6));
+		setHealth(20+(int)(floor*hlthMultiplier));	
+		setAccuracy(Rpg1_17.randomGen(-3, 3));
 	}
 
 	
@@ -48,7 +66,7 @@ public class TrollStats
 	public void setAccuracy(int a) throws InterruptedException
 	{
 		accuracy=a;
-		if(a>4)
+		if(a>0)
 			Rpg1_17.slowPrintln("It appears that "+name+" is wearing glasses\n");
 		else if (a<=0)
 			{
@@ -134,11 +152,12 @@ public class TrollStats
 	}
 	public int rollDamage(int times,int playerProtection) throws InterruptedException
 	{
-		if(times<=0)
-		return 0;
-		damageOut = (Rpg1_17.randomGen(2, 5)+damage-playerProtection)+rollDamage(times-1,playerProtection);
+		for(int i=0;i<times;i++)
+		{
+		damageOut += (Rpg1_17.randomGen((int)(2*dmgMultiplier), (int)(5*dmgMultiplier))+damage-playerProtection);
+		}
 		
-		System.out.println("DamageValue: "+damageOut);
+		//System.out.println("DamageValue: "+damageOut);
 		
 		if(damageOut<=0)
 			Rpg1_17.slowPrintln("You blocked the attack!");
