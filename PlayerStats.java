@@ -34,7 +34,7 @@ public class PlayerStats
 	}
 	public PlayerStats(Weapon w)
 	{
-		this(5,20,20,w);
+		this(7,25,25,w);
 	}
 	//getters______________________________
 	

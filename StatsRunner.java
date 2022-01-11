@@ -46,7 +46,7 @@ public class StatsRunner
 //Auto Run code:________________________
 		for(int i=0;i<100;i++)
 		{
-		Rpg1_17 runner = new Rpg1_17(3,"shield");
+		Rpg1_17 runner = new Rpg1_17(1,"bow");
 		runner.main(args);
 		realTimes++;
 		}

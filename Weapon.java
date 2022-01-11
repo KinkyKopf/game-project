@@ -36,7 +36,7 @@ public class Weapon
 				break;	
 			case "bow"://look up inheritance
 				setMin(2);
-				setMax(4);
+				setMax(5);
 				setProtection(0);
 				evasionBuff=6;
 			case"gauntlets":
