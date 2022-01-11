@@ -11,10 +11,12 @@ import java.util.Scanner;
 public class Rpg1_17 
 {
 	
-	static int printSpeed=0;//20 feels a bit slow but anything less skips around too much
+	static int printSpeed=15;//20 feels a bit slow but anything less skips around too much
 	static boolean aiAutoRun;
 	static int hallChoice;
 	static String weaponChoice;
+	static boolean egg1=false;
+	static int egg2Tries=0;
 	
 	public Rpg1_17(int hall,String weapon)
 	{
@@ -502,14 +504,16 @@ public class Rpg1_17
 			if(goblinAttacker>=Goblin.startingNum)
 			{
 				goblinAttacker= randomGen(0,Goblin.startingNum-1);
-				slowPrintln("reroll");
+				//slowPrintln("reroll");
 			}
-			slowPrint("Goblin number "+goblinAttacker);
+			
+			//slowPrint("Goblin number "+goblinAttacker);
+			
 			while((goblins[goblinAttacker].dead))//if the chosen goblin is dead, this keep picking until an alive goblin is chosen.
 			{
-						slowPrintln("Old Attacker: "+goblinAttacker);
+						//slowPrintln("Old Attacker: "+goblinAttacker);
 						goblinAttacker= randomGen(1,Goblin.startingNum-1);//rerolls the selection
-						slowPrintln("New Attacker: "+goblinAttacker);		
+						//slowPrintln("New Attacker: "+goblinAttacker);		
 			}
 			
 			
@@ -586,7 +590,7 @@ public class Rpg1_17
 												stuff.addGold(-swordCost);
 												slowPrintln("You have "+stuff.getGold()+" gold remaining");
 												slowPrintln("Now off to the dungeon you go!");
-												killTool=new Weapon("sword");
+												killTool=new Weapon("sword",stuff);
 												prompt = "dungeon";
 												break;
 											}
@@ -618,7 +622,7 @@ public class Rpg1_17
 												stuff.addGold(-shieldCost);
 												slowPrintln("You now have "+stuff.getGold()+" gold remaining");
 												slowPrintln("Now off to the dungeon you go!");
-												killTool=new Weapon("shield");
+												killTool=new Weapon("shield",stuff);
 												prompt = "dungeon";
 												break;
 											}
@@ -643,21 +647,20 @@ public class Rpg1_17
 										slowPrintln("Sorry, you don't have enough to buy the bow at the moment");
 										break;
 									 }
-											else 
-												
-											{
-											stuff.addGold(-bowCost);
-										slowPrintln("You now have "+stuff.getGold()+" gold remaining");
-										slowPrintln("Now off to the dungeon you go!");
-										killTool=new Weapon("bow");
-										prompt = "dungeon";
-										break;
-											}//end else
-									}//end if yes
-									else
+									else 		
 									{
-										break;
-									}
+									stuff.addGold(-bowCost);
+									slowPrintln("You now have "+stuff.getGold()+" gold remaining");
+									slowPrintln("Now off to the dungeon you go!");
+									killTool=new Weapon("bow",stuff);
+									prompt = "dungeon";
+									break;
+									}//end else
+								}//end if yes
+							else
+							{
+								break;
+							}
 									
 //						case "skip.sword":
 //							skipDungeon=true;
@@ -678,9 +681,9 @@ public class Rpg1_17
 //							floor=6;
 //							balance=true;
 //							break;
-						case "leave":
+						case "leave","dungeon":
 							prompt="dungeon";
-							killTool=new Weapon("gauntlets");
+							killTool=new Weapon("gauntlets",stuff);
 							break;
 						case "gimme.stuff":
 							loot=lootMaker(1);
@@ -723,8 +726,7 @@ public class Rpg1_17
 		 * make it print the updated stats
 		 */
 		double number;
-		int maxCst,egg2Tries=0,refilCost=100;
-		boolean egg1=false;
+		int maxCst,refilCost=100;
 		String prompt;
 		
 		maxCst=100+(player.getFloor()*50);
@@ -753,7 +755,7 @@ public class Rpg1_17
 			else
 				prompt="leave";
 		}
-		slowPrint(prompt+"\n",25);
+		//slowPrint(prompt+"\n",25);
 //		switch(prompt)
 //		{
 			if(prompt.toLowerCase().equals("potions")||prompt.toLowerCase().equals("potion"))
@@ -787,13 +789,19 @@ public class Rpg1_17
 												
 										slowPrintln("\nThat will cost "+maxCst+" per bottle, how many do you want?");
 										slowPrintln("\n\nNote: The maximum ammount of potions you can currently buy is: "+ ((int)(stuff.getGold()/maxCst)) );
-										//number=input.nextDouble();
-									//	prompt=input.nextLine();//this is to prevent the scanner from skipping inputs later because of how the console reads inputs.
-										number=stuff.getGold()/maxCst-1;
-											if((maxCst*((int)number))>stuff.getGold())
-											{
-												slowPrintln("Sorry, you don't have enough gold to buy that many, please try again.");	
-											}
+										
+										if(!aiAutoRun)
+										{
+										number=input.nextDouble();
+										prompt=input.nextLine();//this is to prevent the scanner from skipping inputs later because of how the console reads inputs.
+										}
+										else
+											number=stuff.getGold()/maxCst-1;
+										
+										if((maxCst*((int)number))>stuff.getGold())
+										{
+											slowPrintln("Sorry, you don't have enough gold to buy that many, please try again.");	
+										}
 															else if(number<0&&egg1==false)//easter egg
 															{
 																slowPrintln("HEY!  You know thats not how that works!  But hey here is 500 gold for trying!");
@@ -859,7 +867,9 @@ public class Rpg1_17
 									else if(prompt.toLowerCase().equals("refill"))
 									{
 										slowPrintln("That will cost 100 gold, press enter to accept or n to decline.");
-									//	prompt=input.nextLine();
+										
+										if(!aiAutoRun)
+										prompt=input.nextLine();
 										
 												if(prompt.toLowerCase().equals("n"))
 												{
@@ -896,19 +906,16 @@ public class Rpg1_17
 			else if (prompt.toLowerCase().equals("upgrade"))
 			{
 				slowPrintln("\nWould you like to upgrade your "+playerWeapon.weaponType+" for 200 gold?(y/n)");
-				
+				System.out.println(playerWeapon.weaponType);
 				if(!aiAutoRun)
 					prompt=input.nextLine();
 				else
 				prompt="y";
 					if(prompt.toLowerCase().equals("y")&&stuff.getGold()>=200&&stuff.getUpgrades()>0)
 					{
-						stuff.addGold(-200);
-						playerWeapon.damageBonus+= 3+(int)(player.getFloor()*.5);
+						playerWeapon.upgrade(player.getFloor());
 						slowPrintln("\nYou Upgraded your "+playerWeapon.weaponType+" and now have "+stuff.getGold()+" gold left!");
-						stuff.addUpgrades(-1);
-						if(playerWeapon.weaponType.equals("shield"));
-							playerWeapon.protection+=randomGen(1,3+player.getFloor());
+						
 					}
 					else if((prompt.toLowerCase().equals("y"))&&stuff.getGold()<200)
 					{
@@ -954,12 +961,16 @@ public class Rpg1_17
 			 *Get the class-things to work in each method-1
 			 *get rid of the transfer arrays-2
 			 *put in the evasion stat-3
+			 *finish the auto run setting
+			 *make a prompt that tells you that you are going to see goblins
 			 *
 			 *To Do:
 			 *____________________
-			 * finish the auto run setting
+			 * 
+			 * 
+			 * the bow isn't working, when you buy it, for some reason it dosen't work
 			 *I think everything is about good for this edition, I just need to play it a lot to make sure it is fully debuged.
-			 *	make a prompt that tells you you are going to see goblins
+			 *	
 			 *Next Update:
 			 *___________________________________________
 			 *
@@ -982,6 +993,8 @@ public class Rpg1_17
 		boolean balance=false;//this is for skipping floors
 		
 			killonater=firstStore(input,bag);
+			
+			slowPrint(killonater.weaponType);
 			
 			PlayerStats character = new PlayerStats(killonater);
 			character.nextFloor();
@@ -1122,10 +1135,7 @@ public class Rpg1_17
 				       slowPrint("Type quit to leave the game or press enter to continue on to the next floor:");
 				       
 				       if(!aiAutoRun)
-				       {
-				       prompt = input.nextLine();
-				       character.nextFloor();
-				       }
+				    	   prompt = input.nextLine();
 				       else
 				    	   prompt="";
 				       

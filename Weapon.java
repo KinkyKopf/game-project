@@ -16,7 +16,8 @@ public class Weapon
 		int minDamage,maxDamage,damageBonus,protection,evasionBuff,currentDamage;
 		 boolean enchanted;
 		String weaponType;
-		public Weapon(String s)//constructor
+		Inventory bag;
+		public Weapon(String s,Inventory b)//constructor
 		{
 //			damageBonus=1000;
 			weaponType=s;
@@ -38,7 +39,9 @@ public class Weapon
 				setMin(2);
 				setMax(5);
 				setProtection(0);
+				System.out.println("Bow Bought!");
 				evasionBuff=6;
+				break;
 			case"gauntlets":
 				setMin(1);
 				setMax(2);
@@ -50,8 +53,8 @@ public class Weapon
 				setProtection(0);
 				evasionBuff=4;
 				weaponType="gauntlets";
-			
 			}
+			bag=b;
 		}
 		public Weapon(int min,int max,int p,boolean suped)
 		{
@@ -102,7 +105,16 @@ public class Weapon
 		}
 		
 		//Misc methods___________________________________
-		
+		public void upgrade(int f)
+		{
+			if(weaponType.equals("shield"))
+			{
+				protection+=Rpg1_17.randomGen(1, 3);
+			}
+			damageBonus+=Rpg1_17.randomGen(1, 3)*(int)(f*1.5);
+			bag.addUpgrades(-1);
+			bag.addGold(-200);
+		}
 		
 		public int randomGen(int min, int max)
 		{
@@ -123,7 +135,7 @@ public class Weapon
 				enchantedString="your weapon is enchanted";
 			else 
 				enchantedString="your weapon is not enchanted";
-			return "Damage: "+damageBonus+"   Protection: "+protection+"   "+enchantedString;
+			return "Bonus Damage: "+damageBonus+"   Protection: "+protection+"   "+enchantedString;
 		}
 		
 	}
