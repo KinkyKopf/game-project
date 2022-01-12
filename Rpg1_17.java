@@ -13,15 +13,16 @@ public class Rpg1_17
 	
 	static int printSpeed=15;//20 feels a bit slow but anything less skips around too much
 	static boolean aiAutoRun;
+	static boolean testingMode=true;
 	static int hallChoice;
 	static String weaponChoice;
 	static boolean egg1=false;
 	static int egg2Tries=0;
 	
-	public Rpg1_17(int hall,String weapon)
+	public Rpg1_17(String weapon)
 	{
 		aiAutoRun=true;
-		hallChoice =hall;
+		
 		weaponChoice=weapon;
 	}
 	public Rpg1_17()
@@ -41,11 +42,7 @@ public class Rpg1_17
 		}
 		return -1;//if the method can't find a corresponding number, it returns -1, which means that there is no positive number that corresponds with the string.	
 	}
-	public static int lootMaker(int floor)
-	{
-		int loot = ((int)(Math.random()*395)+123)+((int)(Math.random()*200)*floor);	
-		return loot;
-	}
+	
 	public static String partGen()//this is purely for fun
 	{
 		int partNumber=randomGen(1,15);
@@ -171,7 +168,7 @@ public class Rpg1_17
 				{
 					slowPrintln("Great!");
 					slowPrint("So you must have just entered a dead goblin, and then confirmed your choice twice on accident!");
-					if(!aiAutoRun)
+					if(!aiAutoRun&&!testingMode)
 						Thread.sleep(750);
 					slowPrint("...",333);
 					slowPrintln("Right?");
@@ -244,7 +241,7 @@ public class Rpg1_17
 		for (int i=0;i<text.length();i++)
 		{
 			System.out.print(text.charAt(i));
-			if(!aiAutoRun)
+			if(!aiAutoRun&&!testingMode)
 				Thread.sleep(printingSpeed);
 		}
 		System.out.println();
@@ -256,7 +253,7 @@ public class Rpg1_17
 		for (int i=0;i<text.length();i++)
 		{
 			System.out.print(text.charAt(i));
-			if(!aiAutoRun)
+			if(!aiAutoRun&&!testingMode)
 				Thread.sleep(printSpeed);
 		}
 		System.out.println();
@@ -268,7 +265,7 @@ public class Rpg1_17
 		for (int i=0;i<text.length();i++)
 		{
 			System.out.print(text.charAt(i));
-			if(!aiAutoRun)
+			if(!aiAutoRun&&!testingMode)
 				Thread.sleep(printSpeed);
 		}
 		System.out.println();
@@ -320,7 +317,7 @@ public class Rpg1_17
 		switch(prompt)
 		{
 		case "y","yes":
-			if(!aiAutoRun)
+			if(!aiAutoRun&&!testingMode)
 			{
 			slowPrint("Auto running in ...");
 			slowPrint("3...2...1...",250);
@@ -342,11 +339,11 @@ public class Rpg1_17
 					slowPrintln("You deal "+playerDam+" damage to the troll!");
 					troll.takeDamage(playerDam);
 					slowPrintln("Congrats, You killed "+troll.getName()+"!\nI bet his children will be equally as happy with your success!");
-					if(!aiAutoRun)
+					if(!aiAutoRun&&!testingMode)
 						Thread.sleep(500);
 					slowPrint("Nah just kidding, he dosen't have children!");
 					
-					loot =lootMaker(player.getFloor());
+					loot =(player.getFloor());
 					stuff.addGold(loot);
 					
 					slowPrintln("You got "+loot+" gold from killing,the troll!\nIt's a bit red but I bet you don't care about that do you?\n\nGold: "+stuff.getGold()+" \n");
@@ -422,8 +419,12 @@ public class Rpg1_17
 		 * add something that auto attacks goblins-4
 		 * integrate the string to number into my code-1-the converter works now all I need to do is get the if statements right.
 		 *
+		 *	To Add:
+		 *	make the goblins have a chance to dodge so they are at least somewhat of a nuiscance for high damage players
+		 *
 		 *	Bugs:
 		 * 	
+		 * 
 		 * 
 		 * fixes:
 		 * dead goblins are attacking; it will say that the goblin is dead, roll the goblin again then just attack-done, just some bad boolean logic, I belive
@@ -442,7 +443,7 @@ public class Rpg1_17
 		boolean alive=true;
 		boolean win = false;
 		int aiCounter=1;
-		int goblinGen =randomGen(1,4);
+		int goblinGen =randomGen(1,5);
 	//	goblinGen=4;
 		Goblin[] goblins=new Goblin[goblinGen];
 	
@@ -491,12 +492,16 @@ public class Rpg1_17
 					if(Goblin.numberOfGoblins==0)
 					{
 						slowPrintln("You killed all the goblins, congrats!  I'm not going to guilt trip you on this one, the goblins are just idiots.");
-						loot=lootMaker(player.getFloor()*Goblin.startingNum);
+						
+						loot=randomGen(50*player.getFloor(),200*player.getFloor())*Goblin.startingNum;
 						stuff.addGold(loot);
+						slowPrintln("You found "+loot+" gold in the coin pouches of the goblins, you now have "+stuff.getGold()+" gold");
 						loot=randomGen(1,3);
-						stuff.addGold(loot);;
+						stuff.addUpgrades(loot);
+						
 						slowPrintln("You also found "+loot+" ugrade tokens in one of the goblin's "+partGen()+" so win/win!");
 						Goblin.startingNum=0;
+						
 						return;
 					}
 	
@@ -551,7 +556,7 @@ public class Rpg1_17
 		
 		swordCost = 500;
 		shieldCost = 700;
-		bowCost = 150;
+		bowCost = 400;
 		
 		//slowPrintln("Welcome to Dork adventurer, your journey awaits!  \n\nInside the shop you see a chest, the shopkeeper say you can buy what ever is in the chest, but you doubt he has any idea what it is inside. \n\nWould you like to open the chest? y/n");
 			// long and cheesy, I know but it is about the atmosphere, right?
@@ -686,7 +691,7 @@ public class Rpg1_17
 							killTool=new Weapon("gauntlets",stuff);
 							break;
 						case "gimme.stuff":
-							loot=lootMaker(1);
+							loot=randomGen(1,500);
 							stuff.addGold(loot);
 							System.out.print(loot);
 							break;
@@ -906,7 +911,6 @@ public class Rpg1_17
 			else if (prompt.toLowerCase().equals("upgrade"))
 			{
 				slowPrintln("\nWould you like to upgrade your "+playerWeapon.weaponType+" for 200 gold?(y/n)");
-				System.out.println(playerWeapon.weaponType);
 				if(!aiAutoRun)
 					prompt=input.nextLine();
 				else
@@ -994,7 +998,6 @@ public class Rpg1_17
 		
 			killonater=firstStore(input,bag);
 			
-			slowPrint(killonater.weaponType);
 			
 			PlayerStats character = new PlayerStats(killonater);
 			character.nextFloor();
@@ -1021,7 +1024,7 @@ public class Rpg1_17
 						prompt=input.nextLine();
 					}
 					else
-						number=hallChoice;
+						number=randomGen(1,3);
 					
 					if(number>3)
 					{

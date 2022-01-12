@@ -31,7 +31,7 @@ public class Goblin
 			hlthMultiplier=10;
 			dmgMultiplier=3;
 		}
-		health = 10+(int)(f*hlthMultiplier);
+		health = 15+(int)(f*hlthMultiplier);
 		baseHealth=health;
 		
 		minDamage = (int)(1+(dmgMultiplier*f));
@@ -59,10 +59,7 @@ public class Goblin
 				dead=true;
 				Rpg1_17.slowPrintln("Goblin "+goblinNum+" has died!");
 				numberOfGoblins--;
-					if(numberOfGoblins<=0)
-					{
-						startingNum=0;
-					}
+					
 			}
 		}
 		else

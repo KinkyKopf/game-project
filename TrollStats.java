@@ -60,7 +60,7 @@ public class TrollStats
 			Rpg1_17.slowPrintln(name+" appears to be abnormally large. But not like in a bad way or anything,he's still in shape for a troll");
 		if(bonusHealth<0)
 		{
-			Rpg1_17.slowPrintln(name+" is way smaller than your average troll but it is best not to metion it, he is probably insecure\n");
+			Rpg1_17.slowPrintln(name+" is way smaller than your average troll but it is best not to metion it, he might be insecure about it\n");
 		}
 	}
 	public void setAccuracy(int a) throws InterruptedException

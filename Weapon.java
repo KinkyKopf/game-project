@@ -19,7 +19,7 @@ public class Weapon
 		Inventory bag;
 		public Weapon(String s,Inventory b)//constructor
 		{
-//			damageBonus=1000;
+			damageBonus=1000;
 			weaponType=s;
 			switch(weaponType)
 			{
@@ -37,10 +37,9 @@ public class Weapon
 				break;	
 			case "bow"://look up inheritance
 				setMin(2);
-				setMax(5);
+				setMax(4);
 				setProtection(0);
-				System.out.println("Bow Bought!");
-				evasionBuff=6;
+				evasionBuff=3;
 				break;
 			case"gauntlets":
 				setMin(1);

@@ -44,9 +44,9 @@ public class StatsRunner
 		//Rpg1_17.goblinHorde(inputTaker, player, null, testWeapon);
 		
 //Auto Run code:________________________
-		for(int i=0;i<100;i++)
+		for(int i=0;i<500;i++)
 		{
-		Rpg1_17 runner = new Rpg1_17(1,"bow");
+		Rpg1_17 runner = new Rpg1_17("shield");
 		runner.main(args);
 		realTimes++;
 		}

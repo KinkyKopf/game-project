@@ -34,7 +34,7 @@ public class PlayerStats
 	}
 	public PlayerStats(Weapon w)
 	{
-		this(7,25,25,w);
+		this(5,20,20,w);
 	}
 	//getters______________________________
 	
@@ -105,6 +105,7 @@ public class PlayerStats
 	public void refillHealth()
 	{
 		health=maxHealth;
+		nearDeath=false;
 	}
 	public void nextFloor() throws InterruptedException
 	{
@@ -118,7 +119,7 @@ public class PlayerStats
 		
 		int enemyRoll=Rpg1_17.randomGen(1,20)+enemyAccuracy;
 		
-		System.out.println("Enemy ROll: "+ enemyRoll);
+		//System.out.println("Enemy ROll: "+ enemyRoll);
 
 		if(evasion>enemyRoll)
 		{
