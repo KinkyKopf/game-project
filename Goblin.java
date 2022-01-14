@@ -1,5 +1,6 @@
 package gameprototypes;
 
+
 public class Goblin 
 {
 	
@@ -31,7 +32,7 @@ public class Goblin
 			hlthMultiplier=10;
 			dmgMultiplier=3;
 		}
-		health = 15+(int)(f*hlthMultiplier);
+		health = 10+(int)(f*hlthMultiplier);
 		baseHealth=health;
 		
 		minDamage = (int)(1+(dmgMultiplier*f));
@@ -41,12 +42,12 @@ public class Goblin
 		numberOfGoblins++;
 		goblinNum=numberOfGoblins;
 		
-		accuracy=Rpg1_17.randomGen(-3, 3);
+		accuracy=Rpg1_18.randomGen(-3, 3);
 			if(accuracy>0)
-				Rpg1_17.slowPrintln("It looks like goblin "+goblinNum+" has glasses");
+				Rpg1_18.slowPrintln("It looks like goblin "+goblinNum+" has glasses");
 			if(accuracy<0)
-				Rpg1_17.slowPrintln("Goblin "+goblinNum+" squints at you.");
-		Rpg1_17.slowPrintln("Goblin "+goblinNum+" has "+health+" health");
+				Rpg1_18.slowPrintln("Goblin "+goblinNum+" squints at you.");
+		Rpg1_18.slowPrintln("Goblin "+goblinNum+" has "+health+" health");
 
 	}
 	public void takeDamage(int dam) throws InterruptedException
@@ -57,14 +58,17 @@ public class Goblin
 			if(health<=0)
 			{
 				dead=true;
-				Rpg1_17.slowPrintln("Goblin "+goblinNum+" has died!");
+				Rpg1_18.slowPrintln("Goblin "+goblinNum+" has died!");
 				numberOfGoblins--;
-					
+					if(numberOfGoblins<=0)
+					{
+						startingNum=0;
+					}
 			}
 		}
 		else
 		{
-			Rpg1_17.slowPrintln("I'm gonna be honest with you champ, you can't kill a corpse, so I would just stop");
+			Rpg1_18.slowPrintln("I'm gonna be honest with you champ, you can't kill a corpse, so I would just stop");
 		}
 	}
 	public String toString()
@@ -82,10 +86,10 @@ public class Goblin
 			return 0;
 		}
 		
-		currentDamage=Rpg1_17.randomGen(minDamage,maxDamage)-player.characterWeapon.protection; 
+		currentDamage=Rpg1_18.randomGen(minDamage,maxDamage)-player.characterWeapon.protection; 
 		if (currentDamage<=0)
 		{
-			Rpg1_17.slowPrintln("You blocked the attack!");
+			Rpg1_18.slowPrintln("You blocked the attack!");
 			return 0;
 		}
 		return currentDamage;

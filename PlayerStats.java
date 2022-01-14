@@ -1,5 +1,6 @@
 package gameprototypes;
 
+
 public class PlayerStats 
 {
 	
@@ -11,8 +12,10 @@ public class PlayerStats
 	 * To do:
 	 * ________________________
 	 * make a balanced way to block, so that the player isn't constantly blocking everything,
+	 * make a minigame that allows you to increase your intelligence by solving math promlems.
+	 * 
 	 */
-	private int floor, evasion,health,maxHealth,armorClass;
+	private int floor, evasion,health,maxHealth,armorClass,magic,intelligence,maxMagic;
 	private boolean alive,nearDeath;
 	Weapon characterWeapon;
 	
@@ -23,18 +26,19 @@ public class PlayerStats
 	 *2-shield
 	 *3-bow
 	 */
-	public PlayerStats(int e,int h,int mh,Weapon w)//constructor
+	public PlayerStats(int e,int h,int mh,Weapon w,int mm)//constructor
 	{
 		characterWeapon=w;
 		setEvasion(e+characterWeapon.evasionBuff);
 		setHealth(h);
 		setMaxHealth(mh);
+		setMaxMagic(mm);
 		alive = true;
 		//armorClass=characterWeapon.protection;
 	}
 	public PlayerStats(Weapon w)
 	{
-		this(5,20,20,w);
+		this(7,25,25,w,100);
 	}
 	//getters______________________________
 	
@@ -61,12 +65,20 @@ public class PlayerStats
 	{
 		return floor;
 	}
+	public int getMaxMagic()
+	{
+		return maxMagic;
+	}
+	public int getMagic()
+	{
+		return magic;
+	}
 	//Mutators_______________________________________
 	public void die() throws InterruptedException
 	{
 		alive=false;
-		Rpg1_17.slowPrintln("You died!!!");		
-		Rpg1_17.slowPrintln("Floor: "+floor);
+		Rpg1_18.slowPrintln("You died!!!");		
+		Rpg1_18.slowPrintln("Floor: "+floor);
 		//Thread.sleep(100);
 	}
 	public void setHealth(int h)
@@ -77,10 +89,19 @@ public class PlayerStats
 	{
 		evasion=e;
 	}
-
 	public void setMaxHealth(int mh)
 	{
 		maxHealth=mh;
+	}
+	public void setMaxMagic(int m)
+	{
+		magic=m;
+		maxMagic=m;
+	}
+	
+	public void addMaxMagic(int m)
+	{
+		maxMagic+=m;
 	}
 	public void addHealth(int adder)
 	{
@@ -89,6 +110,25 @@ public class PlayerStats
 	public void addMaxHealth(int adder)
 	{
 		maxHealth+=adder;
+	}	
+	public void addEvasion(int plus)
+	{
+		evasion+=plus;
+	}
+	
+	
+	public void refillMagic()
+	{
+		magic=maxMagic;
+	}
+	public void refillHealth()
+	{
+		health=maxHealth;
+	}
+	
+	public void useMagic(int m)
+	{
+		magic-=m;
 	}
 	
 	public void takeDamage(int damage) throws InterruptedException
@@ -97,36 +137,51 @@ public class PlayerStats
 		if(health<=0)
 			die();
 	}
-	
-	public void addEvasion(int plus)
-	{
-		evasion+=plus;
-	}
-	public void refillHealth()
-	{
-		health=maxHealth;
-		nearDeath=false;
-	}
 	public void nextFloor() throws InterruptedException
 	{
 		floor++;
 		//add some cool message here, or maybe a funny one
-		Rpg1_17.slowPrintln("You leave the relative comfort of the shop behind and begin decending lower into the dungeon");
+		Rpg1_18.slowPrintln("You leave the relative comfort of the shop behind and begin decending lower into the dungeon");
+		magic=maxMagic;
 	}
+	
+	
 	//Miscelanious methods______________________________
 	public boolean rollToHit(int enemyAccuracy) throws InterruptedException//roll to see if you can dodge
 	{
 		
-		int enemyRoll=Rpg1_17.randomGen(1,20)+enemyAccuracy;
+		int enemyRoll=Rpg1_18.randomGen(1,20)+enemyAccuracy;
 		
-		//System.out.println("Enemy ROll: "+ enemyRoll);
+		System.out.println("Enemy ROll: "+ enemyRoll);
 
 		if(evasion>enemyRoll)
 		{
-			Rpg1_17.slowPrintln("You dodged the attack!");
+			Rpg1_18.slowPrintln("You dodged the attack!");
 			return true;
 		}
 		return false;
+	}
+	public void buyMaxPotion(int num,Inventory stuff) throws InterruptedException
+	{
+		int maxCst;
+		maxCst=100+(floor*50);
+		if(maxCst>500)
+			maxCst=500;
+		if(stuff.getGold()<maxCst*num)
+		{
+			Rpg1_18.slowPrintln("You don't have enough gold to buy "+num+" potions");
+			if(Rpg1_18.randomGen(1, 20)==20)
+				Rpg1_18.slowPrintln("A good video to help with adding is: `https://www.youtube.com/watch?v=dQw4w9WgXcQ");
+		}
+		else
+		{
+			stuff.addGold(-maxCst*num);
+			addMaxHealth(num*10);
+			refillHealth();
+			Rpg1_18.slowPrintln("You bought "+num+" potions and now have "+stuff.getGold()+" gold remaining");
+		}
+		
+		
 	}
 	
 	public String toString()

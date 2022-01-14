@@ -1,5 +1,7 @@
 package gameprototypes;
 
+import oldversions.Rpg1_17;
+
 public class Weapon
 {
 	
@@ -13,14 +15,15 @@ public class Weapon
 	 * I think the balancing is going to be super hard, I don't even know how each of them should interact, and how to ensure they all work properly
 	 */
 	
-		int minDamage,maxDamage,damageBonus,protection,evasionBuff,currentDamage;
+		int minDamage,maxDamage,damageBonus,protection,evasionBuff,currentDamage,upgradeCost;
 		 boolean enchanted;
 		String weaponType;
 		Inventory bag;
 		public Weapon(String s,Inventory b)//constructor
 		{
-			damageBonus=1000;
+//			damageBonus=1000;
 			weaponType=s;
+			upgradeCost=200;
 			switch(weaponType)
 			{
 			case"sword":
@@ -37,9 +40,10 @@ public class Weapon
 				break;	
 			case "bow"://look up inheritance
 				setMin(2);
-				setMax(4);
+				setMax(5);
 				setProtection(0);
-				evasionBuff=3;
+				System.out.println("Bow Bought!");
+				evasionBuff=6;
 				break;
 			case"gauntlets":
 				setMin(1);
@@ -104,7 +108,7 @@ public class Weapon
 		}
 		
 		//Misc methods___________________________________
-		public void upgrade(int f)
+		public void upgrade(int f) throws InterruptedException
 		{
 			if(weaponType.equals("shield"))
 			{
@@ -113,6 +117,9 @@ public class Weapon
 			damageBonus+=Rpg1_17.randomGen(1, 3)*(int)(f*1.5);
 			bag.addUpgrades(-1);
 			bag.addGold(-200);
+			Rpg1_18.slowPrintln("The shopkeeper takes your "+weaponType+" into the back, a while later he comes back with your weapon");
+			Thread.sleep(200);
+			Rpg1_18.slowPrintln("It dosen't look any different, but as you hold the "+weaponType+" it just FEELS more deadly.");
 		}
 		
 		public int randomGen(int min, int max)

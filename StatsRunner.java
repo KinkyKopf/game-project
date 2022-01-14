@@ -2,6 +2,7 @@ package gameprototypes;
 
 import java.util.Scanner;
 
+
 /*
  * Zachary  Kinkopf
  * December 1st
@@ -40,13 +41,13 @@ public class StatsRunner
 //		System.out.println(testWeapon);
 //		System.out.println(testWeapon.rollDamage(1));
 //		
-//		//Rpg1_17.trollFight(inputTaker, player, null, testWeapon);
-		//Rpg1_17.goblinHorde(inputTaker, player, null, testWeapon);
+//		//Rpg1_18.trollFight(inputTaker, player, null, testWeapon);
+		//Rpg1_18.goblinHorde(inputTaker, player, null, testWeapon);
 		
 //Auto Run code:________________________
-		for(int i=0;i<500;i++)
+		for(int i=0;i<100;i++)
 		{
-		Rpg1_17 runner = new Rpg1_17("shield");
+		Rpg1_18 runner = new Rpg1_18(1,"bow");
 		runner.main(args);
 		realTimes++;
 		}
