@@ -1,5 +1,6 @@
 package gameprototypes;
 
+import java.util.Scanner;
 
 public class PlayerStats 
 {
@@ -13,7 +14,9 @@ public class PlayerStats
 	 * ________________________
 	 * make a balanced way to block, so that the player isn't constantly blocking everything,
 	 * make a minigame that allows you to increase your intelligence by solving math promlems.
-	 * 
+	 * make a check magic method to make sure you can't cast spells at 0 magic
+	 * Allow the player to choose how much magic they want to cast the spell for
+	 * get rid of of the spell base and put all the spells in this class
 	 */
 	private int floor, evasion,health,maxHealth,armorClass,magic,intelligence,maxMagic;
 	private boolean alive,nearDeath;
@@ -126,9 +129,12 @@ public class PlayerStats
 		health=maxHealth;
 	}
 	
-	public void useMagic(int m)
+	public void useMagic(int m) throws InterruptedException
 	{
-		magic-=m;
+		if(magic-m<0)
+			Rpg1_18.slowPrintln("you can't cast that spell, you don't have enought magic!");
+		else
+			magic-=m;
 	}
 	
 	public void takeDamage(int damage) throws InterruptedException
@@ -182,6 +188,21 @@ public class PlayerStats
 		}
 		
 		
+	}
+	
+	public int castFireball(Scanner input) throws InterruptedException
+	{
+		int damage;
+		int magicCost=20;
+		
+		Rpg1_18.slowPrint("How much magic do you want to use to cast this?");
+		
+		useMagic(magicCost);
+		
+//		damage=
+		
+		Rpg1_18.slowPrintln("You cast fireball for "+magicCost+", you have "+ magic+" magic left.");
+		return damage;
 	}
 	
 	public String toString()
