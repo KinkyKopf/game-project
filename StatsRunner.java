@@ -2,7 +2,6 @@ package gameprototypes;
 
 import java.util.Scanner;
 
-import oldversions.Rpg1_17;
 
 /*
  * Zachary  Kinkopf
@@ -27,17 +26,14 @@ public class StatsRunner
 	public static void main(String[] args) throws InterruptedException 
 	{
 		Scanner input= new Scanner(System.in);
-		String prompt="";
-//		int realTimes=0;
-		
-		
-		
 		Inventory stuff = new Inventory();
-		Weapon testWeapon= new Weapon("sword",stuff);
+		Weapon testWeapon= new Weapon("sword", stuff);
 		PlayerStats player= new PlayerStats(testWeapon);
-		
 		TrollStats troll = new TrollStats(1);
 		
+		String prompt ="";
+		int realTimes = 0;
+
 //		if(1==1|troll.rollDamage(1)==1)
 //		{
 //			System.out.println(troll.getDamage());
@@ -48,42 +44,48 @@ public class StatsRunner
 //		System.out.println(testWeapon);
 //		System.out.println(testWeapon.rollDamage(1));
 //		
-//		//Rpg1_17.trollFight(inputTaker, player, null, testWeapon);
-		//Rpg1_17.goblinHorde(inputTaker, player, null, testWeapon);
+//		//Rpg1_18.trollFight(inputTaker, player, null, testWeapon);
+		//Rpg1_18.goblinHorde(inputTaker, player, null, testWeapon);
 		
 //Auto Run code:________________________
-//		for(int i=0;i<500;i++)
+//		for(int i=0;i<100;i++)
 //		{
-////		Rpg1_17 runner = new Rpg1_17("shield");
-////		runner.main(args);
+//		Rpg1_18 runner = new Rpg1_18(1,"bow");
+//		runner.main(args);
 //		realTimes++;
 //		}
 //		 CounterFile tabKeeper=new CounterFile();
 //		System.out.println(tabKeeper);
+		
 //		
 //		for(int i=0;i<100;i++)
 //		{
 //			System.out.print(randomGen(0,5-1));
 //		}
-//	
+//		
+		//Combat testing code:_____________________
 		
-		//Fireball test
-		while(prompt!="quit")
+		while(!prompt.equals("quit"))
 		{
-			System.out.println(troll);
 			System.out.println("What would you like to do?");
-			prompt = input.nextLine();
+			prompt=input.nextLine();
+			System.out.println(troll);
 			switch(prompt)
 			{
 			case "fireball":
-				SpellBase cast = new Fireball(testWeapon,player);
-				troll.takeDamage(cast.castSpell());
+				int fireDam = player.castFireball(input);
+				if(fireDam<=0)
+					System.out.println("The fireball fizzeled out in your palm, leaving a faint warmth for a short");
+				else
+				{
+					troll.takeDamage(fireDam);
+					System.out.println("You deal "+fireDam+" to the troll!");
+				}
 				
-				
+
 			}
+			
 		}
-		
-		
 	}
 
 }

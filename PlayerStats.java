@@ -196,14 +196,29 @@ public class PlayerStats
 		int magicCost=20;
 		
 		Rpg1_18.slowPrint("How much magic do you want to use to cast this?");
-		
+		magicCost=input.nextInt();
+		input.nextLine();
+		if(!checkMagic(magicCost))
+			return 0;
 		useMagic(magicCost);
 		
-//		damage=
+		damage=(int)(magicCost*.5+Rpg1_18.randomGen( (int)(magicCost*.25+intelligence),(magicCost*intelligence) ));
 		
 		Rpg1_18.slowPrintln("You cast fireball for "+magicCost+", you have "+ magic+" magic left.");
 		return damage;
 	}
+	
+
+	public boolean checkMagic(int c) throws InterruptedException
+	{
+		if(c>magic)
+		{
+			Rpg1_18.slowPrintln("You don't have enough magic to cast that spell");
+			return false;
+		}
+		return true;
+	}
+	
 	
 	public String toString()
 	{

@@ -26,10 +26,7 @@ public class Rpg1_18
 		hallChoice =hall;
 		weaponChoice=weapon;
 	}
-	public Rpg1_18()
-	{
-		//there is nothing here so if I want to launch a test via a different class, I still can
-	}
+	
 	
 	public static int stringToInt(String intInString)
 	{
