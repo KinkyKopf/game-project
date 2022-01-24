@@ -14,9 +14,15 @@ public class PlayerStats
 	 * ________________________
 	 * make a balanced way to block, so that the player isn't constantly blocking everything,
 	 * make a minigame that allows you to increase your intelligence by solving math promlems.
-	 * make a check magic method to make sure you can't cast spells at 0 magic
-	 * Allow the player to choose how much magic they want to cast the spell for
+	 * allow you to sacrafice some health for magic
 	 * get rid of of the spell base and put all the spells in this class
+	 * 
+	 * Done:
+	 * _________________________________
+	 * Allow the player to choose how much magic they want to cast the spell for
+	 * make a check magic method to make sure you can't cast spells at 0 magic
+	 * 
+	 * 
 	 */
 	private int floor, evasion,health,maxHealth,armorClass,magic,intelligence,maxMagic;
 	private boolean alive,nearDeath;
@@ -213,7 +219,19 @@ public class PlayerStats
 	{
 		if(c>magic)
 		{
-			Rpg1_18.slowPrintln("You don't have enough magic to cast that spell");
+			Rpg1_18.slowPrintln("You begin casting the spell but then suddenly it fizzles out, leaving only a faint warmth behind");
+			
+			return false;
+		}
+		if(c<0)
+		{
+			Rpg1_18.slowPrintln("You attempt to draw in magic from outside yourself but as you do, \n\tsomething changes and the spell explodes in your hand. You take 2 damage");
+			takeDamage(2);
+			return false;
+		}
+		if(c==0)
+		{
+			Rpg1_18.slowPrintln("You make a FWSSHHHH sound with your mouth as you thrust you hands towards your opponent");
 			return false;
 		}
 		return true;

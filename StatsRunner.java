@@ -67,19 +67,21 @@ public class StatsRunner
 		
 		while(!prompt.equals("quit"))
 		{
+			System.out.println(troll);
 			System.out.println("What would you like to do?");
 			prompt=input.nextLine();
-			System.out.println(troll);
+
 			switch(prompt)
 			{
 			case "fireball":
 				int fireDam = player.castFireball(input);
-				if(fireDam<=0)
-					System.out.println("The fireball fizzeled out in your palm, leaving a faint warmth for a short");
-				else
+				if(fireDam>0)
+				
 				{
 					troll.takeDamage(fireDam);
 					System.out.println("You deal "+fireDam+" to the troll!");
+					if(!troll.isAlive())
+						troll=new TrollStats(1);	
 				}
 				
 

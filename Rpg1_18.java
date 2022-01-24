@@ -388,6 +388,22 @@ public class Rpg1_18
 		{
 			
 			slowPrintln("Round "+round+"___________\n");
+			
+			if( (!autoRun||player.getHealth()<player.getMaxHealth()/4) && !aiAutoRun)
+			{
+				
+				slowPrintln("");
+				prompt=input.nextLine();
+				
+				switch(prompt)
+				{
+				case "run","run away":
+					slowPrintln("You decide it is best to run away and as you do, "+troll.getName()+" makes a dumb face and sneers as you run away");
+					return;
+					
+				}
+			}
+			
 			playerDam=playerWeapon.rollDamage(1);
 						
 			
@@ -443,18 +459,7 @@ public class Rpg1_18
 					}
 				}
 				
-				if( (!autoRun||player.getHealth()<player.getMaxHealth()/4) && !aiAutoRun)
-				{
-					slowPrintln("Press enter to continue or n to run away");
-					prompt=input.nextLine();
-					
-					if(prompt.toLowerCase().equals("n"))
-					{
-						slowPrintln("You decide it is best to run away and as you do, "+troll.getName()+" makes a dumb face and sneers as you run away");
-						break;
-					}
-				
-				}
+			
 				
 			round++;
 		}
@@ -778,7 +783,7 @@ public class Rpg1_18
 		 * make it print the updated stats
 		 */
 		int number;
-		int maxCst,refilCost=100;
+		int maxCst;
 		String prompt;
 		
 		maxCst=100+(player.getFloor()*50);

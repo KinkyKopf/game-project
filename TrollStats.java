@@ -5,6 +5,7 @@ public class TrollStats
 {
 	private int health,damage,accuracy,floor,damageOut;
 	private double hlthMultiplier,dmgMultiplier;
+	boolean quickBuild=true;
 
 	private String name;
 	/*   Notes:
@@ -15,7 +16,6 @@ public class TrollStats
 	
 	public TrollStats(int f) throws InterruptedException
 	{
-		
 		if(f<6)
 		{
 			hlthMultiplier=5;
@@ -32,10 +32,14 @@ public class TrollStats
 			dmgMultiplier=3;
 		}
 		nameGen();
+		if(!quickBuild)
+		{
 		Rpg1_18.slowPrintln("As you go down the hallway, a rank scent of what you can only decsribe as teenage man-musk floods your nostrills ");
 		Rpg1_18.slowPrint("...\n",500);
 		Rpg1_18.slowPrintln("A troll is near.\nYou see a door labeled: "+name+". \nBrave yourself, "+name+" the troll is behind here.");
-		
+		}
+		else 
+			Rpg1_18.slowPrintln("A new troll appepared!");
 		setFloor(f);
 		setDamage(Rpg1_18.randomGen(-2,3));
 		setHealth(20+(int)(floor*hlthMultiplier));	
@@ -48,31 +52,38 @@ public class TrollStats
 	{
 		//d=0;
 		damage=d;
-		if (d>2)
-			Rpg1_18.slowPrintln("You see a truly staggering ammount of what you can only assume is empty tubs of preworkout scattered around "+name+"'s lair\n");
-		if(d<1)
-			Rpg1_18.slowPrintln("You notice a stack of books labled \"Computer Science: The Anylitical Studies Of Computational Electronics\" in the corner of "+name+"'s lair\n");
+		
+		if(!quickBuild)
+		{
+			if (d>2)
+				Rpg1_18.slowPrintln("You see a truly staggering ammount of what you can only assume is empty tubs of preworkout scattered around "+name+"'s lair\n");
+			if(d<1)
+				Rpg1_18.slowPrintln("You notice a stack of books labled \"Computer Science: The Anylitical Studies Of Computational Electronics\" in the corner of "+name+"'s lair\n");
+		}
 	}
 	public void setHealth(int h) throws InterruptedException
 	{
 		int bonusHealth=Rpg1_18.randomGen(-7,10);
 		health = h+bonusHealth;
-		if(bonusHealth>5)
-			Rpg1_18.slowPrintln(name+" appears to be abnormally large. But not like in a bad way or anything,he's still in shape for a troll");
-		if(bonusHealth<0)
+		
+		if(!quickBuild)
 		{
-			Rpg1_18.slowPrintln(name+" is way smaller than your average troll but it is best not to metion it, he is probably insecure\n");
+			if(bonusHealth>5)
+				Rpg1_18.slowPrintln(name+" appears to be abnormally large. But not like in a bad way or anything,he's still in shape for a troll");
+			if(bonusHealth<0)
+				Rpg1_18.slowPrintln(name+" is way smaller than your average troll but it is best not to metion it, he is probably insecure\n");
 		}
 	}
 	public void setAccuracy(int a) throws InterruptedException
 	{
 		accuracy=a;
-		if(a>0)
-			Rpg1_18.slowPrintln("It appears that "+name+" is wearing glasses\n");
-		else if (a<=0)
-			{
-			Rpg1_18.slowPrintln(name+" squints at you.\n");
-			}
+		if(!quickBuild)
+		{
+			if(a>0)
+				Rpg1_18.slowPrintln("It appears that "+name+" is wearing glasses\n");
+			if (a<=0)
+				Rpg1_18.slowPrintln(name+" squints at you.\n");
+		}
 	}
 	public void setName(String n)
 	{
@@ -107,7 +118,15 @@ public class TrollStats
 	{
 		return name;
 	}
-//misc methods_________________________	
+	public boolean isAlive()
+	{
+		if(health>0)
+			return true;
+		else
+			return false;
+	}
+	
+	//misc methods_________________________	
 	
 	public void nameGen()
 	{
