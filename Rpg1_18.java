@@ -352,7 +352,7 @@ public class Rpg1_18
 		 *to Do:
 		 *____________________
 		 *
-		 *
+		 * Adapt the revised methods to deal damage directly from them instead of in here
 		 */
 		String prompt;
 		
@@ -436,31 +436,7 @@ public class Rpg1_18
 						slowPrintln("You deal "+playerDam+" damage to the troll!\n\nThe troll has "+troll.getHealth()+" health remaning.");	
 				 }
 				 
-				isHit=!player.rollToHit(troll.getAccuracy());
-				if(isHit)
-				{
-					troll.rollDamage(1,playerWeapon.protection);
-					blocked=troll.getDamage()<=0;
-				}
-				else
-					blocked=true;
-				
-				if( isHit && !blocked)
-				{
-					if(troll.getDamage()>=player.getHealth())
-					{
-					slowPrintln("The troll hits you for "+troll.getDamage()+" damage, absoutely obliterating your "+partGen()+", killing you instantly.");//add a random part generator
-					break;
-					}
-					else
-					{
-					player.addHealth(-troll.getDamage());
-					slowPrintln("The troll hits you for "+troll.getDamage()+" damage!\nYou have "+player.getHealth()+" health remaning!");
-					}
-				}
-				
-			
-				
+				troll.rollDamage(1, player);
 			round++;
 		}
 		while(win==false);
@@ -481,6 +457,8 @@ public class Rpg1_18
 		 *
 		 *	Bugs:
 		 * 	
+		 * To Do:
+		 * I am revising my roll damage methods to deal damage directly, so I need to integrate those into the goblins method
 		 * 
 		 * fixes:
 		 * dead goblins are attacking; it will say that the goblin is dead, roll the goblin again then just attack-done, just some bad boolean logic, I belive

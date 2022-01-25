@@ -54,22 +54,22 @@ public class Goblin
 	{
 		if(health>0)
 		{
-		health-=dam;
+			Rpg1_18.slowPrintln("You deal "+dam+" damage to goblin "+goblinNum+", he has "+health+" health remaining!");
+				
+			health-=dam;
 			if(health<=0)
 			{
 				dead=true;
 				Rpg1_18.slowPrintln("Goblin "+goblinNum+" has died!");
 				numberOfGoblins--;
 					if(numberOfGoblins<=0)
-					{
 						startingNum=0;
-					}
 			}
+			
+			
 		}
 		else
-		{
 			Rpg1_18.slowPrintln("I'm gonna be honest with you champ, you can't kill a corpse, so I would just stop");
-		}
 	}
 	public String toString()
 	{
@@ -78,12 +78,13 @@ public class Goblin
 		return "Goblin "+goblinNum+" has "+health+" health remaining";
 		
 	}
-	public int rollDamage(PlayerStats player) throws InterruptedException
+	public void rollDamage(PlayerStats player) throws InterruptedException
 	{
 		if(player.rollToHit(accuracy))
 		{
 			currentDamage=0;
-			return 0;
+			Rpg1_18.slowPrintln("You dodge the attack!");
+			return;
 		}
 		
 		currentDamage=Rpg1_18.randomGen(minDamage,maxDamage)-player.characterWeapon.protection; 

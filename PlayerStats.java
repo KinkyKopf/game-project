@@ -12,10 +12,10 @@ public class PlayerStats
 	 * 
 	 * To do:
 	 * ________________________
-	 * make a balanced way to block, so that the player isn't constantly blocking everything,
 	 * make a minigame that allows you to increase your intelligence by solving math promlems.
 	 * allow you to sacrafice some health for magic
 	 * get rid of of the spell base and put all the spells in this class
+	 * revise the spells to they take the enemy type as input and deal damage through the method directly.
 	 * 
 	 * Done:
 	 * _________________________________
@@ -27,7 +27,7 @@ public class PlayerStats
 	private int floor, evasion,health,maxHealth,armorClass,magic,intelligence,maxMagic;
 	private boolean alive,nearDeath;
 	Weapon characterWeapon;
-	
+	Inventory bag;
 	/*
 	 *Item index:
 	 *0-gauntlets(fists/no weapon)
@@ -183,7 +183,7 @@ public class PlayerStats
 		{
 			Rpg1_18.slowPrintln("You don't have enough gold to buy "+num+" potions");
 			if(Rpg1_18.randomGen(1, 20)==20)
-				Rpg1_18.slowPrintln("A good video to help with adding is: `https://www.youtube.com/watch?v=dQw4w9WgXcQ");
+				Rpg1_18.slowPrintln("A good video to help with adding is: https://www.youtube.com/watch?v=dQw4w9WgXcQ");
 		}
 		else
 		{
@@ -196,7 +196,7 @@ public class PlayerStats
 		
 	}
 	
-	public int castFireball(Scanner input) throws InterruptedException
+	public void castFireball(Scanner input,TrollStats troll) throws InterruptedException
 	{
 		int damage;
 		int magicCost=20;
@@ -205,15 +205,32 @@ public class PlayerStats
 		magicCost=input.nextInt();
 		input.nextLine();
 		if(!checkMagic(magicCost))
-			return 0;
+			return;
 		useMagic(magicCost);
 		
 		damage=(int)(magicCost*.5+Rpg1_18.randomGen( (int)(magicCost*.25+intelligence),(magicCost*intelligence) ));
 		
 		Rpg1_18.slowPrintln("You cast fireball for "+magicCost+", you have "+ magic+" magic left.");
-		return damage;
+		troll.takeDamage(damage);
 	}
-	
+	public void castFireball(Scanner input,Goblin goblin) throws InterruptedException
+	{
+		int damage;
+		int magicCost=20;
+		
+		Rpg1_18.slowPrint("How much magic do you want to use to cast this?");
+		magicCost=input.nextInt();
+		input.nextLine();
+		if(!checkMagic(magicCost))
+			return;
+		useMagic(magicCost);
+		
+		damage=(int)(magicCost*.5+Rpg1_18.randomGen( (int)(magicCost*.25+intelligence),(magicCost*intelligence) ));
+		
+		Rpg1_18.slowPrintln("You cast fireball for "+magicCost+", you have "+ magic+" magic left.");
+		goblin.takeDamage(damage);
+		return;
+	}
 
 	public boolean checkMagic(int c) throws InterruptedException
 	{

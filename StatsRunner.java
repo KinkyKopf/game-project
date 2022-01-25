@@ -22,15 +22,11 @@ public class StatsRunner
 		return (int)(Math.random()*(max-min+1))+min;
 	}
 
-
+	
 	public static void main(String[] args) throws InterruptedException 
 	{
 		Scanner input= new Scanner(System.in);
-		Inventory stuff = new Inventory();
-		Weapon testWeapon= new Weapon("sword", stuff);
-		PlayerStats player= new PlayerStats(testWeapon);
-		TrollStats troll = new TrollStats(1);
-		
+	
 		String prompt ="";
 		int realTimes = 0;
 
@@ -65,28 +61,32 @@ public class StatsRunner
 //		
 		//Combat testing code:_____________________
 		
+		TrollStats troll = new TrollStats(1);
+		Inventory stuff = new Inventory();
+		Weapon testWeapon= new Weapon("sword", stuff);
+		PlayerStats player= new PlayerStats(testWeapon);
+		Goblin goblin = new Goblin(1);
 		while(!prompt.equals("quit"))
 		{
 			System.out.println(troll);
+			System.out.println(goblin);
 			System.out.println("What would you like to do?");
 			prompt=input.nextLine();
 
 			switch(prompt)
 			{
-			case "fireball":
-				int fireDam = player.castFireball(input);
-				if(fireDam>0)
+			case "t ball","tball":
+				player.castFireball(input,troll);
+				break;
+			case "g ball","gball":
+				player.castFireball(input, goblin);
+				break;
 				
-				{
-					troll.takeDamage(fireDam);
-					System.out.println("You deal "+fireDam+" to the troll!");
-					if(!troll.isAlive())
-						troll=new TrollStats(1);	
-				}
-				
-
 			}
-			
+			troll.rollDamage(1, player);
+			goblin.rollDamage(player);
+			if(!troll.alive)
+				troll=new TrollStats(1);
 		}
 	}
 

@@ -6,6 +6,8 @@ public class TrollStats
 	private int health,damage,accuracy,floor,damageOut;
 	private double hlthMultiplier,dmgMultiplier;
 	boolean quickBuild=true;
+	boolean stunned;
+	boolean alive=true;
 
 	private String name;
 	/*   Notes:
@@ -95,7 +97,9 @@ public class TrollStats
 		if(health<=0)
 		{
 			Rpg1_18.slowPrintln("You killed "+name);
+			alive=false;
 		}
+		Rpg1_18.slowPrintln("You deal "+damage+" to the troll, he has "+health+" health left!");
 	}
 	public void setFloor(int f)
 	{
@@ -170,19 +174,34 @@ public class TrollStats
 		}
 		setName(n);
 	}
-	public int rollDamage(int times,int playerProtection) throws InterruptedException
+	public void rollDamage(int times,PlayerStats player) throws InterruptedException
 	{
+		if(stunned)
+		{
+			Rpg1_18.slowPrintln(name+" brings his arm back, ready to swing but staggers and falls to the ground.");
+			return;
+		}
+		else if(!alive)
+		{
+			return;
+		}
 		for(int i=0;i<times;i++)
 		{
-		damageOut += (Rpg1_18.randomGen((int)(2*dmgMultiplier), (int)(5*dmgMultiplier))+damage-playerProtection);
+		damageOut += (Rpg1_18.randomGen((int)(2*dmgMultiplier), (int)(5*dmgMultiplier))+player.characterWeapon.getProtection());
 		}
-		
 		//System.out.println("DamageValue: "+damageOut);
-		
 		if(damageOut<=0)
 			Rpg1_18.slowPrintln("You blocked the attack!");
 		
-		return damageOut;
+		Rpg1_18.slowPrint("The troll hits you for "+damageOut+" damage");
+		
+		player.takeDamage(damageOut);
+		if(!player.isAlive())
+			Rpg1_18.slowPrintln(", destroying your "+Rpg1_18.partGen()+", killing you instntly");
+		else 
+			Rpg1_18.slowPrintln("!");
+	
+		return;
 		
 	}
 	public String toString()
