@@ -93,6 +93,7 @@ public class Goblin
 			return;
 		}
 		player.takeDamage(currentDamage);
+		Rpg1_18.slowPrintln("");
 	}
 	
 }
