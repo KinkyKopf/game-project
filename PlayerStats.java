@@ -164,7 +164,7 @@ public class PlayerStats
 		
 		int enemyRoll=Rpg1_18.randomGen(1,20)+enemyAccuracy;
 		
-		System.out.println("Enemy ROll: "+ enemyRoll);
+//		System.out.println("Enemy ROll: "+ enemyRoll);
 
 		if(evasion>enemyRoll)
 		{

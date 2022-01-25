@@ -54,9 +54,8 @@ public class Goblin
 	{
 		if(health>0)
 		{
-			Rpg1_18.slowPrintln("You deal "+dam+" damage to goblin "+goblinNum+", he has "+health+" health remaining!");
-				
 			health-=dam;
+			Rpg1_18.slowPrintln("You deal "+dam+" damage to goblin "+goblinNum+", he has "+health+" health remaining!");
 			if(health<=0)
 			{
 				dead=true;
@@ -91,9 +90,9 @@ public class Goblin
 		if (currentDamage<=0)
 		{
 			Rpg1_18.slowPrintln("You blocked the attack!");
-			return 0;
+			return;
 		}
-		return currentDamage;
+		player.takeDamage(currentDamage);
 	}
 	
 }
