@@ -14,6 +14,10 @@ public class TrollStats
 	 *make the troll get bonus evasion if he has glasses on
 	 *more damage if there are tubs of pre-workout 
 	 *bonus health be some quip about him being "big but not like in a bad way"
+	 *
+	 *to Fix:
+	 *
+	 *The prompts are printing in a weird order, I need to tweak the printing so it comes out in the right order.  Like you kill the troll and it says you deal 0 damage.
 	 */
 	
 	public TrollStats(int f) throws InterruptedException
@@ -99,7 +103,7 @@ public class TrollStats
 			Rpg1_18.slowPrintln("You killed "+name);
 			alive=false;
 		}
-		Rpg1_18.slowPrintln("You deal "+damage+" to the troll, he has "+health+" health left!");
+		Rpg1_18.slowPrintln("You deal "+damage+" damage to the troll, he has "+health+" health left!");
 	}
 	public void setFloor(int f)
 	{
@@ -187,11 +191,13 @@ public class TrollStats
 		}
 		for(int i=0;i<times;i++)
 		{
-		damageOut += (Rpg1_18.randomGen((int)(2*dmgMultiplier), (int)(5*dmgMultiplier))+player.characterWeapon.getProtection());
+		damageOut = (Rpg1_18.randomGen((int)(2*dmgMultiplier), (int)(5*dmgMultiplier))+player.characterWeapon.getProtection());
 		}
 		//System.out.println("DamageValue: "+damageOut);
 		if(damageOut<=0)
+		{
 			Rpg1_18.slowPrintln("You blocked the attack!");
+		}
 		
 		Rpg1_18.slowPrint("The troll hits you for "+damageOut+" damage");
 		

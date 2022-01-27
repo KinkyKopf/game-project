@@ -79,17 +79,17 @@ public class Goblin
 	}
 	public void rollDamage(PlayerStats player) throws InterruptedException
 	{
+		Rpg1_18.slowPrint("Goblin "+goblinNum+" swings,");
 		if(player.rollToHit(accuracy))
 		{
 			currentDamage=0;
-			Rpg1_18.slowPrintln("You dodge the attack!");
 			return;
 		}
 		
 		currentDamage=Rpg1_18.randomGen(minDamage,maxDamage)-player.characterWeapon.protection; 
 		if (currentDamage<=0)
 		{
-			Rpg1_18.slowPrintln("You blocked the attack!");
+			Rpg1_18.slowPrintln(" but you blocked the attack!");
 			return;
 		}
 		player.takeDamage(currentDamage);

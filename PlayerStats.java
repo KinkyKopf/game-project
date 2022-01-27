@@ -13,15 +13,14 @@ public class PlayerStats
 	 * To do:
 	 * ________________________
 	 * make a minigame that allows you to increase your intelligence by solving math promlems.
-	 * allow you to sacrafice some health for magic
-	 * get rid of of the spell base and put all the spells in this class
+	 * allow you to sacrifice some health for magic
 	 * revise the spells to they take the enemy type as input and deal damage through the method directly.
 	 * 
 	 * Done:
 	 * _________________________________
 	 * Allow the player to choose how much magic they want to cast the spell for
 	 * make a check magic method to make sure you can't cast spells at 0 magic
-	 * 
+	 * get rid of of the spell base and put all the spells in this class
 	 * 
 	 */
 	private int floor, evasion,health,maxHealth,armorClass,magic,intelligence,maxMagic;
@@ -210,7 +209,7 @@ public class PlayerStats
 		
 		damage=(int)(magicCost*.5+Rpg1_18.randomGen( (int)(magicCost*.25+intelligence),(magicCost*intelligence) ));
 		
-		Rpg1_18.slowPrintln("You cast fireball for "+magicCost+", you have "+ magic+" magic left.");
+		Rpg1_18.slowPrintln("You cast fireball for "+magicCost+" magic, you have "+ magic+" magic left.");
 		troll.takeDamage(damage);
 	}
 	public void castFireball(Scanner input,Goblin goblin) throws InterruptedException
@@ -227,11 +226,12 @@ public class PlayerStats
 		
 		damage=(int)(magicCost*.5+Rpg1_18.randomGen( (int)(magicCost*.25+intelligence),(magicCost*intelligence) ));
 		
-		Rpg1_18.slowPrintln("You cast fireball for "+magicCost+", you have "+ magic+" magic left.");
+		Rpg1_18.slowPrintln("You cast fireball for "+magicCost+" magic, you have "+ magic+" magic left.");
 		goblin.takeDamage(damage);
 		return;
 	}
-
+	
+	public void castSparks(Scanner input, Goblin[])
 	public boolean checkMagic(int c) throws InterruptedException
 	{
 		if(c>magic)

@@ -63,9 +63,10 @@ public class StatsRunner
 		
 		TrollStats troll = new TrollStats(1);
 		Inventory stuff = new Inventory();
-		Weapon testWeapon= new Weapon("sword", stuff);
+		Weapon testWeapon= new Weapon("shield", stuff);
 		PlayerStats player= new PlayerStats(testWeapon);
 		Goblin goblin = new Goblin(1);
+		testWeapon.setProtection(10);
 		while(!prompt.equals("quit"))
 		{
 			System.out.println(troll);
