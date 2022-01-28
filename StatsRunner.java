@@ -60,17 +60,26 @@ public class StatsRunner
 //		}
 //		
 		//Combat testing code:_____________________
-		
+		for(int i =0;i<100;i++) 
+		{
+			System.out.println(Math.random()<.1);
+				
+		}
 		TrollStats troll = new TrollStats(1);
 		Inventory stuff = new Inventory();
 		Weapon testWeapon= new Weapon("shield", stuff);
 		PlayerStats player= new PlayerStats(testWeapon);
 		Goblin goblin = new Goblin(1);
-		testWeapon.setProtection(10);
+		Goblin[] goblinHorde= new Goblin[3];
+		testWeapon.setProtection(0);
+		
+		for(int i =0;i<goblinHorde.length;i++)
+			goblinHorde[i]=new Goblin(1);
+			
 		while(!prompt.equals("quit"))
 		{
-			System.out.println(troll);
-			System.out.println(goblin);
+//			System.out.println(troll);
+			System.out.println(goblinHorde[2]);
 			System.out.println("What would you like to do?");
 			prompt=input.nextLine();
 
@@ -82,10 +91,12 @@ public class StatsRunner
 			case "g ball","gball":
 				player.castFireball(input, goblin);
 				break;
+			case "lightning","light":
+				player.castSparks(input, goblinHorde);
 				
 			}
 			troll.rollDamage(1, player);
-			goblin.rollDamage(player);
+//			goblin.rollDamage(player);
 			if(!troll.alive)
 				troll=new TrollStats(1);
 		}

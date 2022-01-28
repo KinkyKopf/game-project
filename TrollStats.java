@@ -191,7 +191,7 @@ public class TrollStats
 		}
 		for(int i=0;i<times;i++)
 		{
-		damageOut = (Rpg1_18.randomGen((int)(2*dmgMultiplier), (int)(5*dmgMultiplier))+player.characterWeapon.getProtection());
+		damageOut = (Rpg1_18.randomGen((int)(2*dmgMultiplier), (int)(5*dmgMultiplier)))-player.characterWeapon.getProtection();
 		}
 		//System.out.println("DamageValue: "+damageOut);
 		if(damageOut<=0)

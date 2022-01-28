@@ -85,8 +85,7 @@ public class PlayerStats
 	public void die() throws InterruptedException
 	{
 		alive=false;
-		Rpg1_18.slowPrintln("You died!!!");		
-		Rpg1_18.slowPrintln("Floor: "+floor);
+	
 		//Thread.sleep(100);
 	}
 	public void setHealth(int h)
@@ -231,7 +230,44 @@ public class PlayerStats
 		return;
 	}
 	
-	public void castSparks(Scanner input, Goblin[])
+	public void castSparks(Scanner input, Goblin[] goblins) throws InterruptedException
+	{
+		int damageMin;
+		int damageMax;
+		int level;
+		int spellCost;
+		double stunChance;
+		if(intelligence>9)
+			level=4;
+		else if(intelligence>5)
+			level=3;
+		else if (intelligence>3)
+			level=2;
+		else
+			level=1;
+		
+		spellCost=level*5;
+		stunChance=level*.10;
+		if(!checkMagic(spellCost))
+			return;
+		useMagic(spellCost);
+		
+		damageMin=level;
+		damageMax=level*2;
+		
+		
+		for(Goblin g:goblins)
+		{
+			g.takeDamage(Rpg1_18.randomGen(damageMin, damageMax));
+			if(Math.random()<stunChance)
+			{	
+			g.stunned=true;
+			Rpg1_18.slowPrintln("You stun goblin "+g.goblinNum+"!");
+			}
+		}
+		
+		
+	}
 	public boolean checkMagic(int c) throws InterruptedException
 	{
 		if(c>magic)
