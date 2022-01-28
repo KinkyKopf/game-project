@@ -11,9 +11,12 @@ public class Goblin
 	 * fix the roll To hit in the goblins
 	 */
 	 int baseHealth,health,minDamage,maxDamage,accuracy,goblinNum,currentDamage;
-	static int numberOfGoblins,startingNum=0;
+	static int numberOfGoblins;
+	static int startingNum=0;
+	private double hlthMultiplier;
+	private double dmgMultiplier;
 	boolean dead;
-	private double hlthMultiplier,dmgMultiplier;
+	boolean stunned;
 
 	public Goblin(int f) throws InterruptedException
 	{
@@ -79,6 +82,12 @@ public class Goblin
 	}
 	public void rollDamage(PlayerStats player) throws InterruptedException
 	{
+		if(stunned)
+		{
+			Rpg1_18.slowPrintln("The goblin prepares for an attack, but a sudden burst of electricty arks across his body, staggering him!");
+			stunned=false;
+			return;
+		}
 		Rpg1_18.slowPrint("Goblin "+goblinNum+" swings,");
 		if(player.rollToHit(accuracy))
 		{
