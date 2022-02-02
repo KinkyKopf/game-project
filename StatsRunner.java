@@ -60,11 +60,7 @@ public class StatsRunner
 //		}
 //		
 		//Combat testing code:_____________________
-		for(int i =0;i<100;i++) 
-		{
-			System.out.println(Math.random()<.1);
-				
-		}
+
 		TrollStats troll = new TrollStats(1);
 		Inventory stuff = new Inventory();
 		Weapon testWeapon= new Weapon("shield", stuff);
@@ -72,6 +68,8 @@ public class StatsRunner
 		Goblin goblin = new Goblin(1);
 		Goblin[] goblinHorde= new Goblin[3];
 		testWeapon.setProtection(0);
+		
+		int goblinAttacker;
 		
 		for(int i =0;i<goblinHorde.length;i++)
 			goblinHorde[i]=new Goblin(1);
@@ -92,11 +90,12 @@ public class StatsRunner
 				player.castFireball(input, goblin);
 				break;
 			case "lightning","light":
-				player.castSparks(input, goblinHorde);
+				player.castChainLightning(input, goblinHorde);
 				
 			}
+			goblinAttacker= randomGen(0,Goblin.startingNum-1);
 			troll.rollDamage(1, player);
-//			goblin.rollDamage(player);
+			goblinHorde[goblinAttacker].rollDamage(player);
 			if(!troll.alive)
 				troll=new TrollStats(1);
 		}

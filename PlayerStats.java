@@ -1,7 +1,6 @@
 package gameprototypes;
 
 import java.util.Scanner;
-
 public class PlayerStats 
 {
 	
@@ -27,13 +26,7 @@ public class PlayerStats
 	private boolean alive,nearDeath;
 	Weapon characterWeapon;
 	Inventory bag;
-	/*
-	 *Item index:
-	 *0-gauntlets(fists/no weapon)
-	 *1-sword
-	 *2-shield
-	 *3-bow
-	 */
+
 	public PlayerStats(int e,int h,int mh,Weapon w,int mm)//constructor
 	{
 		characterWeapon=w;
@@ -143,6 +136,7 @@ public class PlayerStats
 	
 	public void takeDamage(int damage) throws InterruptedException
 	{
+		Rpg1_18.//add "you took damage"!
 		health-=damage;
 		if(health<=0)
 			die();
@@ -166,7 +160,7 @@ public class PlayerStats
 
 		if(evasion>enemyRoll)
 		{
-			Rpg1_18.slowPrintln("You dodged the attack!");
+			Rpg1_18.slowPrintln("you dodged the attack!");
 			return true;
 		}
 		return false;
@@ -230,7 +224,7 @@ public class PlayerStats
 		return;
 	}
 	
-	public void castSparks(Scanner input, Goblin[] goblins) throws InterruptedException
+	public void castChainLightning(Scanner input, Goblin[] goblins) throws InterruptedException
 	{
 		int damageMin;
 		int damageMax;
