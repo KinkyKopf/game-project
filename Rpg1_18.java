@@ -14,7 +14,7 @@ public class Rpg1_18
 {
 	
 	static int printSpeed=15;//20 feels a bit slow but anything less skips around too much
-	static boolean aiAutoRun;
+	static boolean aiAutoRun=true;
 	static int hallChoice;
 	static String weaponChoice;
 	static boolean egg1=false;
@@ -461,7 +461,7 @@ public class Rpg1_18
 		 * I am revising my roll damage methods to deal damage directly, so I need to integrate those into the goblins method
 		 * 
 		 * fixes:
-		 * dead goblins are attacking; it will say that the goblin is dead, roll the goblin again then just attack-done, just some bad boolean logic, I belive
+		 *  dead goblins are attacking; it will say that the goblin is dead, roll the goblin again then just attack-done, just some bad boolean logic, I belive
 		 *	i fixed half of the array exception issue, originally, whenever it would reroll when a goblin is dead, I set the generator to make the wrong values, so stupid problem, easy fix, but it is still happening sometimes
 		 *  it makes a number bigger than the array when choosing an attacker sometimes, so far it has happened twice
 		 *  it isn't a problem with the random generator, since I made 100 generater numbers and an erroir wasn't in them, meaning in must be in my adding and subtracting--The starting num must stay even though the array got garbage collected meaning that if statring num was five on the las one it will be e5 on this one, i belive. 
@@ -482,12 +482,12 @@ public class Rpg1_18
 		Goblin[] goblins=new Goblin[goblinGen];
 	
 		slowPrintln("You see the flickering light of a fire around the hall, but right as you are about to turn the corner,\n You see the the dancing shadows of goblins.  Prepare for a fight.\n___________________________\n");
-		
+		slowPrintln("There are "+goblinGen+" goblins to attack");
+
 		for(int i=0;i<goblinGen;i++)//generates the goblins
 		{
 			goblins[i]=new Goblin(player.getFloor());
 		}
-		slowPrintln("There are "+Goblin.startingNum+" goblins to attack");
 		
 //		if(aiAutoRun)//this is to generate random numbers to see if they are within a range
 //		{
