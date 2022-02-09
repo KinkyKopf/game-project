@@ -44,14 +44,14 @@ public class StatsRunner
 		//Rpg1_18.goblinHorde(inputTaker, player, null, testWeapon);
 		
 //Auto Run code:________________________
-//		for(int i=0;i<100;i++)
-//		{
-//		Rpg1_18 runner = new Rpg1_18(1,"bow");
-//		runner.main(args);
-//		realTimes++;
-//		}
-//		 CounterFile tabKeeper=new CounterFile();
-//		System.out.println(tabKeeper);
+		for(int i=0;i<10;i++)
+		{
+		Rpg1_18 runner = new Rpg1_18(1,"bow");
+		runner.main(args);
+		realTimes++;
+		}
+		 CounterFile tabKeeper=new CounterFile();
+		System.out.println(tabKeeper);
 		
 //		
 //		for(int i=0;i<100;i++)
@@ -60,45 +60,50 @@ public class StatsRunner
 //		}
 //		
 		//Combat testing code:_____________________
-
-		TrollStats troll = new TrollStats(1);
-		Inventory stuff = new Inventory();
-		Weapon testWeapon= new Weapon("shield", stuff);
-		PlayerStats player= new PlayerStats(testWeapon);
-		Goblin goblin = new Goblin(1);
-		Goblin[] goblinHorde= new Goblin[3];
-		testWeapon.setProtection(0);
-		
-		int goblinAttacker;
-		
-		for(int i =0;i<goblinHorde.length;i++)
-			goblinHorde[i]=new Goblin(1);
-			
-		while(!prompt.equals("quit"))
-		{
-//			System.out.println(troll);
-			System.out.println(goblinHorde[2]);
-			System.out.println("What would you like to do?");
-			prompt=input.nextLine();
-
-			switch(prompt)
-			{
-			case "t ball","tball":
-				player.castFireball(input,troll);
-				break;
-			case "g ball","gball":
-				player.castFireball(input, goblin);
-				break;
-			case "lightning","light":
-				player.castChainLightning(input, goblinHorde);
-				
-			}
-			goblinAttacker= randomGen(0,Goblin.startingNum-1);
-			troll.rollDamage(1, player);
-			goblinHorde[goblinAttacker].rollDamage(player);
-			if(!troll.alive)
-				troll=new TrollStats(1);
-		}
+//
+//		TrollStats troll = new TrollStats(1);
+//		Inventory stuff = new Inventory();
+//		Weapon testWeapon= new Weapon("shield", stuff);
+//		PlayerStats player= new PlayerStats(testWeapon);
+//		Goblin goblin = new Goblin(1);
+//		Goblin[] goblinHorde= new Goblin[3];
+//		testWeapon.setProtection(0);
+//		
+//		int goblinAttacker;
+//		
+//		for(int i =0;i<goblinHorde.length;i++)
+//			goblinHorde[i]=new Goblin(1);
+//			
+//		while(!prompt.equals("quit"))
+//		{
+////			System.out.println(troll);
+//			System.out.println(goblinHorde[2]);
+//			System.out.println("What would you like to do?");
+//			prompt=input.nextLine();
+//
+//			switch(prompt)
+//			{
+//			case "t ball","tball":
+//				player.castFireball(input,troll);
+//				break;
+//			case "g ball","gball":
+//				player.castFireball(input, goblin);
+//				break;
+//			case "lightning","light":
+//				player.castChainLightning(input, goblinHorde);
+//			case "swing g":
+//				goblin.takeDamage(player.characterWeapon.rollDamage(1));
+//			case "swing t":
+//				troll.takeDamage(player.characterWeapon.rollDamage(1));
+//			}
+//			
+//			goblinAttacker= randomGen(0,goblinHorde.length-1);
+//			troll.rollDamage(1, player);
+//			System.out.print("Pick: "+goblinAttacker);
+//			goblinHorde[goblinAttacker].rollDamage(player);
+//			if(!troll.alive)
+//				troll=new TrollStats(1);
+//		}
 	}
 
 }

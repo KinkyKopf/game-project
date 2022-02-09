@@ -88,17 +88,18 @@ public class Goblin
 			stunned=false;
 			return;
 		}
-		Rpg1_18.slowPrint("Goblin "+goblinNum+" swings,");
+//		Rpg1_18.slowPrint("Goblin "+goblinNum+" swings,");
 		if(player.rollToHit(accuracy))
 		{
 			currentDamage=0;
+			Rpg1_18.slowPrintln("Goblin "+goblinNum+" swings, but you dodged the attack!");
 			return;
 		}
 		
 		currentDamage=Rpg1_18.randomGen(minDamage,maxDamage)-player.characterWeapon.protection; 
 		if (currentDamage<=0)
 		{
-			Rpg1_18.slowPrintln(" but you blocked the attack!");
+			Rpg1_18.slowPrintln("Goblin "+goblinNum+" swing, but you blocked the attack!");
 			return;
 		}
 		player.takeDamage(currentDamage);

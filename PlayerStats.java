@@ -136,7 +136,7 @@ public class PlayerStats
 	
 	public void takeDamage(int damage) throws InterruptedException
 	{
-		Rpg1_18.//add "you took damage"!
+//		Rpg1_18.slowPrintln("and hits you for "+damage);
 		health-=damage;
 		if(health<=0)
 			die();
@@ -159,10 +159,7 @@ public class PlayerStats
 //		System.out.println("Enemy ROll: "+ enemyRoll);
 
 		if(evasion>enemyRoll)
-		{
-			Rpg1_18.slowPrintln("you dodged the attack!");
 			return true;
-		}
 		return false;
 	}
 	public void buyMaxPotion(int num,Inventory stuff) throws InterruptedException

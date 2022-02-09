@@ -153,7 +153,7 @@ public class Rpg1_18
 		
 		switch(s)
 		{
-		case "yes","y","holla","yas","yerr","ya","ayo kill that sucka!":
+		case "yes","y","holla","yas","yerr","ya":
 			
 			slowPrintln("You know he is already dead right?");
 			s=inputTaker.nextLine();
@@ -759,6 +759,10 @@ public class Rpg1_18
 		 * get rid of the transfer array that I was so proud of-2
 		 * get rid of the old if/else mess and do a switch instead, but it might be better to do that in the next edition
 		 * make it print the updated stats
+		 * 
+		 * TO do:
+		 * _________________________________
+		 * set up the auto run
 		 */
 		int number;
 		int maxCst;
@@ -768,15 +772,29 @@ public class Rpg1_18
 		if(maxCst>500)
 			maxCst=500;//this should cap the maximum cost at 500
 		
-		slowPrintln("You see torchlight in the distance, as you approach, a broken sign reading \"shop\" hangs from one end\n\nYou can upgrade your weapon or buy some potions, the choice is yours.");
+		slowPrintln("You see torchlight in the distance, as you approach, a broken sign reading \"shop\" hangs from one end\n\nYou can upgrade your weapon or buy some potions, the choice is yours.\n");
 		
-		prompt = input.nextLine();
+		if(aiAutoRun)
+		{
+			if( (stuff.getGold()>=200 && stuff.getUpgrades()>0) && player.getHealth()==player.getMaxHealth() )
+				prompt="upgrade";
+			else if(stuff.getGold()>=maxCst)
+				prompt="potions";	
+			else
+				prompt="leave";
+		}
+		else
+			prompt = input.nextLine();
 		
 		switch(prompt.toLowerCase())
 		{
 		case "upgrade","upgrade weapon":
 			
 			slowPrintln("Would you like to upgrade your weapon for "+playerWeapon.upgradeCost+" gold?");
+			
+			if(aiAutoRun)
+				prompt="yes";
+			else
 			prompt=input.nextLine();
 				
 				switch(prompt.toLowerCase())
@@ -786,17 +804,29 @@ public class Rpg1_18
 				default:
 					slowPrintln("You head back to the main room");
 				}
-		case "potions","potion":
+		case "potions","potion","max","refill":
 			slowPrintln("There are two potions on the wall, max potions, and refill potions, both have a drawing of a heart on them");
 				
+			if(aiAutoRun)
+			{
+				if(stuff.getGold()>=maxCst)
+					prompt="max";
+				else
+					prompt="refill";
+			}
 		
 				switch(prompt.toLowerCase())
 				{
 				case "max","buy max potions","max potions":
 					slowPrintln("How many would you like to buy?");
+					
+				if(aiAutoRun)
+					number=stuff.getGold()/maxCst;
+				else
+				{
 					number=input.nextInt();
 					prompt=input.nextLine();
-					
+				}
 					if(number<0)
 						maxEasterEgg(input,stuff);
 					else
