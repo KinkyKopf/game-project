@@ -109,7 +109,7 @@ public class Rpg1_18
 		return s.nextLine().toLowerCase();
 	}
 	
-	public static int answerChecker(Goblin[] gob,Scanner inputTaker) throws InterruptedException
+	public static int answerChecker(Goblin[] gob,Scanner inputTaker,PlayerStats player) throws InterruptedException
 	{
 		int choice;
 		String str;
@@ -132,6 +132,8 @@ public class Rpg1_18
 				{
 					slowPrintln("How do you think that would even work? You make no sense");
 				}
+				else if(gob[choice-1].dead)
+				choice =psychoChecker(gob,choice,inputTaker,player);
 				else if(choice>=1 && choice<=Goblin.startingNum)
 					return choice;
 			}
@@ -533,8 +535,6 @@ public class Rpg1_18
 		int goblinAttacker;
 		int loot;
 		String prompt = "";
-		boolean alive=true;
-		boolean win = false;
 		int aiCounter=1;
 		int goblinGen =randomGen(1,4);
 	//	goblinGen=4;
@@ -544,9 +544,43 @@ public class Rpg1_18
 		slowPrintln("There are "+goblinGen+" goblins to attack");
 
 		for(int i=0;i<goblinGen;i++)//generates the goblins
-		{
 			goblins[i]=new Goblin(player.getFloor());
+		
+		do
+		{
+		slowPrintln("What would you like to do?");
+		prompt=toLower(input);
+		
+		switch(prompt)
+		{
+		case "attack", "swing":
+			selection=answerChecker(goblins,input,player);
+			player.attack(goblins[selection-1]);
+			break;
+		case "cast fireball","cast fire ball","fireball","fire ball":
+			selection=answerChecker(goblins,input,player);
+			player.castFireball(input, goblins[selection-1]);
+			break;
+		case "cast lightning","lightning":
+			player.castChainLightning(input, goblins);
+			break;
+		}	
+		
+		if(Goblin.allDead)
+		{
+			
 		}
+		
+		goblinAttacker= randomGen(0,Goblin.startingNum-1);//this decides what goblin will attack
+		if(goblinAttacker>=Goblin.startingNum)
+		{
+			goblinAttacker= randomGen(0,Goblin.startingNum-1);
+			//slowPrintln("reroll");
+		}
+		goblins[goblinAttacker].attack(player);
+		
+		}
+		while(player.isAlive());
 		
 //		if(aiAutoRun)//this is to generate random numbers to see if they are within a range
 //		{
@@ -557,82 +591,77 @@ public class Rpg1_18
 //			prompt=input.nextLine();
 //		}
 		
-		do
-		{
-			//Real code:
-			if(!aiAutoRun)
-				selection=answerChecker(goblins,input);
-			else
-				selection=aiCounter;
-			//slowPrint("Answer recived: "+selection);
+//		do
+//		{
+//			//Real code:
+//			if(!aiAutoRun)
+//				selection=answerChecker(goblins,input);
+//			else
+//				selection=aiCounter;
+//			//slowPrint("Answer recived: "+selection);
+//			
+//			if(goblins[selection-1].dead==true)
+//				selection=psychoChecker(goblins,selection,input,player);
+//			
+//			if(goblins[selection-1].dead==false)
+//			{
+//			goblins[selection-1].takeDamage(playerWeapon.rollDamage(1));
+//			slowPrintln("You deal "+playerWeapon.currentDamage+" damage to goblin "+selection+".  The goblin now has "+goblins[selection-1].health+ " health remaining!");
+//			
+//			//Ai runner code:
+//			if(goblins[selection-1].dead==true)
+//				aiCounter++;
+//			}
+//			else 
+//			{
+//				slowPrint("You look at all the very much alive goblins standing around you and decide that,\n in the middle of a fight, you will attack the ONE THING that poses zero danger to you and beat the corpse of goblin "+selection);
+//			}
+//					if(Goblin.numberOfGoblins==0)
+//					{
+//						slowPrintln("You killed all the goblins, congrats!  I'm not going to guilt trip you on this one, the goblins are just idiots.");
+//						loot=lootMaker(player.getFloor()*Goblin.startingNum);
+//						stuff.addGold(loot);
+//						loot=randomGen(1,3);
+//						stuff.addGold(loot);;
+//						slowPrintln("You also found "+loot+" ugrade tokens in one of the goblin's "+partGen()+" so win/win!");
+//						Goblin.startingNum=0;
+//						return;
+//					}
+//	
 			
-			if(goblins[selection-1].dead==true)
-				selection=psychoChecker(goblins,selection,input,player);
-			
-			if(goblins[selection-1].dead==false)
-			{
-			goblins[selection-1].takeDamage(playerWeapon.rollDamage(1));
-			slowPrintln("You deal "+playerWeapon.currentDamage+" damage to goblin "+selection+".  The goblin now has "+goblins[selection-1].health+ " health remaining!");
-			
-			//Ai runner code:
-			if(goblins[selection-1].dead==true)
-				aiCounter++;
-			}
-			else 
-			{
-				slowPrint("You look at all the very much alive goblins standing around you and decide that,\n in the middle of a fight, you will attack the ONE THING that poses zero danger to you and beat the corpse of goblin "+selection);
-			}
-					if(Goblin.numberOfGoblins==0)
-					{
-						slowPrintln("You killed all the goblins, congrats!  I'm not going to guilt trip you on this one, the goblins are just idiots.");
-						loot=lootMaker(player.getFloor()*Goblin.startingNum);
-						stuff.addGold(loot);
-						loot=randomGen(1,3);
-						stuff.addGold(loot);;
-						slowPrintln("You also found "+loot+" ugrade tokens in one of the goblin's "+partGen()+" so win/win!");
-						Goblin.startingNum=0;
-						return;
-					}
-	
-			goblinAttacker= randomGen(0,Goblin.startingNum-1);//this decides what goblin will attack
-			if(goblinAttacker>=Goblin.startingNum)
-			{
-				goblinAttacker= randomGen(0,Goblin.startingNum-1);
-				//slowPrintln("reroll");
-			}
-			
-			//slowPrint("Goblin number "+goblinAttacker);
-			System.out.println("Starting num: "+Goblin.startingNum+"Length: "+goblins.length);
-			while((goblins[goblinAttacker].dead))//if the chosen goblin is dead, this keep picking until an alive goblin is chosen.
-			{
-						slowPrintln("Old Attacker: "+goblinAttacker);
-						goblinAttacker= randomGen(1,Goblin.startingNum-1);//rerolls the selection
-						slowPrintln("New Attacker: "+goblinAttacker);		
-			}
-			
-			
-			slowPrint("Goblin number "+(goblinAttacker+1)+" swings!");
-			goblins[goblinAttacker].rollDamage(player);
-			
-			if(goblins[goblinAttacker].currentDamage>0)
-			{
-			player.takeDamage(goblins[goblinAttacker].currentDamage);
-			slowPrintln("He hits you for "+goblins[goblinAttacker].currentDamage+" damage!\n"
-					+ "You have "+player.getHealth()+" health remaining");
-			}
-			
-			if(player.getHealth()<=0)
-			{
-				
-				System.out.print("The goblins killed you! They celebrate by taking out your "+partGen()+" and doing a dance around it\n that looks like a monkey told another monkey how to do the hokey pokey. ");
-				alive=false;
-				Goblin.startingNum=0;
-				Goblin.numberOfGoblins=0;
-				break;
-			}
-			System.out.println("\n_____________________________________");
-		}
-		while(win==false&&alive==true);
+//			
+//			//slowPrint("Goblin number "+goblinAttacker);
+//			System.out.println("Starting num: "+Goblin.startingNum+"Length: "+goblins.length);
+//			while((goblins[goblinAttacker].dead))//if the chosen goblin is dead, this keep picking until an alive goblin is chosen.
+//			{
+//						slowPrintln("Old Attacker: "+goblinAttacker);
+//						goblinAttacker= randomGen(1,Goblin.startingNum-1);//rerolls the selection
+//						slowPrintln("New Attacker: "+goblinAttacker);		
+//			}
+//			
+//			
+//			slowPrint("Goblin number "+(goblinAttacker+1)+" swings!");
+//			goblins[goblinAttacker].rollDamage(player);
+//			
+//			if(goblins[goblinAttacker].currentDamage>0)
+//			{
+//			player.takeDamage(goblins[goblinAttacker].currentDamage);
+//			slowPrintln("He hits you for "+goblins[goblinAttacker].currentDamage+" damage!\n"
+//					+ "You have "+player.getHealth()+" health remaining");
+//			}
+//			
+//			if(player.getHealth()<=0)
+//			{
+//				
+//				System.out.print("The goblins killed you! They celebrate by taking out your "+partGen()+" and doing a dance around it\n that looks like a monkey told another monkey how to do the hokey pokey. ");
+//				alive=false;
+//				Goblin.startingNum=0;
+//				Goblin.numberOfGoblins=0;
+//				break;
+//			}
+//			System.out.println("\n_____________________________________");
+//		}
+//		while(win==false&&alive==true);
 	}
 	
 	public static Weapon firstStore(Scanner input,Inventory stuff) throws InterruptedException

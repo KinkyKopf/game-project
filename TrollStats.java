@@ -1,7 +1,7 @@
 package gameprototypes;
 
 
-public class TrollStats 
+public class TrollStats extends Creature 
 {
 	private int health,damage,accuracy,floor,damageOut,armor;
 	private double hlthMultiplier,dmgMultiplier;
@@ -22,20 +22,23 @@ public class TrollStats
 	
 	public TrollStats(int f) throws InterruptedException
 	{
-		if(f<6)
+		super(20,Rpg1_18.randomGen(-3, 3),f,"troll");
+
+		double hlthMultiplier,dmgMultiplier;
+		 if(f<10)
 		{
-			hlthMultiplier=5;
-			dmgMultiplier=.9;
-		}
-		else if(f<10)
-		{
-			hlthMultiplier=8;
-			dmgMultiplier=1.5;
+			hlthMultiplier=2;
+			dmgMultiplier=1.2;
 		}
 		else if(f<20)
 		{
-			hlthMultiplier=15;
-			dmgMultiplier=3;
+			hlthMultiplier=4;
+			dmgMultiplier=2;
+		}
+		else
+		{
+			hlthMultiplier=1;
+			dmgMultiplier=1;
 		}
 		nameGen();
 		if(!quickBuild)
@@ -48,7 +51,7 @@ public class TrollStats
 			Rpg1_18.slowPrintln("A new troll appepared!");
 		setFloor(f);
 		setDamage(Rpg1_18.randomGen(-2,3));
-		setHealth(20+(int)(floor*hlthMultiplier));	
+		setHealth(20+(int)(floor*hlthMultiplier),hlthMultiplier);	
 		setAccuracy(Rpg1_18.randomGen(-3, 3));
 	}
 
@@ -56,8 +59,7 @@ public class TrollStats
 //Setters______________
 	public void setDamage(int d) throws InterruptedException
 	{
-		//d=0;
-		damage=d;
+		
 		
 		if(!quickBuild)
 		{
@@ -67,72 +69,9 @@ public class TrollStats
 				Rpg1_18.slowPrintln("You notice a stack of books labled \"Computer Science: The Anylitical Studies Of Computational Electronics\" in the corner of "+name+"'s lair\n");
 		}
 	}
-	public void setHealth(int h) throws InterruptedException
-	{
-		int bonusHealth=Rpg1_18.randomGen(-7,10);
-		health = h+bonusHealth;
-		
-		if(!quickBuild)
-		{
-			if(bonusHealth>5)
-				Rpg1_18.slowPrintln(name+" appears to be abnormally large. But not like in a bad way or anything,he's still in shape for a troll");
-			if(bonusHealth<0)
-				Rpg1_18.slowPrintln(name+" is way smaller than your average troll but it is best not to metion it, he is probably insecure\n");
-		}
-	}
-	public void setAccuracy(int a) throws InterruptedException
-	{
-		accuracy=a;
-		if(!quickBuild)
-		{
-			if(a>0)
-				Rpg1_18.slowPrintln("It appears that "+name+" is wearing glasses\n");
-			if (a<=0)
-				Rpg1_18.slowPrintln(name+" squints at you.\n");
-		}
-	}
-	public void setName(String n)
-	{
-		name=n;
-	}
-	public void takeDamage(int dam) throws InterruptedException
-	{
-		health-=dam;
-		if(health<=0)
-		{
-			Rpg1_18.slowPrintln("You killed "+name);
-			alive=false;
-		}
-//		Rpg1_18.slowPrintln("You deal "+dam+" damage to the troll, he has "+health+" health left!");
-	}
-	public void setFloor(int f)
-	{
-		floor=f;
-	}
+
 //Getters_________________
-	public int getDamage()
-	{
-		return damageOut;
-	}
-	public int getHealth()
-	{
-		return health;
-	}
-	public int getAccuracy()
-	{
-		return accuracy;
-	}
-	public String getName()
-	{
-		return name;
-	}
-	public boolean isAlive()
-	{
-		if(health>0)
-			return true;
-		else
-			return false;
-	}
+	
 	public void printHealth() throws InterruptedException
 	{
 		Rpg1_18.slowPrintln("Troll health: "+health);

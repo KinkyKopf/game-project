@@ -33,7 +33,7 @@ public class StatsRunner
 		Inventory stuff = new Inventory();
 		Weapon testWeapon= new Weapon("sword", stuff);
 		PlayerStats player= new PlayerStats(testWeapon);
-		Goblin goblin = new Goblin(1);
+//		Goblin goblin = new Goblin(1);
 		
 		player.bag=stuff;
 		
@@ -70,9 +70,11 @@ public class StatsRunner
 //		}
 //		
 		//Combat testing code:_____________________
-//		
-		Rpg1_18.trollFight(input, player, stuff, testWeapon);
+
+//		Rpg1_18.trollFight(input, player, stuff, testWeapon);
 //		TrollStats troll = new TrollStats(1);
+		
+		Rpg1_18.goblinHorde(input, player, stuff, testWeapon);
 		
 //		testWeapon.setProtection(10);
 //		while(!prompt.equals("quit"))
