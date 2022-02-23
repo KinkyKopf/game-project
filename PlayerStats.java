@@ -11,10 +11,14 @@ public class PlayerStats
 	 * 
 	 * To do:
 	 * ________________________
-	 * make a minigame that allows you to increase your intelligence by solving math promlems.
+	 * make a minigame that allows you to increase your intelligence by solving math problems.
 	 * allow you to sacrifice some health for magic
+	 * when using a spell, if it kills the troll it says the damage was zero.
 	 * revise the spells to they take the enemy type as input and deal damage through the method directly.
-	 * 
+	 * add an attack method so I can attack trolls or goblins directly.
+	 * make it so two handed weapons need to have a certian strength in order to properly weild them
+	 * add an attack method
+	 * make a chain lightning method for trolls
 	 * Done:
 	 * _________________________________
 	 * Allow the player to choose how much magic they want to cast the spell for
@@ -22,7 +26,7 @@ public class PlayerStats
 	 * get rid of of the spell base and put all the spells in this class
 	 * 
 	 */
-	private int floor, evasion,health,maxHealth,armorClass,magic,intelligence,maxMagic;
+	private int floor, evasion,health,strength,maxHealth,armorClass,magic,intelligence,maxMagic;
 	private boolean alive,nearDeath;
 	Weapon characterWeapon;
 	Inventory bag;
@@ -43,6 +47,10 @@ public class PlayerStats
 	}
 	//getters______________________________
 	
+	public void printHealth() throws InterruptedException
+	{
+		Rpg1_18.slowPrintln("Player health: "+health);
+	}
 	
 	public int getHealth() throws InterruptedException
 	{
@@ -151,6 +159,23 @@ public class PlayerStats
 	
 	
 	//Miscelanious methods______________________________
+	public void attack( TrollStats troll) throws InterruptedException
+	{
+		String s="";
+		int damage;
+		damage=characterWeapon.rollDamage(1);
+		troll.takeDamage(damage);
+		Rpg1_18.slowPrintln("You hit the troll, dealing "+damage+" damage to it!");
+	}
+	public void attack(Goblin goblin) throws InterruptedException
+	{
+		String s="";
+		int damage;
+		damage=characterWeapon.rollDamage(1);
+		goblin.takeDamage(damage);
+		Rpg1_18.slowPrintln("You hit the goblin, dealing "+damage+" damage to it!");
+	}
+	
 	public boolean rollToHit(int enemyAccuracy) throws InterruptedException//roll to see if you can dodge
 	{
 		
@@ -162,6 +187,7 @@ public class PlayerStats
 			return true;
 		return false;
 	}
+	
 	public void buyMaxPotion(int num,Inventory stuff) throws InterruptedException
 	{
 		int maxCst;
@@ -201,6 +227,8 @@ public class PlayerStats
 		
 		Rpg1_18.slowPrintln("You cast fireball for "+magicCost+" magic, you have "+ magic+" magic left.");
 		troll.takeDamage(damage);
+		Rpg1_18.slowPrintln("The fireball rockets out of your palm and slams into the chest of the troll, dealing "+damage+" damage to him");
+		
 	}
 	public void castFireball(Scanner input,Goblin goblin) throws InterruptedException
 	{
@@ -218,7 +246,7 @@ public class PlayerStats
 		
 		Rpg1_18.slowPrintln("You cast fireball for "+magicCost+" magic, you have "+ magic+" magic left.");
 		goblin.takeDamage(damage);
-		return;
+		Rpg1_18.slowPrintln("The fireball rockets out of your palm and slams into the chest of the goblin, dealing "+damage+" damage to him");
 	}
 	
 	public void castChainLightning(Scanner input, Goblin[] goblins) throws InterruptedException
@@ -259,6 +287,9 @@ public class PlayerStats
 		
 		
 	}
+	
+//	public void attack()
+
 	public boolean checkMagic(int c) throws InterruptedException
 	{
 		if(c>magic)

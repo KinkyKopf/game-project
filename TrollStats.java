@@ -3,7 +3,7 @@ package gameprototypes;
 
 public class TrollStats 
 {
-	private int health,damage,accuracy,floor,damageOut;
+	private int health,damage,accuracy,floor,damageOut,armor;
 	private double hlthMultiplier,dmgMultiplier;
 	boolean quickBuild=true;
 	boolean stunned;
@@ -16,7 +16,7 @@ public class TrollStats
 	 *bonus health be some quip about him being "big but not like in a bad way"
 	 *
 	 *to Fix:
-	 *
+	 *I want to revamp the combat so most of it happens inside methods, that way if I want to add more things, it will make it much easier.
 	 *The prompts are printing in a weird order, I need to tweak the printing so it comes out in the right order.  Like you kill the troll and it says you deal 0 damage.
 	 */
 	
@@ -103,7 +103,7 @@ public class TrollStats
 			Rpg1_18.slowPrintln("You killed "+name);
 			alive=false;
 		}
-		Rpg1_18.slowPrintln("You deal "+damage+" damage to the troll, he has "+health+" health left!");
+//		Rpg1_18.slowPrintln("You deal "+dam+" damage to the troll, he has "+health+" health left!");
 	}
 	public void setFloor(int f)
 	{
@@ -133,9 +133,20 @@ public class TrollStats
 		else
 			return false;
 	}
-	
+	public void printHealth() throws InterruptedException
+	{
+		Rpg1_18.slowPrintln("Troll health: "+health);
+	}
 	//misc methods_________________________	
-	
+	public void giveLoot(PlayerStats player) throws InterruptedException
+	{
+		int loot=Rpg1_18.lootMaker(floor);
+		Rpg1_18.slowPrintln("You got "+loot+" gold!");
+		player.bag.addGold(loot);
+		loot=Rpg1_18.randomGen(1,3);
+		Rpg1_18.slowPrintln("You also got "+loot+" upgrade tokens!");
+		player.bag.addUpgrades(loot);
+	}
 	public void nameGen()
 	{
 		String n;
@@ -178,7 +189,7 @@ public class TrollStats
 		}
 		setName(n);
 	}
-	public void rollDamage(int times,PlayerStats player) throws InterruptedException
+	public void attack(int times,PlayerStats player) throws InterruptedException
 	{
 		if(stunned)
 		{
@@ -196,7 +207,8 @@ public class TrollStats
 		//System.out.println("DamageValue: "+damageOut);
 		if(damageOut<=0)
 		{
-			Rpg1_18.slowPrintln("You blocked the attack!");
+			Rpg1_18.slowPrintln("The troll swings but you blocked the attack!");
+			return;
 		}
 		
 		Rpg1_18.slowPrint("The troll hits you for "+damageOut+" damage");
@@ -206,10 +218,9 @@ public class TrollStats
 			Rpg1_18.slowPrintln(", destroying your "+Rpg1_18.partGen()+", killing you instntly");
 		else 
 			Rpg1_18.slowPrintln("!");
-	
-		return;
-		
 	}
+	
+
 	public String toString()
 	{
 		return name+" currently has "+health+" health.";

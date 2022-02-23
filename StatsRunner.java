@@ -13,6 +13,7 @@ import java.util.Scanner;
  *
  *TO DO:
  *finish tweaking the values, so far the bow still dies a lot more on the first level
+ *make it so you fight more than one enemy per floor.
  *
  */
 public class StatsRunner 
@@ -29,7 +30,13 @@ public class StatsRunner
 	
 		String prompt ="";
 		int realTimes = 0;
-
+		Inventory stuff = new Inventory();
+		Weapon testWeapon= new Weapon("sword", stuff);
+		PlayerStats player= new PlayerStats(testWeapon);
+		Goblin goblin = new Goblin(1);
+		
+		player.bag=stuff;
+		
 //		if(1==1|troll.rollDamage(1)==1)
 //		{
 //			System.out.println(troll.getDamage());
@@ -43,15 +50,18 @@ public class StatsRunner
 //		//Rpg1_18.trollFight(inputTaker, player, null, testWeapon);
 		//Rpg1_18.goblinHorde(inputTaker, player, null, testWeapon);
 		
+//		prompt=Rpg1_18.toLower(input);
+//		Rpg1_18.slowPrint(prompt);
+		
 //Auto Run code:________________________
-		for(int i=0;i<10;i++)
-		{
-		Rpg1_18 runner = new Rpg1_18(1,"bow");
-		runner.main(args);
-		realTimes++;
-		}
-		 CounterFile tabKeeper=new CounterFile();
-		System.out.println(tabKeeper);
+//		for(int i=0;i<1;i++)
+//		{
+//		Rpg1_18 runner = new Rpg1_18(1,"bow");
+//		runner.main(args);
+//		realTimes++;
+//		}
+//		 CounterFile tabKeeper=new CounterFile();
+//		System.out.println(tabKeeper);
 		
 //		
 //		for(int i=0;i<100;i++)
@@ -60,24 +70,15 @@ public class StatsRunner
 //		}
 //		
 		//Combat testing code:_____________________
-//
+//		
+		Rpg1_18.trollFight(input, player, stuff, testWeapon);
 //		TrollStats troll = new TrollStats(1);
-//		Inventory stuff = new Inventory();
-//		Weapon testWeapon= new Weapon("shield", stuff);
-//		PlayerStats player= new PlayerStats(testWeapon);
-//		Goblin goblin = new Goblin(1);
-//		Goblin[] goblinHorde= new Goblin[3];
-//		testWeapon.setProtection(0);
-//		
-//		int goblinAttacker;
-//		
-//		for(int i =0;i<goblinHorde.length;i++)
-//			goblinHorde[i]=new Goblin(1);
-//			
+		
+//		testWeapon.setProtection(10);
 //		while(!prompt.equals("quit"))
 //		{
-////			System.out.println(troll);
-//			System.out.println(goblinHorde[2]);
+//			System.out.println(troll);
+//			System.out.println(goblin);
 //			System.out.println("What would you like to do?");
 //			prompt=input.nextLine();
 //
@@ -89,18 +90,10 @@ public class StatsRunner
 //			case "g ball","gball":
 //				player.castFireball(input, goblin);
 //				break;
-//			case "lightning","light":
-//				player.castChainLightning(input, goblinHorde);
-//			case "swing g":
-//				goblin.takeDamage(player.characterWeapon.rollDamage(1));
-//			case "swing t":
-//				troll.takeDamage(player.characterWeapon.rollDamage(1));
+//				
 //			}
-//			
-//			goblinAttacker= randomGen(0,goblinHorde.length-1);
 //			troll.rollDamage(1, player);
-//			System.out.print("Pick: "+goblinAttacker);
-//			goblinHorde[goblinAttacker].rollDamage(player);
+//			goblin.rollDamage(player);
 //			if(!troll.alive)
 //				troll=new TrollStats(1);
 //		}

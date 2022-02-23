@@ -14,7 +14,7 @@ public class Rpg1_18
 {
 	
 	static int printSpeed=15;//20 feels a bit slow but anything less skips around too much
-	static boolean aiAutoRun=true;
+	static boolean aiAutoRun;
 	static int hallChoice;
 	static String weaponChoice;
 	static boolean egg1=false;
@@ -104,7 +104,11 @@ public class Rpg1_18
 	{
 		return (int)(Math.random()*(max-min+1))+min;
 	}
-
+	public static String toLower(Scanner s)
+	{
+		return s.nextLine().toLowerCase();
+	}
+	
 	public static int answerChecker(Goblin[] gob,Scanner inputTaker) throws InterruptedException
 	{
 		int choice;
@@ -353,94 +357,149 @@ public class Rpg1_18
 		 *____________________
 		 *
 		 * Adapt the revised methods to deal damage directly from them instead of in here
+		 * have troll deal damage
 		 */
-		String prompt;
+		boolean validCommand=true;
+		boolean win=false;
+		int loot;
 		
+		String prompt;
 		TrollStats troll= new TrollStats(player.getFloor());
 		
-		int round=1;
-		int playerDam;
-		int loot;
-		String plural="";
-		boolean	win=false,isHit;
-		boolean autoRun=false;
-		boolean blocked;
-		
-		slowPrint("Would you like to auto run this combat?");
-		if(!aiAutoRun)
-			prompt=input.nextLine();
-		else
-		prompt="y";
-		switch(prompt.toLowerCase())
+		do
 		{
-		case "y","yes":
-			if(!aiAutoRun)
+			do
 			{
-			slowPrint("Auto running in ...");
-			slowPrint("3...2...1...",250);
-			}
-			autoRun=true;
-		}
-		
 	
-		
-		do 
-		{
-			
-			slowPrintln("Round "+round+"___________\n");
-			
-			if( (!autoRun||player.getHealth()<player.getMaxHealth()/4) && !aiAutoRun)
-			{
-				
-				slowPrintln("");
-				prompt=input.nextLine();
-				
+				slowPrintln("What would you like to do?");
+				prompt = toLower(input);
 				switch(prompt)
 				{
-				case "run","run away":
-					slowPrintln("You decide it is best to run away and as you do, "+troll.getName()+" makes a dumb face and sneers as you run away");
-					return;
-					
+				case "fire ball","fireball":
+					player.castFireball(input,troll);
+					break;
+				case "attack","swing":
+					player.attack(troll);
+					break;
+				case "run","run away","boat","book it","skeddadle":
+					if(randomGen(1,5)==5)
+					{
+						slowPrintln("You successfully ran away from the troll!");
+						return;
+					}
+					else
+					slowPrintln("You failed to find a good escape route");
+					break;
+				case "help":
+					slowPrintln("The valid commands are: attack, fireball, and run");
+					validCommand = false;
+					break; 
+				default:
+					slowPrintln("That isn't a valid command, try again!");
+					validCommand = false;
 				}
 			}
-			
-			playerDam=playerWeapon.rollDamage(1);
-						
-			
-				 if(troll.getHealth()-playerDam<=0)//killing the troll
-				{
-					slowPrintln("You deal "+playerDam+" damage to the troll!");
-					troll.takeDamage(playerDam);
-					slowPrintln("Congrats, You killed "+troll.getName()+"!\nI bet his children will be equally as happy with your success!");
-					if(!aiAutoRun)
-						Thread.sleep(500);
-					slowPrint("Nah just kidding, he dosen't have children!");
-					
-					loot =lootMaker(player.getFloor());
-					stuff.addGold(loot);
-					
-					slowPrintln("You got "+loot+" gold from killing,the troll!\nIt's a bit red but I bet you don't care about that do you?\n\nGold: "+stuff.getGold()+" \n");
-					
-					loot=randomGen(1,3);
-					stuff.addUpgrades(loot);
-					
-					if(loot>1)
-						plural="s";
-					
-					slowPrintln("You also found "+loot+" upgrade token"+plural+" inside the troll's "+partGen()+"........Nice!");
-					break;
-				}
-				 else 
-				 {
-					 troll.takeDamage(playerDam);
-						slowPrintln("You deal "+playerDam+" damage to the troll!\n\nThe troll has "+troll.getHealth()+" health remaning.");	
-				 }
-				 
-				troll.rollDamage(1, player);
-			round++;
+			while(validCommand==false);
+			if(!troll.alive)
+			{
+				slowPrintln("Congrats, You killed "+troll.getName()+"!\nI bet his children will be equally as happy with your success!");
+				if(!aiAutoRun)
+					Thread.sleep(500);
+				slowPrintln("Nah just kidding, he dosen't have children!");
+				troll.giveLoot(player);
+				return;
+			}
+			troll.attack(1,player);
+			if(!player.isAlive())
+				return;
+			player.printHealth();
+			troll.printHealth();
 		}
 		while(win==false);
 		
+		
+		//		int round=1;
+//		int playerDam;
+//		int loot;
+//		String plural="";
+//		boolean	win=false,isHit;
+//		boolean autoRun=false;
+//		boolean blocked;
+//		
+//		slowPrint("Would you like to auto run this combat?");
+//		if(!aiAutoRun)
+//			prompt=input.nextLine();
+//		else
+//		prompt="y";
+//		switch(prompt.toLowerCase())
+//		{
+//		case "y","yes":
+//			if(!aiAutoRun)
+//			{
+//			slowPrint("Auto running in ...");
+//			slowPrint("3...2...1...",250);
+//			}
+//			autoRun=true;
+//		}
+//		
+//	
+//		
+//		do 
+//		{
+//			
+//			slowPrintln("Round "+round+"___________\n");
+//			
+//			if( (!autoRun||player.getHealth()<player.getMaxHealth()/4) && !aiAutoRun)
+//			{
+//				
+//				slowPrintln("");
+//				prompt=input.nextLine();
+//				
+//			44w	switch(prompt)
+//				{
+//				case "run","run away":
+//					slowPrintln("You decide it is best to run away and as you do, "+troll.getName()+" makes a dumb face and sneers as you run away");
+//					return;
+//					
+//				}
+//			}
+//			
+//			playerDam=playerWeapon.rollDamage(1);
+//						
+//			
+//				 if(troll.getHealth()-playerDam<=0)//killing the troll
+//				{
+//					
+//					slowPrintln("Congrats, You killed "+troll.getName()+"!\nI bet his children will be equally as happy with your success!");
+//					if(!aiAutoRun)
+//						Thread.sleep(500);
+//					slowPrint("Nah just kidding, he dosen't have children!");
+//					
+//					loot =lootMaker(player.getFloor());
+//					stuff.addGold(loot);
+//					
+//					slowPrintln("You got "+loot+" gold from killing,the troll!\nIt's a bit red but I bet you don't care about that do you?\n\nGold: "+stuff.getGold()+" \n");
+//					
+//					loot=randomGen(1,3);
+//					stuff.addUpgrades(loot);
+//					
+//					if(loot>1)
+//						plural="s";
+//					
+//					slowPrintln("You also found "+loot+" upgrade token"+plural+" inside the troll's "+partGen()+"........Nice!");
+//					break;
+//				}
+//				 else 
+//				 {
+//					 troll.takeDamage(playerDam);
+//						slowPrintln("You deal "+playerDam+" damage to the troll!\n\nThe troll has "+troll.getHealth()+" health remaning.");	
+//				 }
+//				 
+//				troll.rollDamage(1, player);
+//			round++;
+//		}
+//		while(win==false);
+//		
 			 
 	
 		
@@ -543,12 +602,12 @@ public class Rpg1_18
 			}
 			
 			//slowPrint("Goblin number "+goblinAttacker);
-			
+			System.out.println("Starting num: "+Goblin.startingNum+"Length: "+goblins.length);
 			while((goblins[goblinAttacker].dead))//if the chosen goblin is dead, this keep picking until an alive goblin is chosen.
 			{
-						//slowPrintln("Old Attacker: "+goblinAttacker);
+						slowPrintln("Old Attacker: "+goblinAttacker);
 						goblinAttacker= randomGen(1,Goblin.startingNum-1);//rerolls the selection
-						//slowPrintln("New Attacker: "+goblinAttacker);		
+						slowPrintln("New Attacker: "+goblinAttacker);		
 			}
 			
 			

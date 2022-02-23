@@ -7,10 +7,14 @@ public class Goblin
 	/*
 	 * to DO: 
 	 * ____________________
+	 * add evasion stat
+	 * find out what current damage is and add it
 	 * 
+	 * Done:
+	 * ___________________
 	 * fix the roll To hit in the goblins
 	 */
-	 int baseHealth,health,minDamage,maxDamage,accuracy,goblinNum,currentDamage;
+	 int baseHealth,armor,health,minDamage,maxDamage,accuracy,goblinNum,currentDamage,evasion;
 	static int numberOfGoblins;
 	static int startingNum=0;
 	private double hlthMultiplier;
@@ -80,7 +84,7 @@ public class Goblin
 		return "Goblin "+goblinNum+" has "+health+" health remaining";
 		
 	}
-	public void rollDamage(PlayerStats player) throws InterruptedException
+	public void attack(PlayerStats player) throws InterruptedException
 	{
 		if(stunned)
 		{
@@ -103,7 +107,7 @@ public class Goblin
 			return;
 		}
 		player.takeDamage(currentDamage);
-		Rpg1_18.slowPrintln("");
+		Rpg1_18.slowPrintln("Goblin "+goblinNum+"swings and hits you for "+currentDamage+" damage!");
 	}
 	
 }
