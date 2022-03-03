@@ -25,7 +25,7 @@ public class Goblin extends Creature
 
 	public Goblin(int f) throws InterruptedException
 	{
-		super(10,0,f,"Goblin ");
+		super(10,f,"Goblin ");
 		
 		int minD,maxD,h;
 		double dm,hm;
@@ -44,7 +44,7 @@ public class Goblin extends Creature
 		numberOfGoblins++;
 		goblinNum=numberOfGoblins;
 		
-		setName(getName()+startingNum);
+		setCreatureName(getName()+startingNum);
 		
 		setAccuracy(Rpg1_18.randomGen(-3, 3));
 			
@@ -78,6 +78,10 @@ public class Goblin extends Creature
 			return"Goblin "+goblinNum+" is dead.";
 		return "Goblin "+goblinNum+" has "+health+" health remaining";
 		
+	}
+	public static void reset()
+	{
+		numberOfGoblins=0;
 	}
 	public void attack(PlayerStats player) throws InterruptedException
 	{

@@ -42,7 +42,7 @@ public class Weapon
 				setMin(2);
 				setMax(5);
 				setProtection(0);
-				System.out.println("Bow Bought!");
+//				System.out.println("Bow Bought!");
 				evasionBuff=6;
 				break;
 			case"gauntlets":

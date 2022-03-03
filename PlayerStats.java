@@ -14,8 +14,8 @@ public class PlayerStats
 	 * make a minigame that allows you to increase your intelligence by solving math problems.
 	 * allow you to sacrifice some health for magic
 	 * when using a spell, if it kills the troll it says the damage was zero.
-	 * revise the spells to they take the enemy type as input and deal damage through the method directly.
-	 * add an attack method so I can attack trolls or goblins directly.
+	 * 
+	 * 
 	 * make it so two handed weapons need to have a certian strength in order to properly weild them
 	 * add an attack method
 	 * make a chain lightning method for trolls
@@ -24,7 +24,8 @@ public class PlayerStats
 	 * Allow the player to choose how much magic they want to cast the spell for
 	 * make a check magic method to make sure you can't cast spells at 0 magic
 	 * get rid of of the spell base and put all the spells in this class
-	 * 
+	 * revise the spells to they take the enemy type as input and deal damage through the method directly.
+	 * add an attack method so I can attack trolls or goblins directly.
 	 */
 	private int floor, evasion,health,strength,maxHealth,armorClass,magic,intelligence,maxMagic;
 	private boolean alive,nearDeath;

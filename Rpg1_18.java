@@ -118,7 +118,7 @@ public class Rpg1_18
 			slowPrint("Enter goblins to see the goblin's health or enter the number of the goblin you want to attack");
 			str=inputTaker.nextLine();
 			
-			if(str.equals("goblins"))
+			if(str.equals("goblins")||str.equals("goblin"))
 				for(int i=0;i<Goblin.startingNum;i++)
 					slowPrintln(gob[i]+"");
 			else
@@ -309,6 +309,17 @@ public class Rpg1_18
 				Thread.sleep(printingSpeed);
 		}
 	}
+	public static void slowPrintln(String text,int printingSpeed) throws InterruptedException//This slow prints, but you can set the print speed, good for counting.
+	{
+		//this is for multi-testing where I want it to go as fast as possible
+		for (int i=0;i<text.length();i++)
+		{
+			System.out.print(text.charAt(i));
+			if(!aiAutoRun)
+				Thread.sleep(printingSpeed);
+		}
+		System.out.println();
+	}
 	public static void slowPrintln(String text) throws InterruptedException//This is the same as the others but goes down one line after.
 	{
 		
@@ -332,6 +343,7 @@ public class Rpg1_18
 				Thread.sleep(printSpeed);
 		}
 	}
+	
 	
 	public static void grueFight(Scanner input, PlayerStats player,Inventory stuff,Weapon playerWeapon)
 	{
@@ -372,7 +384,7 @@ public class Rpg1_18
 		{
 			do
 			{
-	
+				validCommand=true;
 				slowPrintln("What would you like to do?");
 				prompt = toLower(input);
 				switch(prompt)
@@ -402,7 +414,7 @@ public class Rpg1_18
 				}
 			}
 			while(validCommand==false);
-			if(!troll.alive)
+			if(troll.alive==false)
 			{
 				slowPrintln("Congrats, You killed "+troll.getName()+"!\nI bet his children will be equally as happy with your success!");
 				if(!aiAutoRun)
@@ -411,7 +423,7 @@ public class Rpg1_18
 				troll.giveLoot(player);
 				return;
 			}
-			troll.attack(1,player);
+			troll.attack(player);
 			if(!player.isAlive())
 				return;
 			player.printHealth();
@@ -558,6 +570,7 @@ public class Rpg1_18
 			player.attack(goblins[selection-1]);
 			break;
 		case "cast fireball","cast fire ball","fireball","fire ball":
+//			slowPrintln("Wfoor");
 			selection=answerChecker(goblins,input,player);
 			player.castFireball(input, goblins[selection-1]);
 			break;
@@ -568,7 +581,8 @@ public class Rpg1_18
 		
 		if(Goblin.allDead)
 		{
-			
+			Goblin.reset();
+			return;
 		}
 		
 		goblinAttacker= randomGen(0,Goblin.startingNum-1);//this decides what goblin will attack
@@ -980,7 +994,7 @@ public class Rpg1_18
 		
 			killonater=firstStore(input,bag);
 			
-			slowPrint(killonater.weaponType);
+//			slowPrint(killonater.weaponType);
 			
 			PlayerStats character = new PlayerStats(killonater);
 			character.nextFloor();
@@ -1015,13 +1029,17 @@ public class Rpg1_18
 						character.addHealth(-1);
 					}
 					if(number==0)
-						slowPrintln("What?");
+					{
+						slowPrintln("...",250);
+						slowPrintln("What?",100);
+						Thread.sleep(500);
+					}
 					if(number<0)
 					{
 						slowPrintln("You struggle to even rationalise what you mean by a negative hallway"
 								+ "\nbut eventually you decide it makes sense, and try to slam your head through the ground like an ostrich\n");
 							Thread.sleep(1000);	 
-							slowPrint("You take 2 damage",30);
+							slowPrint("You take 2 damage\n",100);
 							Thread.sleep(1000);
 						character.addHealth(-2);
 					}

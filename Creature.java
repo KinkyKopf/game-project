@@ -13,15 +13,13 @@ public class Creature
 	private double damageMultiplier;
 	
 	private boolean stunned;
-	private boolean alive;
+	public boolean alive;
 	public boolean quickBuild;
 	
-	public Creature(int h,int a,int f,String n) throws InterruptedException
+	public Creature(int h,int f,String n) throws InterruptedException
 	{
-		
-		floor=f;
-		setAccuracy(a);
 		creatureName=n;
+		floor=f;
 		alive=true;
 	}
 	
@@ -31,30 +29,15 @@ public class Creature
 		maxDamage=maxD;
 		damageMultiplier=dm;
 	}
-	public void setHealth(int h,double hm) throws InterruptedException
+	public void setHealth(int baseHealth,int bonusHealth,double healthMultiplier) throws InterruptedException
 	{
-		
-		int bonusHealth=Rpg1_18.randomGen((int)(-7*healthMultiplier),(int)(10*healthMultiplier));
-		health = h+(int)(floor*healthMultiplier+bonusHealth);
-		
-		if(!quickBuild)
-		{
-			if(bonusHealth>5)
-				Rpg1_18.slowPrintln(creatureName+" appears to be abnormally large. But not like in a bad way or anything,he's still in shape for a troll");
-			if(bonusHealth<0)
-				Rpg1_18.slowPrintln(creatureName+" is way smaller than your average troll but it is best not to metion it, he is probably insecure\n");
-		}
+		health = baseHealth+(int)(floor*healthMultiplier+bonusHealth);	
 	}
 	public void setAccuracy(int a) throws InterruptedException
 	{
 		accuracy=a;
-		
-			if(a>0)
-				Rpg1_18.slowPrintln("It appears that "+creatureName+" is wearing glasses\n");
-			if (a<=0)
-				Rpg1_18.slowPrintln(creatureName+" squints at you.\n");
 	}
-	public void setName(String n)
+	public void setCreatureName(String n)
 	{
 		creatureName=n;
 	}
@@ -84,6 +67,7 @@ public class Creature
 		return creatureName;
 	}
 	//misc methods
+	
 	public void attack(PlayerStats player) throws InterruptedException
 	{
 		if(stunned)
@@ -103,18 +87,17 @@ public class Creature
 		currentDamage=Rpg1_18.randomGen(minDamage,maxDamage)-player.characterWeapon.protection; 
 		if (currentDamage<=0)
 		{
-			Rpg1_18.slowPrintln(creatureName+" swing, but you blocked the attack!");
+			Rpg1_18.slowPrintln(creatureName+" swings, but you blocked the attack!");
 			return;
 		}
 		player.takeDamage(currentDamage);
-		Rpg1_18.slowPrintln(creatureName+"swings and hits you for "+currentDamage+" damage!");
+		Rpg1_18.slowPrintln(creatureName+" swings and hits you for "+currentDamage+" damage!");
 	}
 	public void takeDamage(int dam) throws InterruptedException
 	{
 		if(health>0)
 		{
 			health-=dam;
-			Rpg1_18.slowPrintln("You deal "+dam+" damage to "+creatureName+", he has "+health+" health remaining!");
 			if(health<=0)
 			{
 				alive=false;

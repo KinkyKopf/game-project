@@ -3,11 +3,8 @@ package gameprototypes;
 
 public class TrollStats extends Creature 
 {
-	private int health,damage,accuracy,floor,damageOut,armor;
-	private double hlthMultiplier,dmgMultiplier;
 	boolean quickBuild=true;
 	boolean stunned;
-	boolean alive=true;
 
 	private String name;
 	/*   Notes:
@@ -22,45 +19,42 @@ public class TrollStats extends Creature
 	
 	public TrollStats(int f) throws InterruptedException
 	{
-		super(20,Rpg1_18.randomGen(-3, 3),f,"troll");
-
-		double hlthMultiplier,dmgMultiplier;
-		 if(f<10)
-		{
-			hlthMultiplier=2;
-			dmgMultiplier=1.2;
-		}
-		else if(f<20)
-		{
-			hlthMultiplier=4;
-			dmgMultiplier=2;
-		}
-		else
-		{
-			hlthMultiplier=1;
-			dmgMultiplier=1;
-		}
+		super(20,f,"the troll");
+		
+		double dmgMultiplier=.25+.25*f;
+		double hlthMultiplier=.5+.5*f;
+		
 		nameGen();
+		
 		if(!quickBuild)
 		{
 		Rpg1_18.slowPrintln("As you go down the hallway, a rank scent of what you can only decsribe as teenage man-musk floods your nostrills ");
 		Rpg1_18.slowPrint("...\n",500);
-		Rpg1_18.slowPrintln("A troll is near.\nYou see a door labeled: "+name+". \nBrave yourself, "+name+" the troll is behind here.");
+		Rpg1_18.slowPrintln("A troll is near.\nYou see a door labeled: "+name+". \nBrave yourself, "+name+" the troll is behind here.\n");
 		}
 		else 
 			Rpg1_18.slowPrintln("A new troll appepared!");
+		
 		setFloor(f);
-		setDamage(Rpg1_18.randomGen(-2,3));
-		setHealth(20+(int)(floor*hlthMultiplier),hlthMultiplier);	
+		
+		setDamage((int)(2*dmgMultiplier),(int)(6*dmgMultiplier),dmgMultiplier);
+		setHealth(20+(int)(getFloor()*hlthMultiplier),hlthMultiplier);	
 		setAccuracy(Rpg1_18.randomGen(-3, 3));
 	}
 
 	
 //Setters______________
-	public void setDamage(int d) throws InterruptedException
+	public void setAccuracy(int a) throws InterruptedException
 	{
-		
-		
+		super.setAccuracy(a);
+
+		if(a>0)
+			Rpg1_18.slowPrintln("It appears that "+super.getName()+" is wearing glasses\n");
+		if (a<=0)
+			Rpg1_18.slowPrintln(super.getName()+" squints at you.\n");
+	}
+	public void setDamage(int d) throws InterruptedException
+	{		
 		if(!quickBuild)
 		{
 			if (d>2)
@@ -69,17 +63,34 @@ public class TrollStats extends Creature
 				Rpg1_18.slowPrintln("You notice a stack of books labled \"Computer Science: The Anylitical Studies Of Computational Electronics\" in the corner of "+name+"'s lair\n");
 		}
 	}
-
+	public void setHealth(int h,double hM) throws InterruptedException
+	{
+		int bonusHealth=Rpg1_18.randomGen((int)(-7*hM),(int)(10*hM));
+		
+		super.setHealth(h,bonusHealth,hM);
+		
+		if(!quickBuild)
+		{
+			if(bonusHealth>5)
+				Rpg1_18.slowPrintln(super.getName()+" appears to be abnormally large. But not like in a bad way or anything,he's still in shape for a troll");
+			if(bonusHealth<0)
+				Rpg1_18.slowPrintln(super.getName()+" is way smaller than your average troll but it is best not to metion it, he is probably insecure\n");
+		}
+	}
+	public void setName(String n)
+	{
+		name=n;
+	}
 //Getters_________________
 	
 	public void printHealth() throws InterruptedException
 	{
-		Rpg1_18.slowPrintln("Troll health: "+health);
+		Rpg1_18.slowPrintln("Troll health: "+getHealth());
 	}
 	//misc methods_________________________	
 	public void giveLoot(PlayerStats player) throws InterruptedException
 	{
-		int loot=Rpg1_18.lootMaker(floor);
+		int loot=Rpg1_18.lootMaker(getFloor());
 		Rpg1_18.slowPrintln("You got "+loot+" gold!");
 		player.bag.addGold(loot);
 		loot=Rpg1_18.randomGen(1,3);
@@ -128,40 +139,40 @@ public class TrollStats extends Creature
 		}
 		setName(n);
 	}
-	public void attack(int times,PlayerStats player) throws InterruptedException
-	{
-		if(stunned)
-		{
-			Rpg1_18.slowPrintln(name+" brings his arm back, ready to swing but staggers and falls to the ground.");
-			return;
-		}
-		else if(!alive)
-		{
-			return;
-		}
-		for(int i=0;i<times;i++)
-		{
-		damageOut = (Rpg1_18.randomGen((int)(2*dmgMultiplier), (int)(5*dmgMultiplier)))-player.characterWeapon.getProtection();
-		}
-		//System.out.println("DamageValue: "+damageOut);
-		if(damageOut<=0)
-		{
-			Rpg1_18.slowPrintln("The troll swings but you blocked the attack!");
-			return;
-		}
-		
-		Rpg1_18.slowPrint("The troll hits you for "+damageOut+" damage");
-		
-		player.takeDamage(damageOut);
-		if(!player.isAlive())
-			Rpg1_18.slowPrintln(", destroying your "+Rpg1_18.partGen()+", killing you instntly");
-		else 
-			Rpg1_18.slowPrintln("!");
-	}
+//	public void attack(int times,PlayerStats player) throws InterruptedException
+//	{
+//		if(stunned)
+//		{
+//			Rpg1_18.slowPrintln(name+" brings his arm back, ready to swing but staggers and falls to the ground.");
+//			return;
+//		}
+//		else if(!alive)
+//		{
+//			return;
+//		}
+//		for(int i=0;i<times;i++)
+//		{
+//		damageOut = (Rpg1_18.randomGen((int)(2*dmgMultiplier), (int)(5*dmgMultiplier)))-player.characterWeapon.getProtection();
+//		}
+//		//System.out.println("DamageValue: "+damageOut);
+//		if(damageOut<=0)
+//		{
+//			Rpg1_18.slowPrintln("The troll swings but you blocked the attack!");
+//			return;
+//		}
+//		
+//		Rpg1_18.slowPrint("The troll hits you for "+damageOut+" damage");
+//		
+//		player.takeDamage(damageOut);
+//		if(!player.isAlive())
+//			Rpg1_18.slowPrintln(", destroying your "+Rpg1_18.partGen()+", killing you instntly");
+//		else 
+//			Rpg1_18.slowPrintln("!");
+//	}
 	
 
 	public String toString()
 	{
-		return name+" currently has "+health+" health.";
+		return name+" currently has "+getHealth()+" health.";
 	}
 }
