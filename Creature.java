@@ -1,37 +1,48 @@
 package gameprototypes;
 
-public class Creature 
+abstract class Creature 
 {
 	private int health;
-	private int floor;
+	private static int floor;
 	private int accuracy;
 	private int minDamage,maxDamage,currentDamage,bonusDam;
 	private int armor;//not yet implemented
+	private double damageModifier;
+	private double healthModifier;
 	private String creatureName;
-	
-	private double healthMultiplier;
-	private double damageMultiplier;
-	
-	private boolean stunned;
+
+	public boolean stunned;
 	public boolean alive;
 	public boolean quickBuild;
+
+	/*
+	 * To do:
+	 * Fit this to be a proper abstract class
+	 * find a good way to make the constructor
+	 */
 	
-	public Creature(int h,int f,String n) throws InterruptedException
+	public Creature(int f) throws InterruptedException
 	{
-		creatureName=n;
 		floor=f;
 		alive=true;
 	}
+	abstract void bonusDamMessage(int bonus) throws InterruptedException;
+	abstract void bonusHealthMessage(int bonus) throws InterruptedException;
+	abstract void bonusAccuracyMessage(int bonus) throws InterruptedException;
 	
-	public void setDamage(int minD,int maxD,double dm) throws InterruptedException
+	public void setDamage(int minD,int maxD,int bd,double dm) throws InterruptedException
 	{
-		minDamage=minD;
-		maxDamage=maxD;
-		damageMultiplier=dm;
+		minDamage=(int)(minD*dm+.5);
+		maxDamage=(int)(maxD*dm+.5);
+		damageModifier=dm;
+		bonusDam=bd;
+		bonusDamMessage(bonusDam);
 	}
-	public void setHealth(int baseHealth,int bonusHealth,double healthMultiplier) throws InterruptedException
+	public void setHealth(int baseHealth,int bonusHealth,double hm) throws InterruptedException
 	{
-		health = baseHealth+(int)(floor*healthMultiplier+bonusHealth);	
+		health = baseHealth+(int)(floor*hm+bonusHealth);	
+		healthModifier=hm;
+		bonusHealthMessage(bonusHealth);
 	}
 	public void setAccuracy(int a) throws InterruptedException
 	{
@@ -46,7 +57,7 @@ public class Creature
 		floor=f;
 	}
 //Getters_________________
-	public int getFloor()
+	public static int getFloor()
 	{
 		return floor;
 	}
@@ -65,6 +76,14 @@ public class Creature
 	public String getName()
 	{
 		return creatureName;
+	}
+	public double getDModifier()
+	{
+		return damageModifier;
+	}
+	public double getHModifier()
+	{
+		return healthModifier;
 	}
 	//misc methods
 	
@@ -111,7 +130,7 @@ public class Creature
 	{
 		if(!alive)
 			return creatureName+" is dead.";
-		return creatureName+" has "+health+" health remaining";
+		return creatureName+" has "+ health+" health remaining";
 		
 	}
 }

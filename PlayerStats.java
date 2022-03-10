@@ -13,11 +13,9 @@ public class PlayerStats
 	 * ________________________
 	 * make a minigame that allows you to increase your intelligence by solving math problems.
 	 * allow you to sacrifice some health for magic
-	 * when using a spell, if it kills the troll it says the damage was zero.
-	 * 
+	 *
 	 * 
 	 * make it so two handed weapons need to have a certian strength in order to properly weild them
-	 * add an attack method
 	 * make a chain lightning method for trolls
 	 * Done:
 	 * _________________________________
@@ -26,13 +24,15 @@ public class PlayerStats
 	 * get rid of of the spell base and put all the spells in this class
 	 * revise the spells to they take the enemy type as input and deal damage through the method directly.
 	 * add an attack method so I can attack trolls or goblins directly.
+	 * when using a spell, if it kills the troll it says the damage was zero.
 	 */
+	
 	private int floor, evasion,health,strength,maxHealth,armorClass,magic,intelligence,maxMagic;
 	private boolean alive,nearDeath;
 	Weapon characterWeapon;
 	Inventory bag;
-
-	public PlayerStats(int e,int h,int mh,Weapon w,int mm)//constructor
+	
+	public PlayerStats(int e,int h,int mh,Weapon w,int mm,int i)//constructor
 	{
 		characterWeapon=w;
 		setEvasion(e+characterWeapon.evasionBuff);
@@ -44,7 +44,7 @@ public class PlayerStats
 	}
 	public PlayerStats(Weapon w)
 	{
-		this(7,25,25,w,100);
+		this(7,25,25,w,100,10);
 	}
 	//getters______________________________
 	
@@ -160,7 +160,7 @@ public class PlayerStats
 	
 	
 	//Miscelanious methods______________________________
-	public void attack( TrollStats troll) throws InterruptedException
+	public void attack(TrollStats troll) throws InterruptedException
 	{
 		String s="";
 		int damage;
@@ -175,6 +175,10 @@ public class PlayerStats
 		damage=characterWeapon.rollDamage(1);
 		goblin.takeDamage(damage);
 		Rpg1_18.slowPrintln("You hit the goblin, dealing "+damage+" damage to it!");
+	}
+	
+	public int answerChecker(Scanner input)
+	{
 	}
 	
 	public boolean rollToHit(int enemyAccuracy) throws InterruptedException//roll to see if you can dodge
@@ -216,10 +220,8 @@ public class PlayerStats
 	{
 		int damage;
 		int magicCost=20;
+				
 		
-		Rpg1_18.slowPrint("How much magic do you want to use to cast this?");
-		magicCost=input.nextInt();
-		input.nextLine();
 		if(!checkMagic(magicCost))
 			return;
 		useMagic(magicCost);
@@ -236,7 +238,7 @@ public class PlayerStats
 		int damage;
 		int magicCost=20;
 		
-		Rpg1_18.slowPrint("How much magic do you want to use to cast this?");
+		Rpg1_18.slowPrintln("How much magic do you want to use to cast this?");
 		magicCost=input.nextInt();
 		input.nextLine();
 		if(!checkMagic(magicCost))
@@ -266,8 +268,9 @@ public class PlayerStats
 		else
 			level=1;
 		
-		spellCost=level*5;
+		spellCost=level*10+10;
 		stunChance=level*.10;
+		
 		if(!checkMagic(spellCost))
 			return;
 		useMagic(spellCost);
@@ -275,17 +278,22 @@ public class PlayerStats
 		damageMin=level;
 		damageMax=level*2;
 		
-		
+		Rpg1_18.slowPrint("You prepare the spell in your hands using "+spellCost+" magic when suddenly.");
+		Rpg1_18.slowPrintln("...",300);
+		Rpg1_18.slowPrint("Tendrils of lightning shoot out from your hands dealing ");
 		for(Goblin g:goblins)
 		{
-			g.takeDamage(Rpg1_18.randomGen(damageMin, damageMax));
+			int temp=Rpg1_18.randomGen(damageMin, damageMax);
+			g.takeDamage(temp);
+			Rpg1_18.slowPrint(temp+" damage to "+g.getName()+" ");
 			if(Math.random()<stunChance)
 			{	
 			g.stunned=true;
-			Rpg1_18.slowPrintln("You stun goblin "+g.goblinNum+"!");
+			Rpg1_18.slowPrint(" and stunning them");
 			}
+			System.out.print(",");
 		}
-		
+		Rpg1_18.slowPrintln(" and then rocketing back into your fingertips");
 		
 	}
 	
@@ -316,6 +324,6 @@ public class PlayerStats
 	
 	public String toString()
 	{
-		return "Current Health: "+health+"   Max Health: "+maxHealth+"   Evasion: "+evasion;
+		return "Current Health: "+health+"   Max Health: "+maxHealth+"   Evasion: "+evasion+"\n\n"+bag.toString();
 	}
 }

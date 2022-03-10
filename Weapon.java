@@ -13,6 +13,7 @@ public class Weapon
 	 *__________________
 	 *tweak the values so that the game is properly balanced
 	 * I think the balancing is going to be super hard, I don't even know how each of them should interact, and how to ensure they all work properly
+	 *make this be an abstract class that dosen't need a bag so i can just give weapons to some enemies
 	 */
 	
 		int minDamage,maxDamage,damageBonus,protection,evasionBuff,currentDamage,upgradeCost;

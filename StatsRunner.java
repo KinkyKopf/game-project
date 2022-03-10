@@ -70,11 +70,10 @@ public class StatsRunner
 //		}
 //		
 		//Combat testing code:_____________________
-
-		Rpg1_18.trollFight(input, player, stuff, testWeapon);
+//		Rpg1_18.trollFight(input, player, stuff, testWeapon);
 //		TrollStats troll = new TrollStats(1);
 		
-//		Rpg1_18.goblinHorde(input, player, stuff, testWeapon);
+		Rpg1_18.goblinHorde(input, player, stuff, testWeapon);
 		
 //		testWeapon.setProtection(10);
 //		while(!prompt.equals("quit"))

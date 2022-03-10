@@ -19,7 +19,7 @@ public class TrollStats extends Creature
 	
 	public TrollStats(int f) throws InterruptedException
 	{
-		super(20,f,"the troll");
+		super(f);
 		
 		double dmgMultiplier=.25+.25*f;
 		double hlthMultiplier=.5+.5*f;
@@ -37,7 +37,7 @@ public class TrollStats extends Creature
 		
 		setFloor(f);
 		
-		setDamage((int)(2*dmgMultiplier),(int)(6*dmgMultiplier),dmgMultiplier);
+		setDamage(2,6,Rpg1_18.randomGen((int)(-2*dmgMultiplier), (int)(3*dmgMultiplier)),dmgMultiplier);
 		setHealth(20+(int)(getFloor()*hlthMultiplier),hlthMultiplier);	
 		setAccuracy(Rpg1_18.randomGen(-3, 3));
 	}
@@ -96,6 +96,36 @@ public class TrollStats extends Creature
 		loot=Rpg1_18.randomGen(1,3);
 		Rpg1_18.slowPrintln("You also got "+loot+" upgrade tokens!");
 		player.bag.addUpgrades(loot);
+	}
+	public void bonusDamMessage(int bonus) throws InterruptedException
+	{
+		String s="";
+		if(bonus<(int)(-1*getDModifier()))
+			s=getName()+" looks particularily skinny.\n";
+		else if(bonus>(int)(2*getDModifier()))
+			s=getName()+" seems particularly bulky.\n";
+		if(!quickBuild)
+		Rpg1_18.slowPrint(s);
+	}
+	public void bonusHealthMessage(int bonus) throws InterruptedException
+	{
+		String s="";
+		if(bonus<(int)(-2*getHModifier()))
+			s=getName()+" looks rather diminutive in stature.\n";
+		else if(bonus>(int)(3*getHModifier()))
+			s=getName()+" looks rather large compared to other goblins.\n";
+		if(!quickBuild)
+			Rpg1_18.slowPrint(s);
+	}
+	public void bonusAccuracyMessage(int bonus) throws InterruptedException
+	{
+		String s="";
+		if(bonus<=-2)
+			s=getName()+" squints at you.\n";
+		else if(bonus>=2)
+			s=getName()+" is wearing glasses.\n";
+		if(!quickBuild)
+			Rpg1_18.slowPrint(s);
 	}
 	public void nameGen()
 	{

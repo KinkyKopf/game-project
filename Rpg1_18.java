@@ -1,10 +1,6 @@
 package gameprototypes;
 
-import java.util.ArrayList;
 import java.util.Scanner;
-
-import gameprototypes.Goblin;
-
 /*
  * Zachary Kinkopf
  * December 1st
@@ -40,6 +36,7 @@ public class Rpg1_18
 		}
 		return -1;//if the method can't find a corresponding number, it returns -1, which means that there is no positive number that corresponds with the string.	
 	}
+	
 	public static int lootMaker(int floor)
 	{
 		int loot = ((int)(Math.random()*395)+123)+((int)(Math.random()*200)*floor);	
@@ -115,16 +112,18 @@ public class Rpg1_18
 		String str;
 		do
 		{
-			slowPrint("Enter goblins to see the goblin's health or enter the number of the goblin you want to attack");
+			slowPrintln("Which goblin would you like to attack?");
 			str=inputTaker.nextLine();
 			
 			if(str.equals("goblins")||str.equals("goblin"))
-				for(int i=0;i<Goblin.startingNum;i++)
+				for(int i=0;i<Goblin.getStartingNum();i++)
 					slowPrintln(gob[i]+"");
+			else if(str.equals("help"))
+				slowPrintln("You can type goblins to see the stats of all the goblins or enter the number of the goblin you want to attack");
 			else
 			{
 				choice = stringToInt(str);
-				if(choice>Goblin.startingNum)
+				if(choice>Goblin.getStartingNum())
 				{
 					slowPrintln("You can't attack a goblin that isn't there, try again.");
 				}
@@ -132,9 +131,9 @@ public class Rpg1_18
 				{
 					slowPrintln("How do you think that would even work? You make no sense");
 				}
-				else if(gob[choice-1].dead)
+				else if(!gob[choice-1].alive)
 				choice =psychoChecker(gob,choice,inputTaker,player);
-				else if(choice>=1 && choice<=Goblin.startingNum)
+				else if(choice>=1 && choice<=Goblin.getStartingNum())
 					return choice;
 			}
 		}
@@ -189,7 +188,7 @@ public class Rpg1_18
 						slowPrint("Awesome! I am so glad you came to your senses!  Very well! who would you like to attack?");
 						choice=inputTaker.nextInt();
 						s=inputTaker.nextLine();
-						if(gob[choice-1].dead==true);
+						if(gob[choice-1].alive);
 							player.takeDamage(1000);
 							return choice;
 							
@@ -214,8 +213,8 @@ public class Rpg1_18
 			else 
 			{
 				do
-					if(gob[choice-1].dead)
-						choice=randomGen(1,Goblin.startingNum);
+					if(!gob[choice-1].alive)
+						choice=randomGen(1,Goblin.getStartingNum());
 					else
 						validAutoChoose=true;
 				while(validAutoChoose==false);
@@ -224,11 +223,11 @@ public class Rpg1_18
 			}
 		case "n","no","you know what? i am going to do the proper and good thing and not merscilessly beat the corpse of my former enemy","eh":
 			
-			choice=randomGen(1,Goblin.startingNum);
+			choice=randomGen(1,Goblin.getStartingNum());
 		
 			do
-				if(gob[choice-1].dead)
-					choice=randomGen(1,Goblin.startingNum);
+				if(!gob[choice-1].alive)
+					choice=randomGen(1,Goblin.getStartingNum());
 				else
 					validAutoChoose=true;
 			while(validAutoChoose==false);
@@ -543,16 +542,17 @@ public class Rpg1_18
 		 */
 	
 		
-		int selection;
+		int selection=1;
 		int goblinAttacker;
 		int loot;
 		String prompt = "";
 		int aiCounter=1;
 		int goblinGen =randomGen(1,4);
+		boolean valid=false;
 	//	goblinGen=4;
 		Goblin[] goblins=new Goblin[goblinGen];
 	
-		slowPrintln("You see the flickering light of a fire around the hall, but right as you are about to turn the corner,\n You see the the dancing shadows of goblins.  Prepare for a fight.\n___________________________\n");
+//		slowPrintln("You see the flickering light of a fire around the hall, but right as you are about to turn the corner,\n You see the the dancing shadows of goblins.  Prepare for a fight.\n___________________________\n");
 		slowPrintln("There are "+goblinGen+" goblins to attack");
 
 		for(int i=0;i<goblinGen;i++)//generates the goblins
@@ -560,35 +560,54 @@ public class Rpg1_18
 		
 		do
 		{
-		slowPrintln("What would you like to do?");
-		prompt=toLower(input);
+			do
+			{
+			slowPrintln("What would you like to do?");
+			prompt=toLower(input);
+			valid=false;
+				switch(prompt)
+				{
+				case "attack", "swing":
+					selection=answerChecker(goblins,input,player);
+					player.attack(goblins[selection-1]);
+					valid=true;
+					Rpg1_18.slowPrintln(goblins[selection-1]+"");
+					break;
+				case "cast fireball","cast fire ball","fireball","fire ball":
+			//			slowPrintln("Wfoor");
+					selection=answerChecker(goblins,input,player);
+					player.castFireball(input, goblins[selection-1]);
+					valid=true;
+					Rpg1_18.slowPrintln(goblins[selection-1]+"");
+					break;
+				case "cast lightning","lightning":
+					player.castChainLightning(input, goblins);
+					valid=true;
+					break;
+				case "help":
+					slowPrintln("You can swing, cast fireball or cast lightning");
+					break;
+				case "goblins":
+					for(Goblin g: goblins)
+						slowPrintln(g+"");
+					break;
+				default:
+					slowPrintln("That isn't a command I recognize, try again");
+				}	
+			}
+			while(!valid);
 		
-		switch(prompt)
-		{
-		case "attack", "swing":
-			selection=answerChecker(goblins,input,player);
-			player.attack(goblins[selection-1]);
-			break;
-		case "cast fireball","cast fire ball","fireball","fire ball":
-//			slowPrintln("Wfoor");
-			selection=answerChecker(goblins,input,player);
-			player.castFireball(input, goblins[selection-1]);
-			break;
-		case "cast lightning","lightning":
-			player.castChainLightning(input, goblins);
-			break;
-		}	
 		
-		if(Goblin.allDead)
+		if(Goblin.getGoblinNum()==0)
 		{
-			Goblin.reset();
+			Goblin.reset(player);
 			return;
 		}
 		
-		goblinAttacker= randomGen(0,Goblin.startingNum-1);//this decides what goblin will attack
-		if(goblinAttacker>=Goblin.startingNum)
+		goblinAttacker= randomGen(0,Goblin.getStartingNum()-1);//this decides what goblin will attack
+		if(goblinAttacker>=Goblin.getStartingNum()||!goblins[goblinAttacker].alive)
 		{
-			goblinAttacker= randomGen(0,Goblin.startingNum-1);
+			goblinAttacker= randomGen(0,Goblin.getStartingNum()-1);
 			//slowPrintln("reroll");
 		}
 		goblins[goblinAttacker].attack(player);
@@ -875,7 +894,7 @@ public class Rpg1_18
 			maxCst=500;//this should cap the maximum cost at 500
 		
 		slowPrintln("You see torchlight in the distance, as you approach, a broken sign reading \"shop\" hangs from one end\n\nYou can upgrade your weapon or buy some potions, the choice is yours.\n");
-		
+		slowPrintln(player+"");
 		if(aiAutoRun)
 		{
 			if( (stuff.getGold()>=200 && stuff.getUpgrades()>0) && player.getHealth()==player.getMaxHealth() )
@@ -1152,6 +1171,7 @@ public class Rpg1_18
 			}
 		   while(!prompt.equals("quit"));
 			
+			//this is for rapid testing
 			CounterFile.addFloors(character.getFloor());
 			if(character.getFloor()==76)
 				CounterFile.numWon++;
