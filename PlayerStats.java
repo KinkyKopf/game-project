@@ -42,9 +42,10 @@ public class PlayerStats
 		alive = true;
 		//armorClass=characterWeapon.protection;
 	}
-	public PlayerStats(Weapon w)
+	public PlayerStats(Weapon w,Inventory stuff)
 	{
 		this(7,25,25,w,100,10);
+		bag=stuff;
 	}
 	//getters______________________________
 	
@@ -160,6 +161,22 @@ public class PlayerStats
 	
 	
 	//Miscelanious methods______________________________
+	
+	public static String toLower(Scanner s)
+	{
+		System.out.println("temp");
+		return s.nextLine().toLowerCase();
+	}
+	public static int takeInt(Scanner input)
+	{
+		int temp=input.nextInt();
+		input.nextLine();
+		
+		return temp;
+	}
+	
+	
+	
 	public void attack(TrollStats troll) throws InterruptedException
 	{
 		String s="";
@@ -176,9 +193,42 @@ public class PlayerStats
 		goblin.takeDamage(damage);
 		Rpg1_18.slowPrintln("You hit the goblin, dealing "+damage+" damage to it!");
 	}
-	
-	public int answerChecker(Scanner input)
+
+	private int answerChecker(Scanner input) throws InterruptedException
 	{
+		String temp;
+		do
+		{
+			Rpg1_18.slowPrintln("How much magic do you want to use?");
+			temp=input.nextLine();
+			temp=temp.toLowerCase();
+//			System.out.println("point 3");
+
+			switch(temp)
+			{
+			case "all":
+				return magic;
+			case "half","50%":
+				return (int)(magic/2);
+			case "quarter","one fourth","fourth","25%":
+				return (int)(magic/4);
+			case "tenth","one tenth","10%":
+				return (int)(magic/10);
+			case "help":
+				Rpg1_18.slowPrintln("You have "+magic+" magic");
+				break;
+			default:
+//					return Rpg1_18.stringToInt(temp);
+				try {
+					return Integer.valueOf(temp);
+				}
+				catch(NumberFormatException ex)
+				{
+					Rpg1_18.slowPrintln("That isn't a command, please try agin");
+				}
+			}
+		}
+		while(1==1);
 	}
 	
 	public boolean rollToHit(int enemyAccuracy) throws InterruptedException//roll to see if you can dodge
@@ -219,9 +269,9 @@ public class PlayerStats
 	public void castFireball(Scanner input,TrollStats troll) throws InterruptedException
 	{
 		int damage;
-		int magicCost=20;
-				
+		int magicCost;
 		
+		magicCost=answerChecker(input);
 		if(!checkMagic(magicCost))
 			return;
 		useMagic(magicCost);
@@ -235,12 +285,15 @@ public class PlayerStats
 	}
 	public void castFireball(Scanner input,Goblin goblin) throws InterruptedException
 	{
+//		System.out.println("point 2");
 		int damage;
-		int magicCost=20;
+		int magicCost;
 		
-		Rpg1_18.slowPrintln("How much magic do you want to use to cast this?");
-		magicCost=input.nextInt();
-		input.nextLine();
+		magicCost=answerChecker(input);
+//		System.out.println("point 4");
+
+		
+//		magicCost=input.nextInt();
 		if(!checkMagic(magicCost))
 			return;
 		useMagic(magicCost);
@@ -284,14 +337,18 @@ public class PlayerStats
 		for(Goblin g:goblins)
 		{
 			int temp=Rpg1_18.randomGen(damageMin, damageMax);
-			g.takeDamage(temp);
-			Rpg1_18.slowPrint(temp+" damage to "+g.getName()+" ");
-			if(Math.random()<stunChance)
-			{	
-			g.stunned=true;
-			Rpg1_18.slowPrint(" and stunning them");
+			
+			if(g.alive)
+			{
+				g.takeDamage(temp);
+				Rpg1_18.slowPrint(temp+" damage to "+g.getName()+" ");
+				if(Math.random()<stunChance)
+				{	
+				g.stunned=true;
+				Rpg1_18.slowPrint(" and stunning them");
+				}
+				System.out.print(",");
 			}
-			System.out.print(",");
 		}
 		Rpg1_18.slowPrintln(" and then rocketing back into your fingertips");
 		

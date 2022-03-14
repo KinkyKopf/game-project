@@ -23,7 +23,10 @@ public class TrollStats extends Creature
 		
 		double dmgMultiplier=.25+.25*f;
 		double hlthMultiplier=.5+.5*f;
+		int bseHealth=20+(int)(getFloor()*hlthMultiplier);
+		int bonHealth=Rpg1_18.randomGen(-8,8);
 		
+			
 		nameGen();
 		
 		if(!quickBuild)
@@ -38,49 +41,14 @@ public class TrollStats extends Creature
 		setFloor(f);
 		
 		setDamage(2,6,Rpg1_18.randomGen((int)(-2*dmgMultiplier), (int)(3*dmgMultiplier)),dmgMultiplier);
-		setHealth(20+(int)(getFloor()*hlthMultiplier),hlthMultiplier);	
+		setHealth(bseHealth,bonHealth,hlthMultiplier);	
 		setAccuracy(Rpg1_18.randomGen(-3, 3));
 	}
 
 	
-//Setters______________
-	public void setAccuracy(int a) throws InterruptedException
-	{
-		super.setAccuracy(a);
 
-		if(a>0)
-			Rpg1_18.slowPrintln("It appears that "+super.getName()+" is wearing glasses\n");
-		if (a<=0)
-			Rpg1_18.slowPrintln(super.getName()+" squints at you.\n");
-	}
-	public void setDamage(int d) throws InterruptedException
-	{		
-		if(!quickBuild)
-		{
-			if (d>2)
-				Rpg1_18.slowPrintln("You see a truly staggering ammount of what you can only assume is empty tubs of preworkout scattered around "+name+"'s lair\n");
-			if(d<1)
-				Rpg1_18.slowPrintln("You notice a stack of books labled \"Computer Science: The Anylitical Studies Of Computational Electronics\" in the corner of "+name+"'s lair\n");
-		}
-	}
-	public void setHealth(int h,double hM) throws InterruptedException
-	{
-		int bonusHealth=Rpg1_18.randomGen((int)(-7*hM),(int)(10*hM));
-		
-		super.setHealth(h,bonusHealth,hM);
-		
-		if(!quickBuild)
-		{
-			if(bonusHealth>5)
-				Rpg1_18.slowPrintln(super.getName()+" appears to be abnormally large. But not like in a bad way or anything,he's still in shape for a troll");
-			if(bonusHealth<0)
-				Rpg1_18.slowPrintln(super.getName()+" is way smaller than your average troll but it is best not to metion it, he is probably insecure\n");
-		}
-	}
-	public void setName(String n)
-	{
-		name=n;
-	}
+
+	
 //Getters_________________
 	
 	public void printHealth() throws InterruptedException
@@ -167,9 +135,9 @@ public class TrollStats extends Creature
 		default:
 			n="Jorge Lopez";
 		}
-		setName(n);
+		setCreatureName(n);
 	}
-//	public void attack(int times,PlayerStats player) throws InterruptedException
+/*	public void attack(int times,PlayerStats player) throws InterruptedException
 //	{
 //		if(stunned)
 //		{
@@ -198,9 +166,9 @@ public class TrollStats extends Creature
 //			Rpg1_18.slowPrintln(", destroying your "+Rpg1_18.partGen()+", killing you instntly");
 //		else 
 //			Rpg1_18.slowPrintln("!");
-//	}
+*/	
 	
-
+	
 	public String toString()
 	{
 		return name+" currently has "+getHealth()+" health.";

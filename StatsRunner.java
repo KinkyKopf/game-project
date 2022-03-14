@@ -32,7 +32,7 @@ public class StatsRunner
 		int realTimes = 0;
 		Inventory stuff = new Inventory();
 		Weapon testWeapon= new Weapon("sword", stuff);
-		PlayerStats player= new PlayerStats(testWeapon);
+		PlayerStats player= new PlayerStats(testWeapon,stuff);
 //		Goblin goblin = new Goblin(1);
 		
 		player.bag=stuff;

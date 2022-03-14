@@ -105,8 +105,15 @@ public class Rpg1_18
 	{
 		return s.nextLine().toLowerCase();
 	}
+	public static int takeInt(Scanner input)
+	{
+		int temp=input.nextInt();
+		input.nextLine();
+		
+		return temp;
+	}
 	
-	public static int answerChecker(Goblin[] gob,Scanner inputTaker,PlayerStats player) throws InterruptedException
+	private static int answerChecker(Goblin[] gob,Scanner inputTaker,PlayerStats player) throws InterruptedException
 	{
 		int choice;
 		String str;
@@ -114,7 +121,6 @@ public class Rpg1_18
 		{
 			slowPrintln("Which goblin would you like to attack?");
 			str=inputTaker.nextLine();
-			
 			if(str.equals("goblins")||str.equals("goblin"))
 				for(int i=0;i<Goblin.getStartingNum();i++)
 					slowPrintln(gob[i]+"");
@@ -134,12 +140,15 @@ public class Rpg1_18
 				else if(!gob[choice-1].alive)
 				choice =psychoChecker(gob,choice,inputTaker,player);
 				else if(choice>=1 && choice<=Goblin.getStartingNum())
+				{
+//					System.out.println(choice);
 					return choice;
+				}
 			}
 		}
 		while((1==1));
 	}
-	public static int psychoChecker(Goblin[] gob,int choice, Scanner inputTaker,PlayerStats player) throws InterruptedException
+	private static int psychoChecker(Goblin[] gob,int choice, Scanner inputTaker,PlayerStats player) throws InterruptedException
 	{
 		/*
 		 * Notes:
@@ -240,7 +249,7 @@ public class Rpg1_18
 			return choice;
 		}
 	}
-	public static void maxEasterEgg(Scanner input,Inventory stuff) throws InterruptedException
+	private static void maxEasterEgg(Scanner input,Inventory stuff) throws InterruptedException
 	{
 		 if(egg1==false)//easter egg
 		{
@@ -374,7 +383,6 @@ public class Rpg1_18
 		 */
 		boolean validCommand=true;
 		boolean win=false;
-		int loot;
 		
 		String prompt;
 		TrollStats troll= new TrollStats(player.getFloor());
@@ -544,9 +552,7 @@ public class Rpg1_18
 		
 		int selection=1;
 		int goblinAttacker;
-		int loot;
 		String prompt = "";
-		int aiCounter=1;
 		int goblinGen =randomGen(1,4);
 		boolean valid=false;
 	//	goblinGen=4;
@@ -576,6 +582,7 @@ public class Rpg1_18
 				case "cast fireball","cast fire ball","fireball","fire ball":
 			//			slowPrintln("Wfoor");
 					selection=answerChecker(goblins,input,player);
+//					System.out.println("point 1");
 					player.castFireball(input, goblins[selection-1]);
 					valid=true;
 					Rpg1_18.slowPrintln(goblins[selection-1]+"");
@@ -585,7 +592,7 @@ public class Rpg1_18
 					valid=true;
 					break;
 				case "help":
-					slowPrintln("You can swing, cast fireball or cast lightning");
+					slowPrintln("You can swing, cast fireball or cast lightning\n\nNote: selection what goblin to attack is a different selection so just enter attack, or fireball.");
 					break;
 				case "goblins":
 					for(Goblin g: goblins)
@@ -605,11 +612,9 @@ public class Rpg1_18
 		}
 		
 		goblinAttacker= randomGen(0,Goblin.getStartingNum()-1);//this decides what goblin will attack
+		
 		if(goblinAttacker>=Goblin.getStartingNum()||!goblins[goblinAttacker].alive)
-		{
 			goblinAttacker= randomGen(0,Goblin.getStartingNum()-1);
-			//slowPrintln("reroll");
-		}
 		goblins[goblinAttacker].attack(player);
 		
 		}
@@ -960,9 +965,8 @@ public class Rpg1_18
 	
 	public static void main(String[] args) throws InterruptedException 
 	  {
+			
 			/*
-			 * Note about notes:
-			 * The number I assign to the end of the note is the priority I am assigning to them.  This is to help with orginsiation, unless it is a date, it which case it says the date.
 			 * _________________
 			 * Notes:
 			 * 
@@ -983,7 +987,8 @@ public class Rpg1_18
 			 *make a prompt that tells you that you are going to see goblins
 			 *the bow isn't working, when you buy it, for some reason it dosen't work
 			 *I think everything is about good for this edition, I just need to play it a lot to make sure it is fully debuged.
-			 *
+			 *add spells-10
+			 *goblins are a bit to hard if you get bad rng, either add player input (maybe spells) or add a mechanic like counterattacking for dodging
 			 *To Do:
 			 *____________________
 			 * 
@@ -996,9 +1001,9 @@ public class Rpg1_18
 			 * add a dagger to maximize evasion. -5
 			 * make it so you can chooses your stats, fallout-style at the beginning of the game.-6
 			 * integrate the cheat codes into working again.-7
-			 * add spells-10
+			 * 
 			 *allow player to get different weapons later on.-10
-			 *goblins are a bit to hard if you get bad rng, either add player input (maybe spells) or add a mechanic like counterattacking for dodging
+			 *
 			 */
 		
 	 	Scanner input = new Scanner(System.in);
@@ -1015,7 +1020,7 @@ public class Rpg1_18
 			
 //			slowPrint(killonater.weaponType);
 			
-			PlayerStats character = new PlayerStats(killonater);
+			PlayerStats character = new PlayerStats(killonater,bag);
 			character.nextFloor();
 			
 			
